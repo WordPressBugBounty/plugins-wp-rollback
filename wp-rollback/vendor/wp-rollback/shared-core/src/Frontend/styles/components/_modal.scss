@@ -1,0 +1,66 @@
+@use '../index' as *;
+
+.wpr-modal {
+    max-width: 600px;
+
+    .dashicons {
+        color: #707EFF;
+        margin-left: 8px;
+    }
+
+    .rollback-details {
+        margin: 0 0 20px;
+    }
+
+    &__changelog .dashicons {
+        color: $color-headings;
+    }
+
+    .wpr-modal-intro {
+        font-size: 13px;
+        margin-top: 0;
+    }
+
+    .wpr-modal-button-wrap {
+        margin: 25px 0 0;
+
+        .is-secondary {
+            margin-left: 20px;
+        }
+    }
+
+    .wpr-details {
+        .progress-messages {
+            background-color: #F0F0F0;
+            padding: 10px 15px;
+            min-height: 150px;
+            min-width: 420px;
+        }
+    }
+
+    .wpr-inprogress-button {
+        &:disabled {
+            background-image: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, .15) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, .15) 50%,
+                    rgba(255, 255, 255, .15) 75%,
+                    transparent 75%,
+                    transparent
+            );
+            background-size: 5rem 5rem;
+            animation: stripes 2s linear infinite;
+        }
+    }
+}
+
+@keyframes stripes {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: 0 0;
+    }
+}

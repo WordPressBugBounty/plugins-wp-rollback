@@ -1,0 +1,45 @@
+@use "../index" as *;
+
+.wpr-loading {
+    &-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+    }
+
+    &-text {
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid $border-color;
+        padding: 20px;
+        text-align: center;
+
+        p {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0 0;
+            padding: 0;
+        }
+    }
+}
+
+.wpr-popover {
+    padding: 12px;
+    background: #fff;
+    border: 1px solid $border-color;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.09);
+    max-width: 300px;
+    font-size: 15px;
+    line-height: 1.4em;
+
+    .components-popover__content {
+        width: auto;
+    }
+}
+
+
+.wpr-tab-panel {
+    min-height: 800px;
+    background-color: #fff;
+}

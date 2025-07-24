@@ -1,0 +1,71 @@
+.wpr-security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    border: 1px solid transparent;
+
+    &__icon {
+        flex-shrink: 0;
+    }
+
+    &__text {
+        white-space: nowrap;
+    }
+
+    // Status variants
+    &--validated {
+        background-color: #d4eda6;
+        color: #2c5e0b;
+        border-color: #94c748;
+
+        .wpr-security-badge__icon {
+            color: #2c5e0b;
+        }
+    }
+
+    &--warning {
+        background-color: #fff2cc;
+        color: #8c6e00;
+        border-color: #f1c232;
+
+        .wpr-security-badge__icon {
+            color: #f57c00;
+        }
+    }
+
+    &--failed {
+        background-color: #fddede;
+        color: #a61e1e;
+        border-color: #e06b6b;
+
+        .wpr-security-badge__icon {
+            color: #d63638;
+        }
+    }
+
+    &--checking {
+        background-color: #f6f7f7;
+        color: #646970;
+        border-color: #c3c4c7;
+
+        .wpr-security-badge__icon {
+            color: #646970;
+            animation: wpr-checking-pulse 1.5s ease-in-out infinite;
+        }
+    }
+}
+
+// Animation for checking state
+@keyframes wpr-checking-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+} 

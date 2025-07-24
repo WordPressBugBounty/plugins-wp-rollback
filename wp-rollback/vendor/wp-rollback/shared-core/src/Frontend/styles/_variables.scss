@@ -1,0 +1,39 @@
+// Colors
+$border-color: #E0E0E0;
+$background-light-gray: #FCFCFC;
+$color-headings: #1d2327;
+$color-text: #24292F;
+$color-light-blue: #F1F8FF;
+
+// Layout
+$container-width: 960px;
+$header-padding: 12px 20px;
+
+// WordPress Admin Colors (from original dataviews)
+:root {
+    --wp-admin-theme-color: #3858e9 !important;
+    --wp-admin-theme-color--rgb: 0, 124, 186 !important;
+    --wp-admin-theme-color-darker-10: #2145e6 !important;
+    --wp-admin-theme-color-darker-10--rgb: 0, 107, 161 !important;
+    --wp-admin-theme-color-darker-20: #183ad6 !important;
+    --wp-admin-theme-color-darker-20--rgb: 0, 90, 135 !important;
+    --wp-admin-border-width-focus: 2px !important;
+    --wp-block-synced-color: #7a00df !important;
+    --wp-block-synced-color--rgb: 122, 0, 223 !important;
+    --wp-bound-block-color: var(--wp-block-synced-color) !important;
+    // These colors are the same as WordPress's default admin colors
+    --wpr-gray-100: #f0f0f0;
+    --wpr-gray-200: #e0e0e0;
+    --wpr-gray-300: #DDD;
+    --wpr-gray-400: #CCC;
+    --wpr-gray-600: #949494;
+    --wpr-gray-700: #757575;
+    --wpr-gray-800: #2f2f2f;
+    --wpr-gray-900: #1e1e1e;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    :root {
+        --wp-admin-border-width-focus: 1.5px;
+    }
+}

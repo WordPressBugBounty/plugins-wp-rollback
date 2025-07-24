@@ -1,0 +1,73 @@
+@use "../index" as *;
+
+.dataviews-wrapper {
+    border: 1px solid $border-color !important;
+
+    tr {
+        background-color: #fff;
+    }
+
+}
+
+.wpr-column-name-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    &__name {
+        font-size: 14px;
+        color: var(--wpr-gray-800);
+    }
+}
+
+.wpr-activity-log-date {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    &__full {
+        fill: var(--wpr-gray-600);
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+    }
+
+    &__relative p {
+        color: $color-headings;
+    }
+
+    &__relative,
+    &__full {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        > p {
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
+
+.wpr-theme-screenshot {
+    > img {
+        border: 1px solid $border-color;
+        border-radius: 4px;
+        width: 100px;
+        height: 75px;
+    }
+}
+
+.wpr-theme-name-column {
+    color: $color-headings;
+}
+
+.wpr-column-notes {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--wpr-gray-800);
+    font-style: italic;
+}

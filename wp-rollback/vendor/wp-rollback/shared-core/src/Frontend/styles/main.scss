@@ -1,0 +1,81 @@
+@use "index" as *;
+
+// Import components
+@use "components/header";
+@use "components/dataviews";
+@use "components/modal";
+@use "components/loading";
+@use "components/rollbacks";
+@use "components/badges";
+@use "components/security-badge";
+@use "components/progress-template";
+
+// Reset & Base Styles
+body {
+    background-color: #f1f5f9 !important;
+
+    .modal-open {
+        font-size: 13px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-top: 0;
+        font-weight: 500;
+    }
+}
+
+#wpcontent {
+    padding-left: 0 !important;
+}
+
+// Common layout styles
+.wpr-tools-content {
+    max-width: $container-width;
+    margin: 0 auto;
+}
+
+.wpr-rollback-options {
+    display: flex;
+    gap: 30px;
+}
+
+.wpr-data-view-wrap {
+    border: 1px solid $border-color;
+    padding: 20px 0;
+}
+
+.wpr-icon-heading {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin: 0 0 15px;
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        margin: 0;
+    }
+}
+
+
+.components-modal__header {
+    .components-modal__header-heading-container {
+        .components-modal__icon-container {
+            order: 2;
+        }
+    }
+}
+
+.wpr-modal {
+    width: 512px;
+
+    .dashicons-yes {
+        color: #67b36d;
+    }
+}
