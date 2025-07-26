@@ -59,6 +59,11 @@ class AddPluginRollbackLinks
      */
     public function __invoke($actions, $pluginFile, $pluginData, $context): array
     {
+        // Handle case where $pluginData is null (e.g., from Jetpack sync)
+        if (!is_array($pluginData)) {
+            return $actions;
+        }
+
         if (!$this->shouldAddRollbackLink($pluginData)) {
             return $actions;
         }
