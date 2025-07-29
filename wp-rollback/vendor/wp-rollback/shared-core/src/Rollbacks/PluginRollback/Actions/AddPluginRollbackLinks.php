@@ -68,18 +68,9 @@ class AddPluginRollbackLinks
             return $actions;
         }
 
-        $isProPluginActive = $this->isProPluginActive();
-        $isPremiumAsset = $this->isPremiumAsset($pluginData);
-
         // Always use the regular rollback URL
         $rollbackURL = $this->buildRollbackUrl($pluginFile);
-        
-        // Style premium asset links differently when Pro plugin isn't active
-        if (!$isProPluginActive && $isPremiumAsset) {
-            $actions['rollback'] = $this->generatePremiumRollbackLink($rollbackURL);
-        } else {
-            $actions['rollback'] = $this->generateRollbackLink($rollbackURL);
-        }
+        $actions['rollback'] = $this->generateRollbackLink($rollbackURL);
 
         return apply_filters('wpr_plugin_action_link', $actions);
     }
@@ -207,24 +198,6 @@ class AddPluginRollbackLinks
             'wpr_plugin_markup',
             sprintf(
                 '<a href="%1$s">%2$s</a>',
-                esc_url($rollbackURL),
-                esc_html__('Rollback', 'wp-rollback')
-            )
-        );
-    }
-
-    /**
-     * Generate HTML for premium rollback link (when Pro plugin is not active and asset is premium)
-     *
-     * @param string $rollbackURL Rollback URL
-     * @return string HTML link
-     */
-    protected function generatePremiumRollbackLink(string $rollbackURL): string
-    {
-        return apply_filters(
-            'wpr_plugin_markup',
-            sprintf(
-                '<a href="%1$s" style="color: #d63638;">%2$s</a>',
                 esc_url($rollbackURL),
                 esc_html__('Rollback', 'wp-rollback')
             )

@@ -159,19 +159,6 @@ export class BaseThemeRollbackHandler {
     }
 
     /**
-     * Get theme data
-     * @param {string} theme Theme slug
-     * @return {Object|null} Theme data
-     */
-    getThemeData( theme ) {
-        const themeData = wp.themes?.data?.themes;
-        if ( ! Array.isArray( themeData ) ) {
-            return null;
-        }
-        return themeData.find( t => t.id === theme ) || null;
-    }
-
-    /**
      * Render the rollback button
      * @param {string} theme Theme slug
      */
@@ -184,9 +171,6 @@ export class BaseThemeRollbackHandler {
         if ( ! themeActions ) {
             return;
         }
-
-        // Get theme data after we confirm we have a valid target
-        const themeData = this.getThemeData( theme );
 
         // Remove existing container if present
         let container = document.getElementById( 'wpr-theme-rollback-container' );
@@ -203,17 +187,8 @@ export class BaseThemeRollbackHandler {
         const root = createRoot( container );
         root.render(
             <UITextProvider>
-                <ThemeRollbackButton theme={ theme } hasRollback={ this.shouldShowRollback( themeData ) } />
+                <ThemeRollbackButton theme={ theme } />
             </UITextProvider>
         );
-    }
-
-    /**
-     * Determine if rollback should be shown
-     * @param {Object|null} themeData Theme data
-     * @return {boolean} Whether to show rollback
-     */
-    shouldShowRollback( themeData ) {
-        return themeData !== null && themeData.hasRollback;
     }
 }
