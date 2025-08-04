@@ -58,7 +58,7 @@ class BackupAsset implements RollbackStep
             return new RollbackStepResult(
                 true, 
                 $rollbackApiRequestDTO,
-                __('Backup skipped for WordPress.org asset.', 'wp-rollback')
+                __('Archive creation skipped for WordPress.org asset.', 'wp-rollback')
             );
         }
 
@@ -69,7 +69,7 @@ class BackupAsset implements RollbackStep
             return new RollbackStepResult(
                 true, 
                 $rollbackApiRequestDTO,
-                __('Backup created successfully.', 'wp-rollback')
+                __('Archive created successfully.', 'wp-rollback')
             );
         }
 
@@ -77,7 +77,7 @@ class BackupAsset implements RollbackStep
         return new RollbackStepResult(
             true, 
             $rollbackApiRequestDTO,
-            __('Backup creation skipped.', 'wp-rollback')
+            __('Archive creation skipped.', 'wp-rollback')
         );
     }
 
@@ -87,7 +87,7 @@ class BackupAsset implements RollbackStep
      */
     public static function rollbackProcessingMessage(): string
     {
-        return esc_html__('Creating backup point…', 'wp-rollback');
+        return esc_html__('Creating version archive…', 'wp-rollback');
     }
 
     /**

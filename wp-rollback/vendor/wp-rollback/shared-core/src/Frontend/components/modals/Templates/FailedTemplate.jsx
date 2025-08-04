@@ -36,7 +36,7 @@ const FailedTemplate = ( { buttons } ) => {
 
                 <p>
                     { __( 'Need help?', 'wp-rollback' ) }&nbsp;
-                    <ExternalLink href="https://wprollback.com/why-rollbacks-can-fail/">
+                    <ExternalLink href="https://wprollback.com/docs/why-rollbacks-can-fail/">
                         { __( 'Read our guide on why rollbacks can fail', 'wp-rollback' ) }
                     </ExternalLink>
                 </p>

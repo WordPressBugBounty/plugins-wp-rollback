@@ -82,6 +82,20 @@ class RollbackItemDTO
     private $lastUpdated;
 
     /**
+     * Validates and returns a string value or null if invalid
+     *
+     * @param mixed $value The value to validate
+     * @return string|null
+     */
+    private static function validateStringOrNull($value): ?string
+    {
+        if (isset($value) && is_string($value) && !empty($value)) {
+            return $value;
+        }
+        return null;
+    }
+
+    /**
      * RollbackItemDTO constructor.
      *
      * @param string $name The asset name
@@ -288,6 +302,10 @@ class RollbackItemDTO
                 }
             }
 
+            // Handle requires and requires_php fields that might be boolean false
+            $requiresWP = self::validateStringOrNull($data->requires ?? null);
+            $requiresPHP = self::validateStringOrNull($data->requires_php ?? null);
+
             return new self(
                 $data->name,
                 $data->slug,
@@ -300,8 +318,8 @@ class RollbackItemDTO
                 $data->homepage ?? null,
                 $data->author_uri ?? null,
                 $data->support_url ?? null,
-                $data->requires ?? null,
-                $data->requires_php ?? null,
+                $requiresWP,
+                $requiresPHP,
                 isset($data->banners) ? (array) $data->banners : null,
                 $data->sections->changelog ?? null,
                 'plugin',
@@ -365,6 +383,12 @@ class RollbackItemDTO
             // Get data from readme if available
             $readme = $data['readme'] ?? [];
             
+            // Handle requires and requires_php fields that might be boolean false
+            $requiresWP = self::validateStringOrNull($data['requiresWP'] ?? null) 
+                ?? self::validateStringOrNull($readme['requires'] ?? null);
+            $requiresPHP = self::validateStringOrNull($data['requiresPHP'] ?? null) 
+                ?? self::validateStringOrNull($readme['requires_php'] ?? null);
+            
             return new self(
                 $data['name'],
                 $slug,
@@ -377,8 +401,8 @@ class RollbackItemDTO
                 $data['pluginURI'] ?? $readme['pluginURI'] ?? null,
                 $data['authorURI'] ?? $readme['author']['author_uri'] ?? null,
                 $data['supportURL'] ?? $readme['support_url'] ?? null,
-                $data['requiresWP'] ?? $readme['requires'] ?? null,
-                $data['requiresPHP'] ?? $readme['requires_php'] ?? null,
+                $requiresWP,
+                $requiresPHP,
                 $data['banners'] ?? $readme['banners'] ?? null,
                 $data['changelog'] ?? ($readme['sections']['changelog'] ?? null),
                 $data['type'] ?? 'plugin',

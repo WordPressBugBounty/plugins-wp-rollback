@@ -56,7 +56,7 @@ class DownloadAsset implements RollbackStep
      */
     public static function rollbackProcessingMessage(): string
     {
-        return esc_html__('Download previous version…', 'wp-rollback');
+        return esc_html__('Download requested version…', 'wp-rollback');
     }
 
     /**

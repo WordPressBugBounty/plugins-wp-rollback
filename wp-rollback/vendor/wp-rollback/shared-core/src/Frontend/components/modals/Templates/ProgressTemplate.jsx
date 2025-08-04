@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState, createInterpolateElement } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import apiFetch from '@wordpress/api-fetch';
+import { decodeEntities } from '@wordpress/html-entities';
 import { useRollbackContext } from '../../../context/RollbackContext';
 
 /**
@@ -188,7 +189,7 @@ const ProgressTemplate = () => {
     const introText = createInterpolateElement(
         __( 'Rolling <assetName/> back to version <assetVersion/>…', 'wp-rollback' ),
         {
-            assetName: <strong>{ rollbackInfo.name }</strong>,
+            assetName: <strong>{ decodeEntities( rollbackInfo.name ) }</strong>,
             assetVersion: <strong>{ rollbackVersion }</strong>,
         }
     );
