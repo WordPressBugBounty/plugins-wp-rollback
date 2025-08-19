@@ -112,7 +112,7 @@ class BackupService
     public function interceptUpgrade(array $options): array
     {
         // Skip WordPress.org packages
-        if (isset($options['package']) && strpos($options['package'], 'downloads.wordpress.org') !== false) {
+        if (isset($options['package']) && is_string($options['package']) && strpos($options['package'], 'downloads.wordpress.org') !== false) {
             return $options;
         }
 

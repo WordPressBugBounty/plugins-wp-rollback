@@ -14,8 +14,11 @@ namespace WpRollback\SharedCore\RestAPI;
 use WP_REST_Request;
 use WP_REST_Server;
 use WpRollback\SharedCore\Core\Contracts\ApiRouteV1;
+use WpRollback\SharedCore\Core\SharedCore;
+use WpRollback\SharedCore\Core\Exceptions\Primitives\Exception;
 use WpRollback\SharedCore\Rollbacks\DTO\RollbackApiRequestDTO;
 use WpRollback\SharedCore\Rollbacks\Registry\RollbackStepRegisterer;
+use WpRollback\SharedCore\Rollbacks\Services\MaintenanceService;
 
 /**
  * @since 1.0.0
@@ -130,6 +133,11 @@ class ProcessRollbackApiRoute extends ApiRouteV1
      */
     public function processRequest(WP_REST_Request $request)
     {
+        // Define constant to indicate rollback is active (for multisite file type filters)
+        if (!defined('WPR_ROLLBACK_ACTIVE')) {
+            define('WPR_ROLLBACK_ACTIVE', true);
+        }
+        
         $slug = $request->get_param('slug');
         $type = $request->get_param('type');
         $version = $request->get_param('version');
@@ -185,7 +193,9 @@ class ProcessRollbackApiRoute extends ApiRouteV1
                     );
                 }
             } elseif (!$result->isSuccess()) {
-                // Handle failure
+                // Handle failure - ensure maintenance mode is disabled
+                $this->cleanupMaintenanceMode();
+                
                 do_action(
                     "wpr_{$type}_rollback_failed",
                     $slug,
@@ -201,6 +211,9 @@ class ProcessRollbackApiRoute extends ApiRouteV1
                 'message' => $result->getMessage(),
             ]);
         } catch (Exception $e) {
+            // Ensure maintenance mode is disabled on any exception
+            $this->cleanupMaintenanceMode();
+            
             do_action(
                 "wpr_{$type}_rollback_failed",
                 $slug,
@@ -248,5 +261,35 @@ class ProcessRollbackApiRoute extends ApiRouteV1
     private function getThemesSlug(): array
     {
         return array_keys(wp_get_themes());
+    }
+
+    /**
+     * Cleanup maintenance mode as a failsafe
+     * This ensures the site doesn't get stuck in maintenance mode if rollback fails
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    private function cleanupMaintenanceMode(): void
+    {
+        try {
+            /** @var MaintenanceService $maintenanceService */
+            $maintenanceService = SharedCore::container()->make(MaintenanceService::class);
+            
+            // Force disable maintenance mode to ensure site is accessible
+            $maintenanceService->forceDisableMaintenanceMode();
+            
+            // Log that we had to force cleanup
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                error_log('[WP Rollback] Maintenance mode was forcefully disabled due to rollback failure.');
+            }
+        } catch (Exception $e) {
+            // Even if cleanup fails, don't throw - we're already in error handling
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                error_log(sprintf('[WP Rollback] Failed to cleanup maintenance mode: %s', $e->getMessage()));
+            }
+        }
     }
 } 

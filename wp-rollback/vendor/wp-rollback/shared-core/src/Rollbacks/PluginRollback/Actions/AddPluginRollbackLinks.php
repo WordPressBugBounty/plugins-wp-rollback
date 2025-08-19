@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\Rollbacks\PluginRollback\Actions;
 
+use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
+
 /**
  * Class AddPluginRollbackLinks
  *
@@ -22,6 +24,7 @@ namespace WpRollback\SharedCore\Rollbacks\PluginRollback\Actions;
  */
 class AddPluginRollbackLinks
 {
+    use PluginHelpers;
     /**
      * The plugin slug used in URLs
      * 
@@ -147,17 +150,6 @@ class AddPluginRollbackLinks
     }
 
     /**
-     * Check if Pro plugin is active
-     *
-     * @return bool Whether Pro plugin is active
-     */
-    protected function isProPluginActive(): bool
-    {
-        // Check if Pro plugin is active by looking for the Pro plugin file
-        return is_plugin_active('wp-rollback-pro/wp-rollback-pro.php') || $this->isProVersion;
-    }
-
-    /**
      * Build the rollback URL
      *
      * @param string $pluginFile Plugin file path
@@ -181,9 +173,8 @@ class AddPluginRollbackLinks
      */
     protected function getBaseAdminUrl(): string
     {
-        return is_network_admin()
-            ? network_admin_url('tools.php')
-            : admin_url('tools.php');
+        $page = is_network_admin() ? 'settings.php' : 'tools.php';
+        return $this->getContextualAdminUrl($page);
     }
 
     /**

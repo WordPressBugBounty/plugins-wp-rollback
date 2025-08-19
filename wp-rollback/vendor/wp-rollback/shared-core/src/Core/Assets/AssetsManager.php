@@ -90,6 +90,8 @@ class AssetsManager {
             'tools' => [
                 'tools_page_wp-rollback',
                 'tools_page_wp-rollback-pro',
+                'settings_page_wp-rollback-network',
+                'settings_page_wp-rollback-pro-network',
             ],
             'themesAdmin' => [
                 'themes'

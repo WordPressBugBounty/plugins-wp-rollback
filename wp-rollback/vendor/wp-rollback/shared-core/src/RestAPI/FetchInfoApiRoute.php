@@ -60,7 +60,7 @@ class FetchInfoApiRoute extends ApiRouteV1
      */
     public function permissionValidation(WP_REST_Request $request)
     {
-        return parent::permissionValidation($request) && current_user_can('update_plugins');
+        return parent::permissionValidation($request);
     }
 
     /**

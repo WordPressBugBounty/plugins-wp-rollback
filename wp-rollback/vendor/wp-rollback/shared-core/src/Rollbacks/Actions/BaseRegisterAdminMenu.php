@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\Rollbacks\Actions;
 
+use WpRollback\SharedCore\Core\BaseConstants;
 use WpRollback\SharedCore\Core\Exceptions\BindingResolutionException;
 use WpRollback\SharedCore\Core\SharedCore;
 use WpRollback\SharedCore\Rollbacks\ToolsPage\ToolsPage;
+use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
 
 /**
  * Base class for registering admin menus in both free and pro versions
@@ -22,6 +24,7 @@ use WpRollback\SharedCore\Rollbacks\ToolsPage\ToolsPage;
  */
 abstract class BaseRegisterAdminMenu
 {
+    use PluginHelpers;
     /**
      * Get the menu title to be displayed in the admin menu
      *
@@ -68,6 +71,11 @@ abstract class BaseRegisterAdminMenu
      */
     public function __invoke(): void
     {
+        // Skip individual site menu registration if plugin is network activated
+        if ($this->isNetworkActivated()) {
+            return;
+        }
+
         $toolsPage = SharedCore::container()->make(ToolsPage::class);
 
         add_management_page(

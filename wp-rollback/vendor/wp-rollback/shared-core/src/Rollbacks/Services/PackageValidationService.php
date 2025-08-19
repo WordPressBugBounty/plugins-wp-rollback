@@ -114,11 +114,10 @@ class PackageValidationService
         return [
             'success' => true,
             'message' => sprintf(
-                /* translators: %1$s: Asset type, %2$s: Number of files validated, %3$s: Number of PHP files found */
-                __('Package validation successful: %1$s validated with %2$d files checked and %3$d PHP files found.', 'wp-rollback'),
+                /* translators: %1$s: Asset type, %2$s: Number of files validated */
+                __('Package validation successful: %1$s package validated with %2$d files checked.', 'wp-rollback'),
                 $assetType,
-                $validationResults['security']['files_checked'] ?? 0,
-                $validationResults['security']['php_files_found'] ?? 0
+                $validationResults['security']['files_checked'] ?? 0
             ),
             'details' => $validationResults,
         ];
@@ -146,10 +145,31 @@ class PackageValidationService
             );
         }
 
+        // First, verify this is actually a ZIP file using ZipArchive
+        // This is more reliable than wp_check_filetype_and_ext() for temporary files
+        if (class_exists('ZipArchive')) {
+            $zip = new ZipArchive();
+            $zipCheck = $zip->open($packagePath, ZipArchive::CHECKCONS);
+            if ($zipCheck !== true) {
+                return new WP_Error(
+                    'invalid_zip_format',
+                    __('Package is not a valid ZIP file format.', 'wp-rollback')
+                );
+            }
+            $zip->close();
+        }
+
         // Use WordPress file type validation
+        // Note: This may fail for temporary files from download_url() in multisite
         $fileType = wp_check_filetype_and_ext($packagePath, basename($packagePath));
         
-        if (!$fileType['ext'] || $fileType['ext'] !== 'zip') {
+        // For temporary files (like those from download_url()), we may not get an extension
+        // If ZipArchive confirmed it's a valid ZIP, we can be more lenient here
+        if (!$fileType['ext'] && class_exists('ZipArchive')) {
+            // Force ZIP type for valid ZIP files that WordPress can't detect
+            $fileType['ext'] = 'zip';
+            $fileType['type'] = 'application/zip';
+        } elseif (!$fileType['ext'] || $fileType['ext'] !== 'zip') {
             return new WP_Error(
                 'invalid_file_type',
                 __('Package is not a valid ZIP file according to WordPress.', 'wp-rollback')
@@ -158,6 +178,13 @@ class PackageValidationService
 
         // Check against WordPress allowed MIME types
         $allowedMimes = get_allowed_mime_types();
+        
+        // In multisite, 'application/zip' might not be in allowed MIME types
+        // Add it temporarily for our validation
+        if (is_multisite() && !in_array('application/zip', $allowedMimes, true)) {
+            $allowedMimes['zip'] = 'application/zip';
+        }
+        
         if (!in_array($fileType['type'], $allowedMimes, true)) {
             return new WP_Error(
                 'disallowed_mime_type',
@@ -172,6 +199,12 @@ class PackageValidationService
         // Use WordPress file size validation
         $maxSize = wp_max_upload_size();
         $fileSize = filesize($packagePath);
+        
+        // For rollback operations, use a more reasonable size limit (100MB)
+        // Multisite often has a restrictive 1MB limit which is too small for plugins/themes
+        if (defined('WPR_ROLLBACK_ACTIVE') || did_action('wp_ajax_wpr_process_rollback')) {
+            $maxSize = max($maxSize, 104857600); // 100MB
+        }
         
         if ($fileSize > $maxSize) {
             return new WP_Error(
@@ -268,10 +301,11 @@ class PackageValidationService
         $zip->open($packagePath);
 
         $rootDir = null;
-        $hasMainFile = false;
-        $expectedMainFile = $assetType === 'plugin' ? "{$assetSlug}.php" : 'style.css';
+        $hasValidStructure = false;
+        $phpFilesFound = 0;
+        $cssFilesFound = 0;
 
-        // Find root directory and validate structure
+        // Find root directory and validate basic structure
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
             
@@ -286,22 +320,28 @@ class PackageValidationService
                 $rootDir = $parts[0];
             }
 
-            // Check for main file
-            $relativePath = $rootDir ? str_replace($rootDir . '/', '', $filename) : $filename;
-            if ($relativePath === $expectedMainFile) {
-                $hasMainFile = true;
+            // Count PHP and CSS files to ensure we have a valid package
+            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            if ($extension === 'php') {
+                $phpFilesFound++;
+                $hasValidStructure = true;
+            } elseif ($extension === 'css') {
+                $cssFilesFound++;
+                if ($assetType === 'theme') {
+                    $hasValidStructure = true;
+                }
             }
         }
 
         $zip->close();
 
-        if (!$hasMainFile) {
+        // Basic validation: ensure package has relevant files
+        if (!$hasValidStructure) {
             return new WP_Error(
-                'missing_main_file',
+                'invalid_package_structure',
                 sprintf(
-                    /* translators: %1$s: Expected file name, %2$s: Asset type */
-                    __('Required %2$s file "%1$s" not found in package.', 'wp-rollback'),
-                    $expectedMainFile,
+                    /* translators: %s: Asset type */
+                    __('Package does not appear to contain valid %s files.', 'wp-rollback'),
                     $assetType
                 )
             );
@@ -309,8 +349,9 @@ class PackageValidationService
 
         return [
             'root_directory' => $rootDir,
-            'main_file_found' => $hasMainFile,
-            'expected_main_file' => $expectedMainFile,
+            'structure_valid' => $hasValidStructure,
+            'php_files_found' => $phpFilesFound,
+            'css_files_found' => $cssFilesFound,
         ];
     }
 

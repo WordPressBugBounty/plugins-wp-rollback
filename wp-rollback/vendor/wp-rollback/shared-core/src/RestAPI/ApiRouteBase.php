@@ -11,6 +11,7 @@ namespace WpRollback\SharedCore\RestAPI;
 
 use WP_REST_Request;
 use WP_Error;
+use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 
 /**
  * Base class for API routes.
@@ -45,7 +46,7 @@ abstract class ApiRouteBase
      */
     public function permissionValidation(WP_REST_Request $request): bool
     {
-        return current_user_can('update_plugins');
+        return PluginUtility::currentUserCanRollback();
     }
 
     /**

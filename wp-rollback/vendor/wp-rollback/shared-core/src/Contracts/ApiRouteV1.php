@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace WpRollback\SharedCore\Contracts;
 
 use WP_REST_Request;
+use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 
 /**
  * Interface for API routes.
@@ -44,6 +45,6 @@ abstract class ApiRouteV1
      */
     public function permissionValidation(WP_REST_Request $request): bool
     {
-        return current_user_can('update_plugins');
+        return PluginUtility::currentUserCanRollback();
     }
 } 
