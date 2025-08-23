@@ -62,7 +62,7 @@ class RollbackStepsApiRoute extends ApiRouteV1
      * @return \WP_REST_Response Response containing the rollback steps
      */
     public function getSteps()
-    {
+    {     
         $rollbackSteps = $this->stepRegisterer->getAllRollbackSteps();
         $stepsData = [];
 

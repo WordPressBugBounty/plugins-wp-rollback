@@ -26,6 +26,33 @@ class RollbackStepRegisterer
     protected array $steps = [];
 
     /**
+     * Get the base rollback steps that should be included in all implementations
+     * 
+     * These are the core steps that every rollback process needs:
+     * 1. MaintenanceMode - Prevents frontend access during rollback
+     * 2. DownloadAsset - Downloads the rollback version
+     * 3. BackupAsset - Creates a backup of current version
+     * 4. ReplaceAsset - Performs the actual file replacement
+     * 5. Cleanup - Removes temp files and ALWAYS disables maintenance mode
+     * 
+     * Note: ValidatePackage is NOT included as it's a pro feature
+     *
+     * @since 1.0.0
+     * @return array<class-string<RollbackStep>> Array of rollback step class names
+     */
+    public static function getBaseSteps(): array
+    {
+        return [
+            \WpRollback\SharedCore\Rollbacks\RollbackSteps\MaintenanceMode::class,
+            \WpRollback\SharedCore\Rollbacks\RollbackSteps\DownloadAsset::class,
+            \WpRollback\SharedCore\Rollbacks\RollbackSteps\BackupAsset::class,
+            // ValidatePackage is intentionally not included here as it's replaced in free version
+            \WpRollback\SharedCore\Rollbacks\RollbackSteps\ReplaceAsset::class,
+            \WpRollback\SharedCore\Rollbacks\RollbackSteps\Cleanup::class,
+        ];
+    }
+
+    /**
      * @since 1.0.0
      *
      * @param class-string<RollbackStep> $rollbackStep

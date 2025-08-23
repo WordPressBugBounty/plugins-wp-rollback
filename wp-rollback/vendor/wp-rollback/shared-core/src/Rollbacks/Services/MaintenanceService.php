@@ -77,13 +77,8 @@ class MaintenanceService
      */
     public function showMaintenanceMessage(): void
     {
-        // Skip for admin, AJAX, REST API, and cron requests
-        if (is_admin() || wp_doing_ajax() || wp_doing_cron() || $this->isRestRequest()) {
-            return;
-        }
-
-        // Skip for logged-in users with update capabilities
-        if (is_user_logged_in() && (current_user_can('update_plugins') || current_user_can('update_themes'))) {
+        // Skip for requests that shouldn't see maintenance mode
+        if (!$this->shouldShowMaintenanceMessage()) {
             return;
         }
 
@@ -270,9 +265,80 @@ class MaintenanceService
      */
     public function init(): void
     {
-        // Check maintenance mode on every request
+        // Always check if maintenance mode is active
+        // The filtering of who sees it happens in showMaintenanceMessage
         if ($this->isMaintenanceModeActive()) {
             add_action('template_redirect', [$this, 'showMaintenanceMessage'], 1);
         }
+    }
+
+    /**
+     * Determine if we should show the maintenance message
+     * Filters out admin, AJAX, REST, CLI, update processes, and monitoring tools
+     *
+     * @since 1.0.0
+     * @return bool
+     */
+    private function shouldShowMaintenanceMessage(): bool
+    {
+        // Skip for admin, AJAX, REST API, and cron requests
+        if (is_admin() || wp_doing_ajax() || wp_doing_cron() || $this->isRestRequest()) {
+            return false;
+        }
+
+        // Skip for logged-in users with update capabilities
+        if (is_user_logged_in() && (current_user_can('update_plugins') || current_user_can('update_themes'))) {
+            return false;
+        }
+
+        // Skip for CLI requests
+        if (defined('WP_CLI') && constant('WP_CLI')) {
+            return false;
+        }
+
+        // Skip for WordPress update processes
+        if (defined('WP_INSTALLING') && constant('WP_INSTALLING')) {
+            return false;
+        }
+
+        // Skip if running update check functions
+        if (did_action('wp_version_check') || did_action('wp_update_plugins') || did_action('wp_update_themes')) {
+            return false;
+        }
+
+        // Skip for system cron or external monitoring
+        if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['HTTP_HOST'])) {
+            return false;
+        }
+
+        // Skip for common monitoring tools and bots
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+            $monitoringAgents = [
+                'nagios',
+                'monitoring',
+                'uptimerobot',
+                'pingdom',
+                'newrelic',
+                'statuspage',
+                'curl',
+                'wget',
+                'wp-cli'
+            ];
+            
+            foreach ($monitoringAgents as $agent) {
+                if (strpos($userAgent, $agent) !== false) {
+                    return false;
+                }
+            }
+        }
+
+        /**
+         * Filter to allow custom logic for showing maintenance mode
+         *
+         * @since 1.0.0
+         * @param bool $should_show Whether to show maintenance mode
+         */
+        return apply_filters('wpr_should_show_maintenance_mode', true);
     }
 }

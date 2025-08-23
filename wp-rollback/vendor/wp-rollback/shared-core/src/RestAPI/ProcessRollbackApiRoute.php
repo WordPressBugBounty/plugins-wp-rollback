@@ -151,6 +151,7 @@ class ProcessRollbackApiRoute extends ApiRouteV1
         }
 
         try {
+            
             $rollbackStep = $this->rollbackStepRegisterer->getRollbackStepById($step);
 
             if (null === $rollbackStep) {
@@ -279,11 +280,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
             // Force disable maintenance mode to ensure site is accessible
             $maintenanceService->forceDisableMaintenanceMode();
             
-            // Log that we had to force cleanup
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-                error_log('[WP Rollback] Maintenance mode was forcefully disabled due to rollback failure.');
-            }
         } catch (Exception $e) {
             // Even if cleanup fails, don't throw - we're already in error handling
             if (defined('WP_DEBUG') && WP_DEBUG) {

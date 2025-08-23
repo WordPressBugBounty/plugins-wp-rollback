@@ -76,20 +76,29 @@ class MaintenanceMode implements RollbackStep
                 ]
             );
         }
+        
+        // Only enable maintenance mode for active plugins/themes
+        $shouldEnableMaintenance = $this->shouldEnableMaintenanceMode($assetType, $assetSlug);
+        
+        if (!$shouldEnableMaintenance) {
+            return new RollbackStepResult(
+                true,
+                $rollbackApiRequestDTO,
+                __('Maintenance mode not needed for inactive asset.', 'wp-rollback'),
+                null,
+                [
+                    'maintenance_status' => 'skipped_inactive',
+                    'asset_type' => $assetType,
+                    'asset_slug' => $assetSlug,
+                    'asset_version' => $assetVersion
+                ]
+            );
+        }
 
         // Enable maintenance mode
         $enabled = $this->maintenanceService->enableMaintenanceMode();
 
         if (!$enabled) {
-            // Log the failure but don't stop the rollback process
-            // Maintenance mode is helpful but not critical
-            error_log(sprintf(
-                'WP Rollback: Failed to enable maintenance mode for %s rollback of %s to version %s',
-                $assetType,
-                $assetSlug,
-                $assetVersion
-            ));
-
             return new RollbackStepResult(
                 true, // Continue with rollback even if maintenance mode fails
                 $rollbackApiRequestDTO,
@@ -137,5 +146,97 @@ class MaintenanceMode implements RollbackStep
     public static function rollbackProcessingMessage(): string
     {
         return esc_html__('Enabling maintenance mode…', 'wp-rollback');
+    }
+
+    /**
+     * Check if maintenance mode should be enabled for the asset
+     * Only enable for active plugins and themes
+     *
+     * @since 1.0.0
+     * @param string $assetType The asset type (plugin or theme)
+     * @param string $assetSlug The asset slug
+     * @return bool True if maintenance mode should be enabled
+     */
+    private function shouldEnableMaintenanceMode(string $assetType, string $assetSlug): bool
+    {
+        if ('plugin' === $assetType) {
+            // Check if plugin is active
+            if (!function_exists('is_plugin_active')) {
+                require_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+            
+            // For plugins, the slug might be the full plugin path or just the directory
+            // First, try with the slug as-is (could be full path like 'plugin-dir/plugin-file.php')
+            if (is_plugin_active($assetSlug)) {
+                return true;
+            }
+            
+            // If not found, check all active plugins to see if any start with this slug
+            $active_plugins = get_option('active_plugins', []);
+            foreach ($active_plugins as $plugin) {
+                // Check if the plugin file starts with our slug directory
+                if (strpos($plugin, $assetSlug . '/') === 0) {
+                    return true;
+                }
+                
+                // Also check if the plugin file path matches when we add common file patterns
+                $common_files = [$assetSlug . '.php', 'plugin.php', 'index.php', 'main.php'];
+                foreach ($common_files as $file) {
+                    if ($plugin === $assetSlug . '/' . $file) {
+                        return true;
+                    }
+                }
+            }
+            
+            // Check network activated plugins for multisite
+            if (is_multisite()) {
+                $network_plugins = get_site_option('active_sitewide_plugins', []);
+                foreach ($network_plugins as $plugin => $time) {
+                    if ($plugin === $assetSlug || strpos($plugin, $assetSlug . '/') === 0) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+        
+        if ('theme' === $assetType) {
+            // Check if theme is currently active
+            $current_theme = wp_get_theme();
+            if ($current_theme->get_stylesheet() === $assetSlug) {
+                return true;
+            }
+            
+            // Check parent theme if using child theme
+            if ($current_theme->parent()) {
+                $parent_theme = $current_theme->parent();
+                if ($parent_theme->get_stylesheet() === $assetSlug) {
+                    return true;
+                }
+            }
+            
+            // Check network enabled themes for multisite
+            if (is_multisite()) {
+                $allowed_themes = get_site_option('allowedthemes', []);
+                if (isset($allowed_themes[$assetSlug]) && $allowed_themes[$assetSlug]) {
+                    // Check if any site is using this theme
+                    global $wpdb;
+                    $sites_using_theme = $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = 'stylesheet' AND option_value = %s",
+                        $assetSlug
+                    ));
+                    
+                    if ($sites_using_theme > 0) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+        
+        // Unknown asset type, don't enable maintenance mode
+        return false;
     }
 }

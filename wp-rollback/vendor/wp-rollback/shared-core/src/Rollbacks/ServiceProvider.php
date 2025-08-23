@@ -75,18 +75,17 @@ class ServiceProvider implements ServiceProviderContract
             return new Cleanup($container->make(MaintenanceService::class));
         });
 
-        // Register base RollbackStepRegisterer with common steps
-        // Plugins can extend this by adding additional steps
-        SharedCore::container()->singleton(RollbackStepRegisterer::class, function () {
-            $registerer = new RollbackStepRegisterer();
-            $registerer->addStep(MaintenanceMode::class); 
-            $registerer->addStep(DownloadAsset::class);
-            $registerer->addStep(BackupAsset::class);
-            $registerer->addStep(ValidatePackage::class);
-            $registerer->addStep(ReplaceAsset::class);
-            $registerer->addStep(Cleanup::class);
-            return $registerer;
-        });
+        // Register base RollbackStepRegisterer only if not already registered
+        // This allows plugins to customize while providing a sensible default
+        if (!SharedCore::container()->has(RollbackStepRegisterer::class)) {            
+            SharedCore::container()->singleton(RollbackStepRegisterer::class, function () {
+                $registerer = new RollbackStepRegisterer();
+                // Register base steps and add ValidatePackage (pro feature)
+                $registerer->register(RollbackStepRegisterer::getBaseSteps());
+                $registerer->registerAfter(ValidatePackage::class, BackupAsset::class);
+                return $registerer;
+            });
+        } 
     }
 
     /**
