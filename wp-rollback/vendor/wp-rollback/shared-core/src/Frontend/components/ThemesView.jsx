@@ -13,6 +13,8 @@ const ThemesView = () => {
             fields={ themeConfig.fields }
             defaultLayouts={ themeConfig.defaultLayouts }
             loadingMessage={ __( 'Loading themes…', 'wp-rollback' ) }
+            emptyStateTitle={ __( 'No Themes Found', 'wp-rollback' ) }
+            emptyStateDescription={ __( 'No themes available for rollback.', 'wp-rollback' ) }
         />
     );
 };

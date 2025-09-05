@@ -57,7 +57,7 @@ abstract class RollbackManager
      * @param string $type The asset type (plugin or theme)
      * @return bool|string True if valid, error message if not
      */
-    public function validateRollback(string $slug, string $version, string $type): bool|string
+    public function validateRollback(string $slug, string $version, string $type)
     {
         if (empty($slug)) {
             return 'Invalid slug provided.';

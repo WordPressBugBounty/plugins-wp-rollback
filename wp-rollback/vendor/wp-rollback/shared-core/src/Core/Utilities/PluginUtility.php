@@ -26,13 +26,13 @@ class PluginUtility
     /**
      * Get the plugin directory name from a plugin file
      *
-     * @param string $plugin_file Plugin file path
+     * @param string $pluginFile Plugin file path
      * @return string Plugin directory name
      */
-    public static function getPluginDirname(string $plugin_file): string 
+    public static function getPluginDirname(string $pluginFile): string 
     {
-        $plugin_dir = dirname($plugin_file);
-        return basename($plugin_dir);
+        $pluginDir = dirname($pluginFile);
+        return basename($pluginDir);
     }
 
     /**

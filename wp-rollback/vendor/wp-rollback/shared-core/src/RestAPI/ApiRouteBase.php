@@ -73,7 +73,7 @@ abstract class ApiRouteBase
      * @param array<string, mixed> $fields Fields to validate with their sanitization callbacks
      * @return array<string, mixed>|WP_Error Sanitized data or error
      */
-    protected function validateRequestData(WP_REST_Request $request, array $fields): array|WP_Error
+    protected function validateRequestData(WP_REST_Request $request, array $fields)
     {
         $data = [];
 

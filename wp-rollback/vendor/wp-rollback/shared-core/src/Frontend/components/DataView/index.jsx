@@ -1,14 +1,8 @@
 import { useMemo } from '@wordpress/element';
-import { DataViews } from '@wordpress/dataviews/wp';
+import { DataViews } from '@wordpress/dataviews';
 import { __ } from '@wordpress/i18n';
 import Loading from '../Loading';
-
-const EmptyStateContent = () => (
-    <div className="wpr-empty-state">
-        <h2>{ __( 'No Activity Found', 'wp-rollback' ) }</h2>
-        <p>{ __( 'Activity will be logged here.', 'wp-rollback' ) }</p>
-    </div>
-);
+import DataViewBlankSlate from './DataViewBlankSlate';
 
 /**
  * DataView component for displaying data in a customizable view
@@ -22,6 +16,9 @@ const EmptyStateContent = () => (
  * @param {Object}   props.view                 Current view settings
  * @param {Function} props.onChangeView         Callback for view changes
  * @param {Function} props.onNavigateToRollback Callback for rollback navigation
+ * @param {Function} props.onDelete             Callback for delete action
+ * @param {string}   props.emptyStateTitle      Custom title for empty state
+ * @param {string}   props.emptyStateDescription Custom description for empty state
  * @return {JSX.Element}                        The rendered component
  */
 const DataView = ( {
@@ -33,6 +30,9 @@ const DataView = ( {
     view,
     onChangeView,
     onNavigateToRollback,
+    onDelete,
+    emptyStateTitle,
+    emptyStateDescription,
 } ) => {
     const { data: processedData } = useMemo( () => {
         if ( ! data ) {
@@ -46,14 +46,14 @@ const DataView = ( {
         return { data: dataWithIds };
     }, [ data ] );
 
-    // Process fields to inject onNavigateToRollback to render functions
+    // Process fields to inject onNavigateToRollback and onDelete to render functions
     const processedFields = useMemo( () => {
         if ( ! fields ) {
             return [];
         }
 
         return fields.map( field => {
-            // If this is a field with a render function that might need onNavigateToRollback
+            // If this is a field with a render function that might need onNavigateToRollback or onDelete
             if ( field.render && field.id === 'actions' ) {
                 return {
                     ...field,
@@ -61,12 +61,13 @@ const DataView = ( {
                         field.render( {
                             ...props,
                             onNavigateToRollback,
+                            onDelete,
                         } ),
                 };
             }
             return field;
         } );
-    }, [ fields, onNavigateToRollback ] );
+    }, [ fields, onNavigateToRollback, onDelete ] );
 
     if ( isLoading ) {
         return <Loading />;
@@ -74,7 +75,12 @@ const DataView = ( {
 
     // Show custom empty state when there's no data
     if ( ! processedData.length ) {
-        return <EmptyStateContent />;
+        return (
+            <DataViewBlankSlate 
+                title={ emptyStateTitle }
+                description={ emptyStateDescription }
+            />
+        );
     }
 
     return (

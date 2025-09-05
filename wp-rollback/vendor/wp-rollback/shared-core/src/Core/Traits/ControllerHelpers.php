@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace WpRollback\SharedCore\Core\Traits;
 
 use WpRollback\SharedCore\Core\Exceptions\BindingResolutionException;
-use WpRollback\SharedCore\Core\Request;
 use WpRollback\SharedCore\Core\SharedCore;
 
 /**

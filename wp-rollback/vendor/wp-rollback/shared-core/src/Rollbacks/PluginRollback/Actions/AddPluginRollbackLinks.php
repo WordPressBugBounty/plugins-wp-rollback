@@ -188,7 +188,7 @@ class AddPluginRollbackLinks
         return apply_filters(
             'wpr_plugin_markup',
             sprintf(
-                '<a href="%1$s">%2$s</a>',
+                '<a href="%1$s" class="wpr-plugin-rollback-link">%2$s</a>',
                 esc_url($rollbackURL),
                 esc_html__('Rollback', 'wp-rollback')
             )

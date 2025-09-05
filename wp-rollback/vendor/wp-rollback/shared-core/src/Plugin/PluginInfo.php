@@ -60,9 +60,9 @@ class PluginInfo {
         }
 
         $plugins = get_plugins();
-        foreach ($plugins as $plugin_file => $plugin_data) {
-            if (strpos($plugin_file, $this->slug . '/') === 0) {
-                return $plugin_data['Version'];
+        foreach ($plugins as $pluginFile => $pluginData) {
+            if (strpos($pluginFile, $this->slug . '/') === 0) {
+                return $pluginData['Version'];
             }
         }
 

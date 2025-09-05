@@ -1,5 +1,7 @@
 const statusStyles = {
     success: 'green',
+    active: 'green',
+    inactive: 'gray',
     failure: 'red',
     error: 'red',
     aborted: 'yellow',

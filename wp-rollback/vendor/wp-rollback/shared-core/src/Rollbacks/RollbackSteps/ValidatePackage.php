@@ -64,16 +64,7 @@ class ValidatePackage implements RollbackStep
         // Get the downloaded package path from transient
         $package = get_transient("wpr_{$assetType}_{$assetSlug}_package");
 
-        // Validate package exists
-        if (empty($package) || !is_string($package)) {
-            return new RollbackStepResult(
-                false,
-                $rollbackApiRequestDTO,
-                __('No package found for validation.', 'wp-rollback')
-            );
-        }
-
-        // Handle WP_Error case
+        // Handle WP_Error case first
         if (is_wp_error($package)) {
             return new RollbackStepResult(
                 false,
@@ -83,6 +74,15 @@ class ValidatePackage implements RollbackStep
                     __('Package error during validation: %s', 'wp-rollback'),
                     $package->get_error_message()
                 )
+            );
+        }
+
+        // Validate package exists and is a string
+        if (empty($package) || !is_string($package)) {
+            return new RollbackStepResult(
+                false,
+                $rollbackApiRequestDTO,
+                __('No package found for validation.', 'wp-rollback')
             );
         }
 

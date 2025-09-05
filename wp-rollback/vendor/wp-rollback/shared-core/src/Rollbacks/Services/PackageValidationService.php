@@ -99,16 +99,6 @@ class PackageValidationService
 
         // 4. Validate file security (custom patterns WordPress doesn't provide)
         $securityValidation = $this->validateFileSecurity($packagePath);
-        if (is_wp_error($securityValidation)) {
-            return [
-                'success' => false,
-                'message' => sprintf(
-                    /* translators: %s: Error message */
-                    __('Security validation failed: %s', 'wp-rollback'),
-                    $securityValidation->get_error_message()
-                ),
-            ];
-        }
         $validationResults['security'] = $securityValidation;
 
         return [
@@ -366,9 +356,9 @@ class PackageValidationService
      *
      * @since 1.0.0
      * @param string $packagePath Path to ZIP package
-     * @return array|WP_Error Validation results or error
+     * @return array Validation results
      */
-    private function validateFileSecurity(string $packagePath)
+    private function validateFileSecurity(string $packagePath): array
     {
         $zip = new ZipArchive();
         $zip->open($packagePath);

@@ -63,9 +63,17 @@ class BackupAsset implements RollbackStep
         }
 
         // Create backup of the current premium asset
-        $backupCreated = $this->backupService->createAssetBackup($assetSlug, $assetType);
+        $backupResult = $this->backupService->createAssetBackup($assetSlug, $assetType);
 
-        if ($backupCreated) {
+        if ('exists' === $backupResult) {
+            return new RollbackStepResult(
+                true, 
+                $rollbackApiRequestDTO,
+                __('Archive already exists for this version.', 'wp-rollback')
+            );
+        }
+
+        if (true === $backupResult) {
             return new RollbackStepResult(
                 true, 
                 $rollbackApiRequestDTO,
@@ -77,7 +85,7 @@ class BackupAsset implements RollbackStep
         return new RollbackStepResult(
             true, 
             $rollbackApiRequestDTO,
-            __('Archive creation skipped.', 'wp-rollback')
+            __('Archive creation failed but rollback will continue.', 'wp-rollback')
         );
     }
 

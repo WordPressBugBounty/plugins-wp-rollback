@@ -366,12 +366,12 @@
         },
         {
             "name": "wp-rollback/shared-core",
-            "version": "dev-feature/integrity-checks",
-            "version_normalized": "dev-feature/integrity-checks",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "../shared-core",
-                "reference": "954c32c51be99c1be175e75bda248090df2fce7b"
+                "reference": "8094f2f766347fd62d56f2eb842d48a4069d3839"
             },
             "require": {
                 "php": ">=7.4"

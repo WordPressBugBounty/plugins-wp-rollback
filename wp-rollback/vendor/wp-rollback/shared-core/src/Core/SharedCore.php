@@ -43,7 +43,7 @@ class SharedCore
      * Initialize the shared core.
      *
      * This function sets up the core shared functionality used by both plugins.
-     * It should be called from the main plugin files.
+     * It should be called from the main plugin files before using any SharedCore functionality.
      *
      * @since 1.0.0
      * @return void
@@ -54,15 +54,17 @@ class SharedCore
             return;
         }
         
-        // Register service provider if needed
-        if (function_exists('add_action')) {
-            add_action('plugins_loaded', function () {
-                $serviceProvider = new ServiceProvider();
-                $serviceProvider->register();
-                add_action('init', [$serviceProvider, 'boot']);
-            }, 10);
-        }
-        
         self::$initialized = true;
     }
-} 
+    
+    /**
+     * Check if SharedCore has been initialized
+     *
+     * @since 1.0.0
+     * @return bool
+     */
+    public static function isInitialized(): bool
+    {
+        return self::$initialized;
+    }
+}

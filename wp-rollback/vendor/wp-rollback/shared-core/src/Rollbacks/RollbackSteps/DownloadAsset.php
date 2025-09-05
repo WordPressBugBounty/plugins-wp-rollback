@@ -47,7 +47,7 @@ class DownloadAsset implements RollbackStep
         // In multisite, temporarily allow ZIP downloads for super admins
         $filterAdded = false;
         if (is_multisite() && is_super_admin()) {
-            add_filter('wp_check_filetype_and_ext', array($this, 'allowZipDownload'), 10, 5);
+            add_filter('wp_check_filetype_and_ext', [$this, 'allowZipDownload'], 10, 5);
             $filterAdded = true;
         }
 
@@ -56,7 +56,7 @@ class DownloadAsset implements RollbackStep
         
         // Remove the filter after download
         if ($filterAdded) {
-            remove_filter('wp_check_filetype_and_ext', array($this, 'allowZipDownload'), 10);
+            remove_filter('wp_check_filetype_and_ext', [$this, 'allowZipDownload'], 10);
         }
         
         set_transient("wpr_{$assetType}_{$assetSlug}_package", $package, HOUR_IN_SECONDS);

@@ -169,7 +169,9 @@ class MaintenanceService
         }
 
         $prefix = rest_get_url_prefix();
-        if (strpos($_SERVER['REQUEST_URI'] ?? '', '/' . $prefix . '/') !== false) {
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Used for route matching only, not stored or displayed
+        $requestUri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '';
+        if (strpos($requestUri, '/' . $prefix . '/') !== false) {
             return true;
         }
 
@@ -313,7 +315,8 @@ class MaintenanceService
 
         // Skip for common monitoring tools and bots
         if (isset($_SERVER['HTTP_USER_AGENT'])) {
-            $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Used for bot detection only, not stored
+            $userAgent = strtolower(wp_unslash($_SERVER['HTTP_USER_AGENT']));
             $monitoringAgents = [
                 'nagios',
                 'monitoring',

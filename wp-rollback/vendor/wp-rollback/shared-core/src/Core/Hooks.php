@@ -107,7 +107,8 @@ class Hooks
     {
         // If we have a factory registered for this class, use it
         if (isset(self::$container[$class])) {
-            return (self::$container[$class])();
+            $factory = self::$container[$class];
+            return $factory();
         }
         
         // Check if the class is a Controller

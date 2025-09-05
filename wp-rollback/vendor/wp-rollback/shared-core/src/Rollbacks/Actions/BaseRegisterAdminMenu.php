@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\Rollbacks\Actions;
 
-use WpRollback\SharedCore\Core\BaseConstants;
 use WpRollback\SharedCore\Core\Exceptions\BindingResolutionException;
 use WpRollback\SharedCore\Core\SharedCore;
 use WpRollback\SharedCore\Rollbacks\ToolsPage\ToolsPage;

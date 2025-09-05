@@ -1,4 +1,5 @@
 import { useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import DataView from './DataView';
 import { usePlugins } from '../hooks/dataViews/usePlugins';
 import { pluginConfig } from './DataView/config/pluginConfig';
@@ -28,6 +29,8 @@ const PluginsDataView = ( { onNavigateToRollback } ) => {
             view={ view }
             onChangeView={ setView }
             onNavigateToRollback={ onNavigateToRollback }
+            emptyStateTitle={ __( 'No Plugins Found', 'wp-rollback' ) }
+            emptyStateDescription={ __( 'No plugins available for rollback.', 'wp-rollback' ) }
         />
     );
 };

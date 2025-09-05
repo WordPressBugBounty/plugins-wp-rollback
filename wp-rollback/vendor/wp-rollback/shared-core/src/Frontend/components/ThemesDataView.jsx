@@ -1,4 +1,5 @@
 import { useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import DataView from './DataView';
 import { useThemes } from '../hooks/dataViews/useThemes';
 import { themeConfig } from './DataView/config/themeConfig';
@@ -28,6 +29,8 @@ const ThemesDataView = ( { onNavigateToRollback } ) => {
             view={ view }
             onChangeView={ setView }
             onNavigateToRollback={ onNavigateToRollback }
+            emptyStateTitle={ __( 'No Themes Found', 'wp-rollback' ) }
+            emptyStateDescription={ __( 'No themes available for rollback.', 'wp-rollback' ) }
         />
     );
 };
