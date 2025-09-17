@@ -484,7 +484,9 @@ class BackupService
             require_once ABSPATH . 'wp-admin/includes/file.php';
         }
 
-        WP_Filesystem();
+        // set $allow_relaxed_file_ownership to true to allow Group/World writable files.
+        WP_Filesystem(false, false, true);
+        
         // phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- $wp_filesystem is a WordPress global
         global $wp_filesystem;
 
