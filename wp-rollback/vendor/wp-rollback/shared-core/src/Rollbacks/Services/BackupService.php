@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\Rollbacks\Services;
 
-use WP_Filesystem_Direct;
+use WP_Filesystem_Base;
 use ZipArchive;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
@@ -35,9 +35,9 @@ class BackupService
     private string $rollbackDir;
 
     /**
-     * @var WP_Filesystem_Direct|null WordPress filesystem
+     * @var WP_Filesystem_Base|null WordPress filesystem
      */
-    private ?WP_Filesystem_Direct $filesystem = null;
+    private ?WP_Filesystem_Base $filesystem = null;
 
     /**
      * Constructor.
@@ -491,7 +491,8 @@ class BackupService
         global $wp_filesystem;
 
         // WordPress variable naming exception - this is a global WordPress var
-        if (!($wp_filesystem instanceof WP_Filesystem_Direct)) {
+        // Accept any WP_Filesystem_Base implementation, not just Direct
+        if (!($wp_filesystem instanceof WP_Filesystem_Base)) {
             throw new \RuntimeException('WordPress filesystem not initialized properly.');
         }
 
