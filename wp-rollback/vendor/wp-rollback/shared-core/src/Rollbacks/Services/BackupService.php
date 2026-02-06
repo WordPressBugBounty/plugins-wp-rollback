@@ -143,8 +143,13 @@ class BackupService
             }
 
             return false;
-        } catch (\Exception $e) {
-            // Silently fail if backup creation fails
+        } catch (\Throwable $e) {
+            // Silently fail if backup creation fails - catches both Exceptions and Errors
+            // Log error if debug mode is enabled
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                error_log(sprintf('[WP Rollback] Backup creation failed for %s (%s): %s', $assetSlug, $assetType, $e->getMessage()));
+            }
             return false;
         }
     }
@@ -170,8 +175,13 @@ class BackupService
             
             try {
                 $this->createAssetBackup($pluginSlug, 'plugin');
-            } catch (\Exception $e) {
-                // Silently continue if backup fails
+            } catch (\Throwable $e) {
+                // Silently continue if backup fails - catches both Exceptions and Errors
+                // This ensures plugin updates are never blocked by backup failures
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                    error_log(sprintf('[WP Rollback] Backup creation failed during plugin update: %s', $e->getMessage()));
+                }
             }
         } // Handle theme updates
         elseif (isset($options['destination'], $options['hook_extra']['theme'])) {
@@ -179,8 +189,13 @@ class BackupService
             
             try {
                 $this->createAssetBackup($themeSlug, 'theme');
-            } catch (\Exception $e) {
-                // Silently continue if backup fails
+            } catch (\Throwable $e) {
+                // Silently continue if backup fails - catches both Exceptions and Errors
+                // This ensures theme updates are never blocked by backup failures
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                    error_log(sprintf('[WP Rollback] Backup creation failed during theme update: %s', $e->getMessage()));
+                }
             }
         }
 
@@ -419,6 +434,27 @@ class BackupService
         // Rotate backups to maintain maximum of 25 per asset
         $this->rotateBackups($slug);
 
+        // Try ZipArchive first (faster), fallback to PclZip (WordPress Core library)
+        if (class_exists('ZipArchive')) {
+            return $this->createBackupZipWithZipArchive($assetPath, $slug, $type, $zipPath);
+        } else {
+            return $this->createBackupZipWithPclZip($assetPath, $slug, $type, $zipPath);
+        }
+    }
+
+    /**
+     * Create a ZIP backup using ZipArchive (preferred method).
+     *
+     * @since 1.0.0
+     * @param string $assetPath The path to the asset directory
+     * @param string $slug The asset slug
+     * @param string $type The asset type ('plugin' or 'theme')
+     * @param string $zipPath The path where the ZIP file will be created
+     * @return bool True if ZIP was created successfully
+     * @throws \RuntimeException If ZIP creation fails
+     */
+    private function createBackupZipWithZipArchive(string $assetPath, string $slug, string $type, string $zipPath): bool
+    {
         // Create ZIP archive
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -456,6 +492,10 @@ class BackupService
 
             $zip->close();
             
+            // Extract version from zip path for the action hook
+            $version = basename($zipPath, '.zip');
+            $version = str_replace($slug . '-', '', $version);
+            
             // Trigger action for archive creation (Pro plugin can hook into this)
             do_action('wpr_archive_created', $slug, $version, $type, $zipPath);
             
@@ -465,6 +505,65 @@ class BackupService
                 $zip->close();
             }
             throw new \RuntimeException('Error creating backup: ' . esc_html($e->getMessage()));
+        }
+    }
+
+    /**
+     * Create a ZIP backup using PclZip (WordPress Core fallback).
+     *
+     * @since 1.0.0
+     * @param string $assetPath The path to the asset directory
+     * @param string $slug The asset slug
+     * @param string $type The asset type ('plugin' or 'theme')
+     * @param string $zipPath The path where the ZIP file will be created
+     * @return bool True if ZIP was created successfully
+     * @throws \RuntimeException If ZIP creation fails
+     */
+    private function createBackupZipWithPclZip(string $assetPath, string $slug, string $type, string $zipPath): bool
+    {
+        // Load PclZip library from WordPress Core
+        if (!class_exists('PclZip')) {
+            require_once ABSPATH . 'wp-admin/includes/class-pclzip.php';
+        }
+
+        try {
+            // phpcs:ignore PHPCompatibility.Classes.NewClasses.pclzipFound
+            $archive = new \PclZip($zipPath);
+            
+            // Prepare add options based on asset type
+            $addPath = trailingslashit($assetPath);
+            $removePath = dirname($assetPath);
+            
+            if ('theme' === $type) {
+                // For themes, ensure files are in a directory with the theme's slug
+                $result = $archive->add( // @phpstan-ignore-line - PclZip is WordPress Core class
+                    $addPath,
+                    PCLZIP_OPT_REMOVE_PATH, // @phpstan-ignore-line - WordPress Core constant
+                    $removePath
+                );
+            } else {
+                // For plugins, keep the directory structure
+                $result = $archive->add( // @phpstan-ignore-line - PclZip is WordPress Core class
+                    $addPath,
+                    PCLZIP_OPT_REMOVE_PATH, // @phpstan-ignore-line - WordPress Core constant
+                    dirname($removePath)
+                );
+            }
+
+            if (0 === $result) {
+                throw new \RuntimeException('PclZip error: ' . esc_html($archive->errorInfo(true)));
+            }
+
+            // Extract version from zip path for the action hook
+            $version = basename($zipPath, '.zip');
+            $version = str_replace($slug . '-', '', $version);
+            
+            // Trigger action for archive creation (Pro plugin can hook into this)
+            do_action('wpr_archive_created', $slug, $version, $type, $zipPath);
+            
+            return true;
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Error creating backup with PclZip: ' . esc_html($e->getMessage()));
         }
     }
 

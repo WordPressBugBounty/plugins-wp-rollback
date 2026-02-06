@@ -1,7 +1,7 @@
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import DataView from './DataView';
 import { useThemes } from '../hooks/dataViews/useThemes';
+import { useDataViewState } from '../hooks/dataViews/useDataViewState';
 import { themeConfig } from './DataView/config/themeConfig';
 
 /**
@@ -9,16 +9,11 @@ import { themeConfig } from './DataView/config/themeConfig';
  *
  * @param {Object}   props                      Component properties
  * @param {Function} props.onNavigateToRollback Callback function for rollback navigation
- * @return {JSX.Element}                   The rendered component
+ * @return {JSX.Element}                        The rendered component
  */
 const ThemesDataView = ( { onNavigateToRollback } ) => {
     const { data, isLoading } = useThemes();
-    const [ view, setView ] = useState( {
-        type: 'table',
-        perPage: 10,
-        layout: themeConfig.defaultLayouts.table?.layout,
-        fields: themeConfig.fields.map( field => field.id ),
-    } );
+    const [ view, setView ] = useDataViewState( themeConfig );
 
     return (
         <DataView

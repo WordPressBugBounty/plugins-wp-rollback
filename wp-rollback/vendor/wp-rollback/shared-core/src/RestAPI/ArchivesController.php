@@ -166,95 +166,70 @@ class ArchivesController extends WP_REST_Controller
             $page = (int) ($params['page'] ?? 1);
             $offset = ($page - 1) * $perPage;
             $type = $params['type'] ?? '';
+            $orderby = $params['orderby'] ?? 'created_at';
+            $order = strtoupper($params['order'] ?? 'DESC');
             
-            // Build query for archives only
-            $whereClause = "WHERE a.status = 'success'";
-            $whereParams = [];
+            // Map orderby fields to actual database columns
+            $orderbyMap = [
+                'name' => 'a.name',
+                'version' => 'a.version_to',
+                'user_id' => 'a.updated_by',
+                'created_at' => 'a.created_at',
+                'file_size' => 'file_size', // This is from the subquery
+            ];
+            
+            $orderbyColumn = $orderbyMap[$orderby] ?? 'a.created_at';
+            
+            // Validate order direction
+            $order = in_array($order, ['ASC', 'DESC'], true) ? $order : 'DESC';
+            
+            // Build WHERE clause
+            $whereConditions = [
+                "m.meta_key = 'archive_action'",
+                "m.meta_value = %s",
+                "a.status = 'success'",
+            ];
+            $prepareArgs = ['backup'];
             
             if ($type) {
-                $whereClause .= " AND a.type = %s";
-                $whereParams[] = $type;
+                $whereConditions[] = 'a.type = %s';
+                $prepareArgs[] = $type;
             }
+            
+            $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
             
             // Get total count
-            if ($type) {
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be prepared
-                $countQuery = $wpdb->prepare(
-                    "SELECT COUNT(DISTINCT a.id) 
-                    FROM {$table} a
-                    INNER JOIN {$metaTable} m ON a.id = m.rollback_id
-                    WHERE m.meta_key = 'archive_action' AND m.meta_value = %s
-                    AND a.status = 'success' AND a.type = %s",
-                    'backup',
-                    $type
-                );
-            } else {
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be prepared
-                $countQuery = $wpdb->prepare(
-                    "SELECT COUNT(DISTINCT a.id) 
-                    FROM {$table} a
-                    INNER JOIN {$metaTable} m ON a.id = m.rollback_id
-                    WHERE m.meta_key = 'archive_action' AND m.meta_value = %s
-                    AND a.status = 'success'",
-                    'backup'
-                );
-            }
+            $countQuerySql = "SELECT COUNT(DISTINCT a.id) 
+                FROM {$table} a
+                INNER JOIN {$metaTable} m ON a.id = m.rollback_id
+                {$whereClause}";
             
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- Custom table query, $countQuery is prepared above
-            $total = (int) $wpdb->get_var($countQuery);
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- Table names and WHERE clause are properly sanitized, query is passed to prepare()
+            $total = (int) $wpdb->get_var($wpdb->prepare($countQuerySql, $prepareArgs));
             
             // Get archives with all necessary data
-            if ($type) {
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be prepared
-                $query = $wpdb->prepare(
-                    "SELECT DISTINCT
-                        a.id,
-                        a.type,
-                        a.name,
-                        a.slug,
-                        a.version_to as version,
-                        a.updated_by,
-                        a.created_at,
-                        (SELECT meta_value FROM {$metaTable} WHERE rollback_id = a.id AND meta_key = 'archive_file_size' LIMIT 1) as file_size,
-                        (SELECT meta_value FROM {$metaTable} WHERE rollback_id = a.id AND meta_key = 'archive_file_path' LIMIT 1) as file_path
-                    FROM {$table} a
-                    INNER JOIN {$metaTable} m ON a.id = m.rollback_id
-                    WHERE m.meta_key = 'archive_action' AND m.meta_value = %s
-                    AND a.status = 'success' AND a.type = %s
-                    ORDER BY a.created_at DESC
-                    LIMIT %d OFFSET %d",
-                    'backup',
-                    $type,
-                    $perPage,
-                    $offset
-                );
-            } else {
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be prepared
-                $query = $wpdb->prepare(
-                    "SELECT DISTINCT
-                        a.id,
-                        a.type,
-                        a.name,
-                        a.slug,
-                        a.version_to as version,
-                        a.updated_by,
-                        a.created_at,
-                        (SELECT meta_value FROM {$metaTable} WHERE rollback_id = a.id AND meta_key = 'archive_file_size' LIMIT 1) as file_size,
-                        (SELECT meta_value FROM {$metaTable} WHERE rollback_id = a.id AND meta_key = 'archive_file_path' LIMIT 1) as file_path
-                    FROM {$table} a
-                    INNER JOIN {$metaTable} m ON a.id = m.rollback_id
-                    WHERE m.meta_key = 'archive_action' AND m.meta_value = %s
-                    AND a.status = 'success'
-                    ORDER BY a.created_at DESC
-                    LIMIT %d OFFSET %d",
-                    'backup',
-                    $perPage,
-                    $offset
-                );
-            }
+            $querySql = "SELECT DISTINCT
+                    a.id,
+                    a.type,
+                    a.name,
+                    a.slug,
+                    a.version_to as version,
+                    a.updated_by,
+                    a.created_at,
+                    (SELECT meta_value FROM {$metaTable} WHERE rollback_id = a.id AND meta_key = 'archive_file_size' LIMIT 1) as file_size,
+                    (SELECT meta_value FROM {$metaTable} WHERE rollback_id = a.id AND meta_key = 'archive_file_path' LIMIT 1) as file_path
+                FROM {$table} a
+                INNER JOIN {$metaTable} m ON a.id = m.rollback_id
+                {$whereClause}
+                ORDER BY {$orderbyColumn} {$order}
+                LIMIT %d OFFSET %d";
             
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- Custom table query, $query is prepared above
-            $archives = $wpdb->get_results($query, ARRAY_A);
+            // Add pagination parameters
+            $prepareArgs[] = $perPage;
+            $prepareArgs[] = $offset;
+            
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- Table names, WHERE clause, and ORDER BY are properly sanitized, query is passed to prepare()
+            $archives = $wpdb->get_results($wpdb->prepare($querySql, $prepareArgs), ARRAY_A);
             
             // Process archives to add user data and format
             $processedArchives = array_map(function($archive) {
@@ -559,6 +534,22 @@ class ArchivesController extends WP_REST_Controller
                 'description' => __('Filter by asset type.', 'wp-rollback'),
                 'type' => 'string',
                 'enum' => ['plugin', 'theme'],
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'orderby' => [
+                'description' => __('Sort collection by field.', 'wp-rollback'),
+                'type' => 'string',
+                'enum' => ['name', 'version', 'user_id', 'created_at', 'file_size'],
+                'default' => 'created_at',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ],
+            'order' => [
+                'description' => __('Order sort attribute ascending or descending.', 'wp-rollback'),
+                'type' => 'string',
+                'enum' => ['ASC', 'DESC'],
+                'default' => 'DESC',
                 'sanitize_callback' => 'sanitize_text_field',
                 'validate_callback' => 'rest_validate_request_arg',
             ],

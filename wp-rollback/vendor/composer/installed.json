@@ -7,19 +7,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/wordpress-plugin-readme-parser.git",
-                "reference": "9cbd55db37a188f8e856d2dfa32927229ebd4fd2"
+                "reference": "9c56ae9979c335df2371abc4cabca2e31b12cb00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/wordpress-plugin-readme-parser/zipball/9cbd55db37a188f8e856d2dfa32927229ebd4fd2",
-                "reference": "9cbd55db37a188f8e856d2dfa32927229ebd4fd2",
+                "url": "https://api.github.com/repos/afragen/wordpress-plugin-readme-parser/zipball/9c56ae9979c335df2371abc4cabca2e31b12cb00",
+                "reference": "9c56ae9979c335df2371abc4cabca2e31b12cb00",
                 "shasum": ""
             },
             "require": {
-                "erusev/parsedown": "^1.7",
-                "php": ">=5.4"
+                "erusev/parsedown": "dev-master#0b274ac959624e6c6d647e9c9b6c2d20da242004",
+                "php": ">=7.1"
             },
-            "time": "2025-06-17T01:28:50+00:00",
+            "time": "2025-12-06T18:49:18+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -52,27 +52,28 @@
         },
         {
             "name": "erusev/parsedown",
-            "version": "1.7.4",
-            "version_normalized": "1.7.4.0",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3"
+                "reference": "0b274ac959624e6c6d647e9c9b6c2d20da242004"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
-                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/0b274ac959624e6c6d647e9c9b6c2d20da242004",
+                "reference": "0b274ac959624e6c6d647e9c9b6c2d20da242004",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": ">=5.3.0"
+                "php": ">=7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35"
+                "phpunit/phpunit": "^7.5|^8.5|^9.6"
             },
-            "time": "2019-12-30T22:54:17+00:00",
+            "time": "2025-08-31T07:57:44+00:00",
+            "default-branch": true,
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -99,116 +100,9 @@
             ],
             "support": {
                 "issues": "https://github.com/erusev/parsedown/issues",
-                "source": "https://github.com/erusev/parsedown/tree/1.7.x"
+                "source": "https://github.com/erusev/parsedown/tree/master"
             },
             "install-path": "../erusev/parsedown"
-        },
-        {
-            "name": "psr/container",
-            "version": "1.1.1",
-            "version_normalized": "1.1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/container.git",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.0"
-            },
-            "time": "2021-03-05T17:36:06+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Container\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common Container Interface (PHP FIG PSR-11)",
-            "homepage": "https://github.com/php-fig/container",
-            "keywords": [
-                "PSR-11",
-                "container",
-                "container-interface",
-                "container-interop",
-                "psr"
-            ],
-            "support": {
-                "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/1.1.1"
-            },
-            "install-path": "../psr/container"
-        },
-        {
-            "name": "stellarwp/admin-notices",
-            "version": "2.0.1",
-            "version_normalized": "2.0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stellarwp/admin-notices.git",
-                "reference": "1d4c25adb2fe4fc959bea3f4501c58bb7586509d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stellarwp/admin-notices/zipball/1d4c25adb2fe4fc959bea3f4501c58bb7586509d",
-                "reference": "1d4c25adb2fe4fc959bea3f4501c58bb7586509d",
-                "shasum": ""
-            },
-            "require": {
-                "psr/container": "1.1.1"
-            },
-            "require-dev": {
-                "codeception/module-asserts": "^1.0",
-                "codeception/module-cli": "^1.0",
-                "codeception/module-db": "^1.0",
-                "codeception/module-filesystem": "^1.0",
-                "codeception/module-phpbrowser": "^1.0",
-                "codeception/module-rest": "^1.0",
-                "codeception/module-webdriver": "^1.0",
-                "codeception/util-universalframework": "^1.0",
-                "lucatume/wp-browser": "^3.6.5",
-                "phpunit/phpunit": "^9.5",
-                "szepeviktor/phpstan-wordpress": "^1.3"
-            },
-            "time": "2025-07-10T17:44:44+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "StellarWP\\AdminNotices\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jason Adams",
-                    "email": "jason.adams@stellarwp.com"
-                }
-            ],
-            "description": "A handy package for easily displaying admin notices in WordPress with simple to complex visibility conditions",
-            "support": {
-                "issues": "https://github.com/stellarwp/admin-notices/issues",
-                "source": "https://github.com/stellarwp/admin-notices/tree/2.0.1"
-            },
-            "install-path": "../stellarwp/admin-notices"
         },
         {
             "name": "stellarwp/arrays",
@@ -366,8 +260,8 @@
         },
         {
             "name": "wp-rollback/shared-core",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "version": "dev-dataviews-sorting",
+            "version_normalized": "dev-dataviews-sorting",
             "dist": {
                 "type": "path",
                 "url": "../shared-core",

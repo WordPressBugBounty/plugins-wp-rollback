@@ -30,7 +30,12 @@ class AssetsManager {
      */
     public function enqueueScript(string $handle, $localizeDataOrEnqueueStyle = true, ?bool $enqueueStyle = true, ?string $localizeVarName = null): void {
         $screen = get_current_screen();
-        if (!$screen || !$this->isAllowedPage($screen->id, $handle)) {
+        if (!$screen) {
+            return;
+        }
+        
+        // Cast to string to handle cases where page builders return non-string screen IDs
+        if (!$this->isAllowedPage((string) $screen->id, $handle)) {
             return;
         }
 

@@ -4,10 +4,10 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit40303e445a46d348c26a843c38a31d19
+class ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f
 {
     public static $prefixLengthsPsr4 = array (
-        'W' => 
+        'W' =>
         array (
             'WpRollback\\SharedCore\\' => 22,
             'WpRollback\\Free\\' => 16,
@@ -15,20 +15,20 @@ class ComposerStaticInit40303e445a46d348c26a843c38a31d19
     );
 
     public static $prefixDirsPsr4 = array (
-        'WpRollback\\SharedCore\\' => 
+        'WpRollback\\SharedCore\\' =>
         array (
             0 => __DIR__ . '/..' . '/wp-rollback/shared-core/src',
         ),
-        'WpRollback\\Free\\' => 
+        'WpRollback\\Free\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'P' => 
+        'P' =>
         array (
-            'Parsedown' => 
+            'Parsedown' =>
             array (
                 0 => __DIR__ . '/..' . '/erusev/parsedown',
             ),
@@ -57,6 +57,7 @@ class ComposerStaticInit40303e445a46d348c26a843c38a31d19
         'WpRollback\\Free\\Rollbacks\\ThemeRollback\\Views\\ThemeRollbackButton' => __DIR__ . '/../..' . '/src/Rollbacks/ThemeRollback/Views/ThemeRollbackButton.php',
         'WpRollback\\SharedCore\\Contracts\\ApiRouteV1' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Contracts/ApiRouteV1.php',
         'WpRollback\\SharedCore\\Contracts\\ServiceProvider' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Contracts/ServiceProvider.php',
+        'WpRollback\\SharedCore\\Core\\AdminNotices' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Core/AdminNotices.php',
         'WpRollback\\SharedCore\\Core\\ArraySet' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Core/ArraySet.php',
         'WpRollback\\SharedCore\\Core\\Assets\\AssetsManager' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Core/Assets/AssetsManager.php',
         'WpRollback\\SharedCore\\Core\\BaseConstants' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Core/BaseConstants.php',
@@ -129,10 +130,10 @@ class ComposerStaticInit40303e445a46d348c26a843c38a31d19
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit40303e445a46d348c26a843c38a31d19::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit40303e445a46d348c26a843c38a31d19::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit40303e445a46d348c26a843c38a31d19::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit40303e445a46d348c26a843c38a31d19::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$classMap;
 
         }, null, ClassLoader::class);
     }

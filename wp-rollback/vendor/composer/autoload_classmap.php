@@ -27,6 +27,7 @@ return array(
     'WpRollback\\Free\\Rollbacks\\ThemeRollback\\Views\\ThemeRollbackButton' => $baseDir . '/src/Rollbacks/ThemeRollback/Views/ThemeRollbackButton.php',
     'WpRollback\\SharedCore\\Contracts\\ApiRouteV1' => $vendorDir . '/wp-rollback/shared-core/src/Contracts/ApiRouteV1.php',
     'WpRollback\\SharedCore\\Contracts\\ServiceProvider' => $vendorDir . '/wp-rollback/shared-core/src/Contracts/ServiceProvider.php',
+    'WpRollback\\SharedCore\\Core\\AdminNotices' => $vendorDir . '/wp-rollback/shared-core/src/Core/AdminNotices.php',
     'WpRollback\\SharedCore\\Core\\ArraySet' => $vendorDir . '/wp-rollback/shared-core/src/Core/ArraySet.php',
     'WpRollback\\SharedCore\\Core\\Assets\\AssetsManager' => $vendorDir . '/wp-rollback/shared-core/src/Core/Assets/AssetsManager.php',
     'WpRollback\\SharedCore\\Core\\BaseConstants' => $vendorDir . '/wp-rollback/shared-core/src/Core/BaseConstants.php',

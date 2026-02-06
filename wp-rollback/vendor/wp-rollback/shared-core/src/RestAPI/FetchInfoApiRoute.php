@@ -122,12 +122,19 @@ class FetchInfoApiRoute extends ApiRouteV1
         if ('plugin' === $type && isset($data->versions)) {
             $versions = [];
             foreach ($data->versions as $version => $downloadUrl) {
-                if ('trunk' === $version || strpos($version, '-RC') !== false) {
+                // Skip 'trunk' - it will be handled separately if needed
+                if ('trunk' === $version) {
+                    $versions[$version] = [
+                        'file' => basename($downloadUrl),
+                        'downloadUrl' => $downloadUrl,
+                        'released' => null,
+                    ];
                     continue;
                 }
                 
-                // Ensure version number is valid
-                if (!preg_match('/^\d+(\.\d+)*$/', $version)) {
+                // Validate version format - allow semantic versioning with pre-release tags
+                // Examples: 1.0, 2.5.3, 1.0-beta, 2.5.0-RC1, 15.1-a.7, 15.1-beta.2
+                if (!preg_match('/^\d+(\.\d+)*(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$/', $version)) {
                     continue;
                 }
 

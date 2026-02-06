@@ -287,6 +287,14 @@ class PackageValidationService
      */
     private function validatePackageStructure(string $packagePath, string $assetType, string $assetSlug)
     {
+        // Defensive check - this should never happen as validateZipIntegrity() checks first
+        if (!class_exists('ZipArchive')) {
+            return new WP_Error(
+                'zip_not_available',
+                __('ZIP functionality is not available for package validation.', 'wp-rollback')
+            );
+        }
+
         $zip = new ZipArchive();
         $zip->open($packagePath);
 
@@ -360,6 +368,15 @@ class PackageValidationService
      */
     private function validateFileSecurity(string $packagePath): array
     {
+        // Defensive check - this should never happen as validateZipIntegrity() checks first
+        if (!class_exists('ZipArchive')) {
+            return [
+                'files_checked' => 0,
+                'oversized_files' => [],
+                'warnings' => ['ZIP functionality is not available for security validation.'],
+            ];
+        }
+
         $zip = new ZipArchive();
         $zip->open($packagePath);
 

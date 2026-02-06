@@ -1,32 +1,36 @@
 import { useMemo } from '@wordpress/element';
-import { DataViews } from '@wordpress/dataviews';
-import { __ } from '@wordpress/i18n';
+import { DataViews, filterSortAndPaginate } from '@wordpress/dataviews';
 import Loading from '../Loading';
 import DataViewBlankSlate from './DataViewBlankSlate';
 
 /**
  * DataView component for displaying data in a customizable view
  *
- * @param {Object}   props                      Component properties
- * @param {Array}    props.data                 Data to display
- * @param {boolean}  props.isLoading            Whether data is loading
- * @param {Array}    props.fields               Field definitions
- * @param {Object}   props.defaultLayouts       Default layout configurations
- * @param {Object}   props.paginationInfo       Pagination information
- * @param {Object}   props.view                 Current view settings
- * @param {Function} props.onChangeView         Callback for view changes
- * @param {Function} props.onNavigateToRollback Callback for rollback navigation
- * @param {Function} props.onDelete             Callback for delete action
- * @param {string}   props.emptyStateTitle      Custom title for empty state
+ * Supports both client-side and server-side pagination:
+ * - Client-side: Pass data without paginationInfo. Filtering, sorting, and pagination
+ *   are handled automatically using WordPress DataViews utilities.
+ * - Server-side: Pass paginationInfo from API. Only sorting/filtering is applied client-side.
+ *
+ * @param {Object}   props                       Component properties
+ * @param {Array}    props.data                  Data to display
+ * @param {boolean}  props.isLoading             Whether data is loading
+ * @param {Array}    props.fields                Field definitions
+ * @param {Object}   props.defaultLayouts        Default layout configurations
+ * @param {Object}   props.paginationInfo        Optional pagination info for server-side pagination
+ * @param {Object}   props.view                  Current view settings (includes sort, filters, pagination)
+ * @param {Function} props.onChangeView          Callback for view changes
+ * @param {Function} props.onNavigateToRollback  Callback for rollback navigation
+ * @param {Function} props.onDelete              Callback for delete action
+ * @param {string}   props.emptyStateTitle       Custom title for empty state
  * @param {string}   props.emptyStateDescription Custom description for empty state
- * @return {JSX.Element}                        The rendered component
+ * @return {JSX.Element}                         The rendered component
  */
 const DataView = ( {
     data,
     isLoading,
     fields,
     defaultLayouts,
-    paginationInfo = { totalItems: 0, totalPages: 1 },
+    paginationInfo,
     view,
     onChangeView,
     onNavigateToRollback,
@@ -34,53 +38,72 @@ const DataView = ( {
     emptyStateTitle,
     emptyStateDescription,
 } ) => {
-    const { data: processedData } = useMemo( () => {
-        if ( ! data ) {
-            return { data: [] };
+    // Ensure all items have IDs (fallback for data without IDs)
+    const dataWithIds = useMemo( () => {
+        if ( ! data?.length ) {
+            return [];
         }
-        const dataWithIds = data.map( ( item, index ) => ( {
+
+        // Check if any items are missing IDs
+        if ( data.every( item => item.id ) ) {
+            return data;
+        }
+
+        // Add fallback IDs only to items that need them
+        return data.map( ( item, index ) => ( {
             ...item,
             id: item.id || `item-${ index }`,
         } ) );
-
-        return { data: dataWithIds };
     }, [ data ] );
 
     // Process fields to inject onNavigateToRollback and onDelete to render functions
     const processedFields = useMemo( () => {
-        if ( ! fields ) {
+        if ( ! fields?.length ) {
             return [];
         }
 
-        return fields.map( field => {
-            // If this is a field with a render function that might need onNavigateToRollback or onDelete
-            if ( field.render && field.id === 'actions' ) {
-                return {
-                    ...field,
-                    render: props =>
-                        field.render( {
-                            ...props,
-                            onNavigateToRollback,
-                            onDelete,
-                        } ),
-                };
-            }
-            return field;
-        } );
+        // Only modify the actions field, return others as-is
+        return fields.map( field =>
+            field.id === 'actions' && field.render
+                ? {
+                      ...field,
+                      render: props =>
+                          field.render( {
+                              ...props,
+                              onNavigateToRollback,
+                              onDelete,
+                          } ),
+                  }
+                : field
+        );
     }, [ fields, onNavigateToRollback, onDelete ] );
+
+    // Apply filtering, sorting, and pagination
+    const { data: processedData, paginationInfo: finalPaginationInfo } = useMemo( () => {
+        // Empty state
+        if ( ! dataWithIds?.length ) {
+            return {
+                data: [],
+                paginationInfo: paginationInfo || { totalItems: 0, totalPages: 0 },
+            };
+        }
+
+        // Server-side pagination: data already filtered/sorted/paginated
+        if ( paginationInfo ) {
+            return { data: dataWithIds, paginationInfo };
+        }
+
+        // Client-side: apply filtering, sorting, and pagination
+        return filterSortAndPaginate( dataWithIds, view, processedFields );
+    }, [ dataWithIds, view, processedFields, paginationInfo ] );
 
     if ( isLoading ) {
         return <Loading />;
     }
 
     // Show custom empty state when there's no data
-    if ( ! processedData.length ) {
-        return (
-            <DataViewBlankSlate 
-                title={ emptyStateTitle }
-                description={ emptyStateDescription }
-            />
-        );
+    if ( ! dataWithIds.length ) {
+        return <DataViewBlankSlate title={ emptyStateTitle } description={ emptyStateDescription } />;
     }
 
     return (
@@ -91,7 +114,7 @@ const DataView = ( {
             view={ view }
             onChangeView={ onChangeView }
             isLoading={ isLoading }
-            paginationInfo={ paginationInfo }
+            paginationInfo={ finalPaginationInfo }
             search={ false }
         />
     );

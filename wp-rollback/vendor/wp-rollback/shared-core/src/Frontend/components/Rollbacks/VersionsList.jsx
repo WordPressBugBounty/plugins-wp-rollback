@@ -25,30 +25,83 @@ const VersionsList = ( { versions, rollbackVersion, setRollbackVersion, currentV
         );
     }
 
-    const sortedAndFilteredVersions = Object.keys( versions )
-        .filter( version => version.toLowerCase().includes( searchTerm.toLowerCase() ) )
-        .sort( ( a, b ) => {
-            if ( a === 'trunk' ) {
-                return 1;
-            }
+	/**
+	 * Compare two version strings for sorting (descending order - newest first)
+	 *
+	 * @param {string} a First version
+	 * @param {string} b Second version
+	 * @return {number} Sort order
+	 */
+	const compareVersions = ( a, b ) => {
+		// Trunk always goes last
+		if ( a === 'trunk' ) {
+			return 1;
+		}
+		if ( b === 'trunk' ) {
+			return -1;
+		}
 
-            if ( b === 'trunk' ) {
-                return -1;
-            }
-            return b.localeCompare( a, undefined, {
-                numeric: true,
-                sensitivity: 'base',
-            } );
-        } );
+		// Parse version strings
+		const parseVersion = ver => {
+			const parts = ver.split( '-' );
+			const numbers = parts[ 0 ].split( '.' ).map( num => parseInt( num, 10 ) || 0 );
+			const preRelease = parts.slice( 1 ).join( '-' ) || null;
+			return { numbers, preRelease };
+		};
 
-    const handleSelectionChange = version => {
-        setRollbackVersion( version );
-    };
+		const versionA = parseVersion( a );
+		const versionB = parseVersion( b );
 
-    // Ensure currentVersion is in the list and selected by default
-    const versionsToDisplay = sortedAndFilteredVersions.includes( currentVersion )
-        ? sortedAndFilteredVersions
-        : [ currentVersion, ...sortedAndFilteredVersions ];
+		// Compare version numbers part by part
+		const maxLen = Math.max( versionA.numbers.length, versionB.numbers.length );
+		
+		for ( let i = 0; i < maxLen; i++ ) {
+			const numA = versionA.numbers[ i ] || 0;
+			const numB = versionB.numbers[ i ] || 0;
+
+			if ( numA > numB ) {
+				return -1; // A is newer, should come first
+			}
+			if ( numA < numB ) {
+				return 1; // B is newer, should come first
+			}
+		}
+
+		// Base versions are equal, check pre-release tags
+		// Stable versions (no pre-release) should come before pre-release
+		if ( ! versionA.preRelease && versionB.preRelease ) {
+			return -1;
+		}
+		if ( versionA.preRelease && ! versionB.preRelease ) {
+			return 1;
+		}
+
+		// Both have pre-release, compare alphabetically in reverse
+		if ( versionA.preRelease && versionB.preRelease ) {
+			return versionB.preRelease.localeCompare( versionA.preRelease );
+		}
+
+		return 0;
+	};
+
+	const sortedAndFilteredVersions = Object.keys( versions )
+		.filter( version => version.toLowerCase().includes( searchTerm.toLowerCase() ) )
+		.sort( compareVersions );
+
+	const handleSelectionChange = version => {
+		setRollbackVersion( version );
+	};
+
+	// Ensure currentVersion and trunk are always in the list
+	const versionsToDisplay = [ ...sortedAndFilteredVersions ];
+
+	if ( ! versionsToDisplay.includes( currentVersion ) ) {
+		versionsToDisplay.unshift( currentVersion );
+	}
+
+	if ( versions.trunk && ! versionsToDisplay.includes( 'trunk' ) ) {
+		versionsToDisplay.push( 'trunk' );
+	}
 
     return (
         <div className="wpr-versions-container">

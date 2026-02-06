@@ -3,9 +3,9 @@ Contributors: dlocc, drrobotnik, webdevmattcrom
 Tags: rollback, revert, downgrade, version, plugins
 Requires at least: 6.5
 Donate Link: https://wprollback.com/
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.0.8
+Stable tag: 3.0.11
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -111,6 +111,23 @@ Yes! All strings are internationalized and ready to be translated. You can eithe
 This is the first version of this plugin. It is a tool for your convenience. Rollback at your own risk!
 
 == Changelog ==
+
+= 3.0.11 =
+* Fix: Resolved fatal error that occurred on servers without the PHP ZipArchive extension when any plugin or theme was updated. The plugin now automatically uses WordPress Core's PclZip library as a fallback, ensuring backups work on all server configurations and updates never fail.
+* Fix: Column sorting now works correctly for Version and Status columns in plugin and theme lists.
+* Enhancement: Added PclZip fallback for backup creation when ZipArchive extension is unavailable, ensuring universal compatibility across all hosting environments.
+* Enhancement: Improved error handling throughout the backup system to catch both Exceptions and PHP Errors, preventing any interruption to plugin/theme updates.
+* Enhancement: Optimized DataView components with reusable hooks and improved performance.
+
+= 3.0.10 =
+* Fix: Resolved fatal error when Visual Composer page builder is active. The plugin now properly validates screen IDs to handle cases where page builders return non-standard screen ID values.
+
+= 3.0.9 =
+* New: Re-added "Trunk" as an available rollback version option for testing development versions.
+* New: Added support for pre-release versions including beta, alpha, and RC versions (e.g., 15.1-beta.2, 15.2-a.7, 2.5.0-RC1).
+* Enhancement: Improved version sorting algorithm to properly order pre-release versions alongside stable releases.
+* Tweak: Added smooth rotating animation to loading indicators for better visual feedback.
+* Tweak: Updated compatibility to WordPress 6.9.
 
 = 3.0.8 =
 * Fix: Changed the filesystem type in BackupService from WP_Filesystem_Direct to WP_Filesystem_Base to allow for broader compatibility with different filesystem implementations.

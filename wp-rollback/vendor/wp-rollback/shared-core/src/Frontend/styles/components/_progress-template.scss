@@ -2,6 +2,7 @@
 .wpr-progress-template {
     padding: 0;
     overflow: hidden;
+    min-height: 510px;
     
     &--running {
         .wpr-progress-header {

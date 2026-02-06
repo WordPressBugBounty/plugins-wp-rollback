@@ -8,13 +8,13 @@ import { Button, Icon } from '@wordpress/components';
  * @param {Object}   props.item                 Item data (plugin or theme)
  * @param {string}   props.type                 Item type ('plugin' or 'theme')
  * @param {Function} props.onNavigateToRollback Callback function to navigate to rollback page
- * @return {JSX.Element}                  The rendered component
+ * @return {JSX.Element}                        The rendered component
  */
 const ActionsColumn = ( { item, type = 'plugin', onNavigateToRollback } ) => {
     const handleClick = () => {
         if ( typeof onNavigateToRollback === 'function' ) {
-            const slug = type === 'plugin' ? item.plugin.split( '/' )[ 0 ] : item.stylesheet.split( '/' )[ 0 ];
-            onNavigateToRollback( type, slug );
+            // Both plugins and themes now have a slug property
+            onNavigateToRollback( type, item.slug );
         }
     };
 
