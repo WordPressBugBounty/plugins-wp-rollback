@@ -2,6 +2,7 @@ import { Button, Spinner } from '@wordpress/components';
 import { createInterpolateElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useRollbackContext } from '../../context/RollbackContext';
+import { getVersionChangeType } from '../../utils';
 
 /**
  * Rollback buttons component.
@@ -12,9 +13,22 @@ import { useRollbackContext } from '../../context/RollbackContext';
  * @return {JSX.Element} The buttons component
  */
 const RollbackButtons = ( { buttons } ) => {
-    const { setModalTemplate, setIsModalOpen, type } = useRollbackContext();
+    const { setModalTemplate, setIsModalOpen, type, rollbackVersion, currentVersion } = useRollbackContext();
     const typeTitle = type === 'plugin' ? __( 'Plugin', 'wp-rollback' ) : __( 'Theme', 'wp-rollback' );
-    const buttonTitle = createInterpolateElement( buttons.confirm.title, {
+
+    const confirmActionLabels = {
+        reinstall: __( 'Reinstall Now', 'wp-rollback' ),
+        update: __( 'Update Now', 'wp-rollback' ),
+        rollback: __( 'Rollback Now', 'wp-rollback' ),
+    };
+
+    const changeType = getVersionChangeType( rollbackVersion, currentVersion );
+    const confirmTitle =
+        buttons.confirm.title === __( 'Rollback Now', 'wp-rollback' )
+            ? confirmActionLabels[ changeType ]
+            : buttons.confirm.title;
+
+    const buttonTitle = createInterpolateElement( confirmTitle, {
         type: <>{ typeTitle }</>,
     } );
 
@@ -41,14 +55,14 @@ const RollbackButtons = ( { buttons } ) => {
                         // Execute custom cancel logic if provided
                         if ( buttons.cancel.onClick ) {
                             const result = buttons.cancel.onClick( type );
-                            
+
                             // Only set new template if a valid template is returned
                             if ( result && typeof result === 'string' ) {
                                 setModalTemplate( result );
                                 return;
                             }
                         }
-                        
+
                         // Default behavior: close the modal
                         setIsModalOpen( false );
                     } }

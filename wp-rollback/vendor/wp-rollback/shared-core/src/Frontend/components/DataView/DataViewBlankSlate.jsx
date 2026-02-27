@@ -8,9 +8,9 @@ import { __ } from '@wordpress/i18n';
  * @param {string} props.description Description text for empty state
  * @return {JSX.Element}             The rendered component
  */
-const DataViewBlankSlate = ( { 
+const DataViewBlankSlate = ( {
     title = __( 'No Data Found', 'wp-rollback' ),
-    description = __( 'Data will appear here when available.', 'wp-rollback' )
+    description = __( 'Data will appear here when available.', 'wp-rollback' ),
 } ) => {
     return (
         <div className="wpr-empty-state">

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WP Rollback plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Rollback 3.0.11\n"
+"Project-Id-Version: WP Rollback 3.0.12\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/free-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-24T02:39:38+00:00\n"
+"POT-Creation-Date: 2026-02-27T18:25:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-rollback\n"
@@ -196,11 +196,40 @@ msgid "Theme"
 msgstr ""
 
 #: build/tools.js:22
-msgid "Unknown Plugin"
+msgid "Reinstall Now"
+msgstr ""
+
+#: build/tools.js:22
+msgid "Update Now"
+msgstr ""
+
+#: build/tools.js:22
+#: build/tools.js:23
+msgid "Rollback Now"
+msgstr ""
+
+#: build/tools.js:22
+msgid "You are about to reinstall <rollbackName/> version <rollbackVersion/>. Please confirm you would like to proceed."
+msgstr ""
+
+#: build/tools.js:22
+msgid "You are about to update <rollbackName/> from version <currentVersion/> to <rollbackVersion/>. Please confirm you would like to proceed."
 msgstr ""
 
 #: build/tools.js:22
 msgid "You are about to rollback <rollbackName/> from version <currentVersion/> to <rollbackVersion/>. Please confirm you would like to proceed."
+msgstr ""
+
+#: build/tools.js:22
+msgid "Update Version:"
+msgstr ""
+
+#: build/tools.js:22
+msgid "New Version:"
+msgstr ""
+
+#: build/tools.js:22
+msgid "Unknown Plugin"
 msgstr ""
 
 #: build/tools.js:22
@@ -213,10 +242,6 @@ msgstr ""
 
 #: build/tools.js:22
 msgid "Installed Version:"
-msgstr ""
-
-#: build/tools.js:22
-msgid "New Version:"
 msgstr ""
 
 #: build/tools.js:22
@@ -303,10 +328,6 @@ msgid "Confirm Rollback"
 msgstr ""
 
 #: build/tools.js:23
-msgid "Rollback Now"
-msgstr ""
-
-#: build/tools.js:23
 msgid "Cancel"
 msgstr ""
 
@@ -340,6 +361,14 @@ msgstr ""
 
 #: build/tools.js:23
 msgid "Select which theme version you would like to rollback to from the releases listed below."
+msgstr ""
+
+#: build/tools.js:23
+msgid "Reinstall"
+msgstr ""
+
+#: build/tools.js:23
+msgid "Update"
 msgstr ""
 
 #: build/tools.js:23

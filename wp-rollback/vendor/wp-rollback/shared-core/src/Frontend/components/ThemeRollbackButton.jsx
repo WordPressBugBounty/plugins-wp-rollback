@@ -3,8 +3,8 @@ import { useUIText } from '../context/UITextContext';
 /**
  * Theme rollback button component
  *
- * @param {Object}  props             Component properties
- * @param {string}  props.theme       Theme slug
+ * @param {Object} props       Component properties
+ * @param {string} props.theme Theme slug
  * @return {JSX.Element} The theme rollback button component
  */
 const ThemeRollbackButton = ( { theme } ) => {

@@ -171,6 +171,36 @@ class ReplaceAsset implements RollbackStep
     }
 
     /**
+     * Delete plugin files using WP_Filesystem directly, bypassing delete_plugins().
+     *
+     * WordPress's delete_plugins() triggers uninstall_plugin() which runs a plugin's
+     * uninstall.php or registered uninstall hook, deleting user data. During a rollback
+     * we only want to remove files — matching how WordPress core's Plugin_Upgrader
+     * handles updates via WP_Upgrader::clear_destination().
+     *
+     * @since 1.0.0
+     * @param string $pluginDir Absolute path to the plugin directory to remove.
+     * @return bool Whether the deletion was successful.
+     */
+    private function deletePluginFiles(string $pluginDir): bool
+    {
+        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
+        global $wp_filesystem;
+
+        if (!WP_Filesystem()) {
+            return false;
+        }
+
+        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
+        if ($wp_filesystem->is_dir($pluginDir)) {
+            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
+            return $wp_filesystem->delete($pluginDir, true);
+        }
+
+        return true;
+    }
+
+    /**
      * Prepare destination based on asset type
      *
      * @since 1.0.0
@@ -239,7 +269,7 @@ class ReplaceAsset implements RollbackStep
                         deactivate_plugins($pluginFile, true, true);
                     }
                     
-                    delete_plugins([$pluginFile]);
+                    $this->deletePluginFiles($pluginDir);
                 }
             }
         }

@@ -5,7 +5,7 @@
 $strauss_src = dirname(__FILE__);
 
 return array(
-   'WpRollback\Free\Dependencies\StellarWP\Arrays\Arr' => $strauss_src . '/stellarwp/arrays/src/Arrays/Arr.php',
    'WpRollback\Free\Dependencies\StellarWP\ContainerContract\ContainerInterface' => $strauss_src . '/stellarwp/container-contract/src/ContainerInterface.php',
+   'WpRollback\Free\Dependencies\StellarWP\Arrays\Arr' => $strauss_src . '/stellarwp/arrays/src/Arrays/Arr.php',
    'WpRollback\Free\Dependencies\StellarWP\SuperGlobals\SuperGlobals' => $strauss_src . '/stellarwp/superglobals/src/SuperGlobals/SuperGlobals.php',
 );

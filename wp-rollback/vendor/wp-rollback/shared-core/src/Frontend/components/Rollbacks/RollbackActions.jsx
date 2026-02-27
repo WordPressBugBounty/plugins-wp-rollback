@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { useRollbackContext } from '../../context/RollbackContext';
+import { getVersionChangeType } from '../../utils';
 
 /**
  * Rollback actions component
@@ -15,18 +16,18 @@ const RollbackActions = () => {
         setIsModalOpen( true );
     };
 
-    // Determine if rollback button should be disabled
-    const isRollbackDisabled = rollbackVersion === currentVersion;
+    const changeType = getVersionChangeType( rollbackVersion, currentVersion );
+
+    const buttonLabels = {
+        reinstall: __( 'Reinstall', 'wp-rollback' ),
+        update: __( 'Update', 'wp-rollback' ),
+        rollback: __( 'Rollback', 'wp-rollback' ),
+    };
 
     return (
         <div className="wpr-button-wrap">
-            <Button
-                variant="primary"
-                onClick={ handleRollback }
-                className="wpr-button-submit"
-                disabled={ isRollbackDisabled } // Disable if rollbackVersion is the same as currentVersion
-            >
-                { __( 'Rollback', 'wp-rollback' ) }
+            <Button variant="primary" onClick={ handleRollback } className="wpr-button-submit">
+                { buttonLabels[ changeType ] }
             </Button>
 
             <Button variant="secondary" onClick={ handleCancel } className="wpr-button-cancel">

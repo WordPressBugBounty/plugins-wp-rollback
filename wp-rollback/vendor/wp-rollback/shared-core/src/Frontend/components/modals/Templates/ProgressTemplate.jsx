@@ -25,16 +25,16 @@ const ProgressTemplate = () => {
     // Step status: 'pending', 'running', 'completed', 'error'
     const [ stepStatuses, setStepStatuses ] = useState( {} );
 
-    const delay = ( ms ) => new Promise( resolve => setTimeout( resolve, ms ) );
+    const delay = ms => new Promise( resolve => setTimeout( resolve, ms ) );
 
     const updateStepStatus = ( stepIndex, status, message = '' ) => {
-        setStepStatuses( prev => ({
+        setStepStatuses( prev => ( {
             ...prev,
-            [ stepIndex ]: { status, message }
-        }) );
+            [ stepIndex ]: { status, message },
+        } ) );
     };
 
-    const getStepIcon = ( status ) => {
+    const getStepIcon = status => {
         switch ( status ) {
             case 'running':
                 return (
@@ -46,7 +46,13 @@ const ProgressTemplate = () => {
                 return (
                     <div className="wpr-step-icon wpr-step-icon--completed">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path
+                                d="M13.5 4.5L6 12L2.5 8.5"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
                         </svg>
                     </div>
                 );
@@ -54,7 +60,13 @@ const ProgressTemplate = () => {
                 return (
                     <div className="wpr-step-icon wpr-step-icon--error">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path
+                                d="M12 4L4 12M4 4L12 12"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
                         </svg>
                     </div>
                 );
@@ -121,14 +133,14 @@ const ProgressTemplate = () => {
                 for ( let i = 0; i < rollbackSteps.length; i++ ) {
                     const step = rollbackSteps[ i ];
                     setCurrentStep( i );
-                    
+
                     // Update progress
                     const progressPercent = ( i / rollbackSteps.length ) * 100;
                     setProgress( progressPercent );
 
                     // Mark step as running
                     updateStepStatus( i, 'running', step.rollbackProcessingMessage );
-                    
+
                     // Artificial delay to let user see the step start
                     await delay( 600 );
 
@@ -152,12 +164,12 @@ const ProgressTemplate = () => {
                         await delay( 400 );
 
                         // Mark step as completed
-                        const completionMessage = response.message || __( 'Step completed successfully', 'wp-rollback' );
+                        const completionMessage =
+                            response.message || __( 'Step completed successfully', 'wp-rollback' );
                         updateStepStatus( i, 'completed', completionMessage );
 
                         // Additional delay to let user see completion
                         await delay( 300 );
-
                     } catch ( stepError ) {
                         updateStepStatus( i, 'error', stepError.message );
                         throw stepError;
@@ -171,11 +183,10 @@ const ProgressTemplate = () => {
 
                 // Completion delay to show success state
                 await delay( 800 );
-
             } catch ( error ) {
                 setHasError( true );
                 setErrorMessage( error.message || __( 'An unknown error occurred.', 'wp-rollback' ) );
-                
+
                 // Delay before showing error modal
                 setTimeout( () => {
                     setModalTemplate( 'failed' );
@@ -195,56 +206,57 @@ const ProgressTemplate = () => {
     );
 
     const getOverallStatus = () => {
-        if ( hasError ) return 'error';
-        if ( isComplete ) return 'completed';
+        if ( hasError ) {
+            return 'error';
+        }
+        if ( isComplete ) {
+            return 'completed';
+        }
         return 'running';
     };
 
     return (
-        <div className={`wpr-progress-template wpr-progress-template--${getOverallStatus()}`}>
+        <div className={ `wpr-progress-template wpr-progress-template--${ getOverallStatus() }` }>
             <div className="wpr-progress-header">
                 <p className="wpr-modal-intro">{ introText }</p>
                 <p className="wpr-progress-subtitle" aria-live="polite">
-                    { hasError 
+                    { hasError
                         ? __( 'An error occurred during the rollback process.', 'wp-rollback' )
-                        : isComplete 
-                            ? __( 'Rollback completed successfully! Click Continue to proceed.', 'wp-rollback' )
-                            : __( 'Please wait while we safely rollback your asset.', 'wp-rollback' )
-                    }
+                        : isComplete
+                        ? __( 'Rollback completed successfully! Click Continue to proceed.', 'wp-rollback' )
+                        : __( 'Please wait while we safely rollback your asset.', 'wp-rollback' ) }
                 </p>
             </div>
 
-            {/* Progress Bar */}
+            { /* Progress Bar */ }
             <div className="wpr-progress-bar-container">
-                <div className={`wpr-progress-bar ${isComplete ? 'wpr-progress-bar--complete' : ''}`}>
-                    <div 
-                        className={`wpr-progress-bar-fill ${isComplete ? 'wpr-progress-bar-fill--complete' : ''}`}
-                        style={{ width: `${progress}%` }}
+                <div className={ `wpr-progress-bar ${ isComplete ? 'wpr-progress-bar--complete' : '' }` }>
+                    <div
+                        className={ `wpr-progress-bar-fill ${ isComplete ? 'wpr-progress-bar-fill--complete' : '' }` }
+                        style={ { width: `${ progress }%` } }
                     ></div>
                 </div>
                 <span className="wpr-progress-percentage">{ Math.round( progress ) }%</span>
             </div>
 
-            {/* Steps List */}
+            { /* Steps List */ }
             <div className="wpr-steps-container">
                 { steps.map( ( step, index ) => {
                     const status = stepStatuses[ index ] || { status: 'pending', message: '' };
                     const isActive = index === currentStep;
-                    
+
                     return (
-                        <div 
+                        <div
                             key={ step.id }
-                            className={`wpr-step wpr-step--${status.status} ${isActive ? 'wpr-step--active' : ''}`}
+                            className={ `wpr-step wpr-step--${ status.status } ${
+                                isActive ? 'wpr-step--active' : ''
+                            }` }
                         >
                             { getStepIcon( status.status ) }
                             <div className="wpr-step-content">
-                                <div className="wpr-step-title">
-                                    { step.rollbackProcessingMessage || step.id }
-                                </div>
+                                <div className="wpr-step-title">{ step.rollbackProcessingMessage || step.id }</div>
                                 { status.message && status.status === 'completed' && (
-                                    <div className="wpr-step-message">
-                                        { status.message }
-                                    </div>
+                                    <div className="wpr-step-message">{ status.message }</div>
                                 ) }
                             </div>
                         </div>
@@ -253,9 +265,9 @@ const ProgressTemplate = () => {
             </div>
 
             <div className="wpr-modal-button-wrap">
-                <Button 
-                    className={`wpr-progress-button wpr-progress-button--${getOverallStatus()}`}
-                    variant="primary" 
+                <Button
+                    className={ `wpr-progress-button wpr-progress-button--${ getOverallStatus() }` }
+                    variant="primary"
                     disabled={ ! isComplete && ! hasError }
                     onClick={ () => {
                         if ( isComplete ) {
@@ -263,12 +275,11 @@ const ProgressTemplate = () => {
                         }
                     } }
                 >
-                    { hasError 
+                    { hasError
                         ? __( 'Rollback Failed', 'wp-rollback' )
-                        : isComplete 
-                            ? __( 'Continue', 'wp-rollback' )
-                            : __( 'Rollback in Progress…', 'wp-rollback' )
-                    }
+                        : isComplete
+                        ? __( 'Continue', 'wp-rollback' )
+                        : __( 'Rollback in Progress…', 'wp-rollback' ) }
                 </Button>
             </div>
         </div>

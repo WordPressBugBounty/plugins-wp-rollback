@@ -4,10 +4,10 @@ import { Icon } from '@wordpress/components';
 /**
  * SecurityBadge component for displaying package validation status.
  *
- * @param {Object} props               Component properties
- * @param {string} props.status        Validation status: 'validated', 'warning', 'failed', 'checking'
- * @param {string} props.message       Optional custom message to display
- * @param {number} props.filesChecked  Number of files that were validated (optional)
+ * @param {Object} props              Component properties
+ * @param {string} props.status       Validation status: 'validated', 'warning', 'failed', 'checking'
+ * @param {string} props.message      Optional custom message to display
+ * @param {number} props.filesChecked Number of files that were validated (optional)
  * @return {JSX.Element}               The rendered component
  */
 const SecurityBadge = ( { status = 'checking', message = '', filesChecked = null } ) => {
@@ -17,12 +17,12 @@ const SecurityBadge = ( { status = 'checking', message = '', filesChecked = null
                 return {
                     icon: 'yes-alt',
                     className: 'wpr-security-badge--validated',
-                    text: filesChecked 
+                    text: filesChecked
                         ? sprintf(
-                            /* translators: %d: Number of files validated */
-                            __( 'Validated (%d files)', 'wp-rollback' ),
-                            filesChecked
-                        )
+                              /* translators: %d: Number of files validated */
+                              __( 'Validated (%d files)', 'wp-rollback' ),
+                              filesChecked
+                          )
                         : __( 'Validated', 'wp-rollback' ),
                     title: __( 'Package validated using WordPress Core methods', 'wp-rollback' ),
                 };
@@ -45,7 +45,7 @@ const SecurityBadge = ( { status = 'checking', message = '', filesChecked = null
                 return {
                     icon: 'clock',
                     className: 'wpr-security-badge--checking',
-                    text: __( 'Validating...', 'wp-rollback' ),
+                    text: __( 'Validating…', 'wp-rollback' ),
                     title: __( 'Validating package using WordPress Core methods', 'wp-rollback' ),
                 };
         }
@@ -55,20 +55,11 @@ const SecurityBadge = ( { status = 'checking', message = '', filesChecked = null
     const displayText = message || config.text;
 
     return (
-        <span 
-            className={ `wpr-security-badge ${ config.className }` }
-            title={ config.title }
-        >
-            <Icon 
-                icon={ config.icon } 
-                size={ 16 }
-                className="wpr-security-badge__icon"
-            />
-            <span className="wpr-security-badge__text">
-                { displayText }
-            </span>
+        <span className={ `wpr-security-badge ${ config.className }` } title={ config.title }>
+            <Icon icon={ config.icon } size={ 16 } className="wpr-security-badge__icon" />
+            <span className="wpr-security-badge__text">{ displayText }</span>
         </span>
     );
 };
 
-export default SecurityBadge; 
+export default SecurityBadge;
