@@ -145,10 +145,6 @@
         font-weight: 500;
     }
 
-    .wpr-updater-info .dashicons {
-        font-size: 16px;
-    }
-
     .wpr-plugin-lastupdate {
         font-size: 14px;
         font-style: italic;
@@ -235,6 +231,8 @@
         display: flex;
         padding: 20px 30px;
         align-items: center;
+        flex-wrap: nowrap;
+        gap: 0;
     }
 
     input[type="radio"] {
@@ -255,6 +253,76 @@
     }
 }
 
+// Right-side badge container — pushes all badges to the trailing edge of the row
+.wpr-version-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+// Version source badges (vault / local / repo)
+.wpr-version-source {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 3px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    cursor: default;
+
+    .dashicons {
+        font-size: 13px;
+        width: 13px;
+        height: 13px;
+        line-height: 13px;
+    }
+
+    &--vault {
+        color: var(--wp-admin-theme-color);
+        background: rgba(56, 88, 233, 0.08);
+
+        .dashicons {
+            color: var(--wp-admin-theme-color);
+        }
+    }
+
+    &--local {
+        color: #1e7e34;
+        background: rgba(30, 126, 52, 0.07);
+
+        .dashicons {
+            color: #1e7e34;
+        }
+    }
+
+    &--repo {
+        color: #0073aa;
+        background: rgba(0, 115, 170, 0.08);
+
+        .dashicons {
+            color: #0073aa;
+        }
+    }
+}
+
+// Placed after .wpr-version-source to respect specificity ordering (no-descending-specificity)
+.wpr-meta-wrap .wpr-updater-info .dashicons {
+    font-size: 16px;
+}
+
+// Release date displayed alongside the Repo badge
+.wpr-version-date {
+    font-size: 13px;
+    color: var(--wpr-gray-600);
+    white-space: nowrap;
+}
+
 // Bottom button
 .wpr-button-wrap {
     padding: 20px 30px;
@@ -263,7 +331,7 @@
     width: 802px;
     box-sizing: border-box;
     border: 1px solid $border-color;
-    box-shadow: 0px -10px 20px rgb(0 0 0 / 9%);
+    box-shadow: 0 -10px 20px rgb(0 0 0 / 9%);
 
     .is-secondary {
         margin-left: 20px;

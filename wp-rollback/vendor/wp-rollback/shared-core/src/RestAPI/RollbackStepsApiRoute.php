@@ -4,7 +4,6 @@
  * API route for retrieving rollback steps.
  *
  * @package WpRollback\SharedCore\RestAPI
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -18,7 +17,6 @@ use WpRollback\SharedCore\Rollbacks\Registry\RollbackStepRegisterer;
 /**
  * API route for retrieving rollback steps
  * 
- * @since 1.0.0
  */
 class RollbackStepsApiRoute extends ApiRouteV1
 {
@@ -40,7 +38,6 @@ class RollbackStepsApiRoute extends ApiRouteV1
     /**
      * Register the REST route
      * 
-     * @since 1.0.0
      */
     public function register(): void
     {
@@ -58,7 +55,6 @@ class RollbackStepsApiRoute extends ApiRouteV1
     /**
      * Get all registered rollback steps
      * 
-     * @since 1.0.0
      * @return \WP_REST_Response Response containing the rollback steps
      */
     public function getSteps()
@@ -82,7 +78,6 @@ class RollbackStepsApiRoute extends ApiRouteV1
     /**
      * Get the routes that this API handler registers
      * 
-     * @since 1.0.0
      * @return array Array of routes
      */
     public function getRoutes(): array

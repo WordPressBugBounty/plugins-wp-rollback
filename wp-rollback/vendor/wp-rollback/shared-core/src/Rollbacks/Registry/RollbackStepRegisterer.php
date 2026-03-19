@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks\Registry
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -15,12 +14,10 @@ use WpRollback\SharedCore\Core\SharedCore;
 use WpRollback\SharedCore\Rollbacks\Contract\RollbackStep;
 
 /**
- * @since 1.0.0
  */
 class RollbackStepRegisterer
 {
     /**
-     * @since 1.0.0
      * @var class-string<RollbackStep>[]
      */
     protected array $steps = [];
@@ -37,7 +34,6 @@ class RollbackStepRegisterer
      * 
      * Note: ValidatePackage is NOT included as it's a pro feature
      *
-     * @since 1.0.0
      * @return array<class-string<RollbackStep>> Array of rollback step class names
      */
     public static function getBaseSteps(): array
@@ -53,7 +49,6 @@ class RollbackStepRegisterer
     }
 
     /**
-     * @since 1.0.0
      *
      * @param class-string<RollbackStep> $rollbackStep
      * @param class-string<RollbackStep> $stepClass
@@ -82,7 +77,6 @@ class RollbackStepRegisterer
     /**
      * Add a step to the beginning of the steps array
      * 
-     * @since 1.0.0
      * @param class-string<RollbackStep> $stepClass
      */
     public function addStep(string $stepClass): void
@@ -91,7 +85,6 @@ class RollbackStepRegisterer
     }
 
     /**
-     * @since 1.0.0
      *
      * @param class-string<RollbackStep> $rollbackStep
      * @param class-string<RollbackStep> $stepClass
@@ -108,7 +101,6 @@ class RollbackStepRegisterer
     }
 
     /**
-     * @since 1.0.0
      * @throws BindingResolutionException
      */
     public function getRollbackStepById(string $id): ?RollbackStep
@@ -124,7 +116,6 @@ class RollbackStepRegisterer
     }
 
     /**
-     * @since 1.0.0
      * @return class-string<RollbackStep>[]
      */
     public function getAllRollbackSteps(): array
@@ -133,7 +124,6 @@ class RollbackStepRegisterer
     }
 
     /**
-     * @since 1.0.0
      */
     public function getAllRollbackStepsIds(): array
     {
@@ -143,7 +133,6 @@ class RollbackStepRegisterer
     /**
      * Register a list of rollback steps in the given order
      * 
-     * @since 1.0.0
      * @param class-string<RollbackStep>[] $steps The steps to register, in order
      * @return void
      */

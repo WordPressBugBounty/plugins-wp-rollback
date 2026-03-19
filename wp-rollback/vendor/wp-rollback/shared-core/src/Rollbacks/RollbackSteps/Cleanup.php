@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks\RollbackSteps
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -15,14 +14,12 @@ use WpRollback\SharedCore\Rollbacks\Contract\RollbackStep;
 use WpRollback\SharedCore\Rollbacks\Contract\RollbackStepResult;
 
 /**
- * @since 1.0.0
  */
 class Cleanup implements RollbackStep
 {
     /**
      * Maintenance service instance
      *
-     * @since 1.0.0
      * @var MaintenanceService
      */
     private MaintenanceService $maintenanceService;
@@ -30,7 +27,6 @@ class Cleanup implements RollbackStep
     /**
      * Constructor
      *
-     * @since 1.0.0
      * @param MaintenanceService $maintenanceService The maintenance service
      */
     public function __construct(MaintenanceService $maintenanceService)
@@ -40,7 +36,6 @@ class Cleanup implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function id(): string
     {
@@ -49,7 +44,6 @@ class Cleanup implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function execute(RollbackApiRequestDTO $rollbackApiRequestDTO): RollbackStepResult
     {
@@ -111,7 +105,6 @@ class Cleanup implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function rollbackProcessingMessage(): string
     {

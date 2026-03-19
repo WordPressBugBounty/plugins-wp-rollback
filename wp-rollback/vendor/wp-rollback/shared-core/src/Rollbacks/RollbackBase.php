@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -12,14 +11,12 @@ namespace WpRollback\SharedCore\Rollbacks;
 /**
  * Base class for rollback functionality.
  *
- * @since 1.0.0
  */
 abstract class RollbackBase
 {
     /**
      * The asset type.
      *
-     * @since 1.0.0
      * @var string
      */
     protected string $type = '';
@@ -27,7 +24,6 @@ abstract class RollbackBase
     /**
      * The asset slug.
      *
-     * @since 1.0.0
      * @var string
      */
     protected string $slug = '';
@@ -35,7 +31,6 @@ abstract class RollbackBase
     /**
      * The version to rollback to.
      *
-     * @since 1.0.0
      * @var string
      */
     protected string $version = '';
@@ -43,7 +38,6 @@ abstract class RollbackBase
     /**
      * Set up the rollback.
      *
-     * @since 1.0.0
      *
      * @param string $type    The asset type.
      * @param string $slug    The asset slug.
@@ -62,7 +56,6 @@ abstract class RollbackBase
     /**
      * Execute the rollback process.
      *
-     * @since 1.0.0
      *
      * @return bool
      */

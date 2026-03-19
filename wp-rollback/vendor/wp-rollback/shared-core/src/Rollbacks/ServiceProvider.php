@@ -7,7 +7,6 @@
  * that are shared between the free and pro plugins.
  *
  * @package WpRollback\SharedCore\Rollbacks
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -32,13 +31,11 @@ use WpRollback\SharedCore\Rollbacks\ToolsPage\ToolsPage;
 /**
  * Class ServiceProvider
  *
- * @since 1.0.0
  */
 class ServiceProvider implements ServiceProviderContract
 {
     /**
      * @inheritdoc
-     * @since 1.0.0
      * @throws BindingResolutionException
      */
     public function register(): void
@@ -88,7 +85,6 @@ class ServiceProvider implements ServiceProviderContract
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function boot(): void
     {
@@ -124,7 +120,6 @@ class ServiceProvider implements ServiceProviderContract
      * Register WordPress hooks for backup functionality.
      * These hooks are shared between free and pro plugins.
      *
-     * @since 1.0.0
      * @param BackupService $backupService The backup service instance
      */
     private function registerBackupHooks(BackupService $backupService): void
@@ -165,7 +160,6 @@ class ServiceProvider implements ServiceProviderContract
     /**
      * Filter upload MIME types to allow ZIP files during rollback operations.
      *
-     * @since 1.0.0
      * @param array $mimes Array of allowed MIME types.
      * @return array Modified array of allowed MIME types.
      */
@@ -181,7 +175,6 @@ class ServiceProvider implements ServiceProviderContract
     /**
      * Filter allowed upload file types for multisite during rollback operations.
      *
-     * @since 1.0.0
      * @param string|false $filetypes Space-separated list of allowed file extensions.
      * @return string|false Modified list of allowed file extensions.
      */
@@ -201,7 +194,6 @@ class ServiceProvider implements ServiceProviderContract
     /**
      * Filter upload size limit for multisite during rollback operations.
      *
-     * @since 1.0.0
      * @param int $size Maximum upload size in bytes.
      * @return int Modified maximum upload size in bytes.
      */

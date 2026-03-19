@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Core\Container
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -17,7 +16,6 @@ use WpRollback\SharedCore\Core\Container\Exceptions\BindingResolutionException;
 /**
  * Container implementation.
  *
- * @since 1.0.0
  */
 class Container implements ContainerInterface
 {
@@ -107,7 +105,6 @@ class Container implements ContainerInterface
     /**
      * Get the concrete implementation for a given abstract.
      *
-     * @since 1.0.0
      *
      * @param string $abstract
      * @return mixed
@@ -124,7 +121,6 @@ class Container implements ContainerInterface
     /**
      * Determine if the given abstract type has been bound as a shared instance.
      *
-     * @since 1.0.0
      *
      * @param string $abstract
      * @return bool
@@ -137,7 +133,6 @@ class Container implements ContainerInterface
     /**
      * Get the alias for an abstract if available.
      *
-     * @since 1.0.0
      *
      * @param string $abstract
      * @return string
@@ -150,7 +145,6 @@ class Container implements ContainerInterface
     /**
      * Get the closure for building a concrete instance.
      *
-     * @since 1.0.0
      *
      * @param string $abstract
      * @param string|object $concrete
@@ -170,7 +164,6 @@ class Container implements ContainerInterface
     /**
      * Build a concrete instance.
      *
-     * @since 1.0.0
      *
      * @param mixed $concrete
      * @param array<mixed> $parameters
@@ -211,7 +204,6 @@ class Container implements ContainerInterface
     /**
      * Resolve a class from the container.
      *
-     * @since 1.0.0
      *
      * @param string $concrete
      * @param array<mixed> $parameters
@@ -226,7 +218,6 @@ class Container implements ContainerInterface
     /**
      * Resolve dependencies from the container.
      *
-     * @since 1.0.0
      *
      * @param array<ReflectionParameter> $dependencies
      * @param array<mixed> $parameters

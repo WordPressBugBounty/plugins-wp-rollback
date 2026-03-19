@@ -8,7 +8,6 @@ namespace WpRollback\SharedCore\Core\Utilities;
  * Plugin utility class
  *
  * @package WpRollback\SharedCore\Core\Utilities
- * @since 1.0.0
  */
 class PluginUtility
 {

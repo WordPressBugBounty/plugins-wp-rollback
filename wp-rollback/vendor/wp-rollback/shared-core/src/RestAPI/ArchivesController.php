@@ -4,7 +4,6 @@
  * Archives REST Controller
  *
  * @package WpRollback\SharedCore\Rollbacks\REST
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -21,7 +20,6 @@ use WpRollback\Pro\ActivityLog\Repository\ActivityRepository;
 /**
  * REST API controller for managing archived assets
  *
- * @since 1.0.0
  */
 class ArchivesController extends WP_REST_Controller
 {
@@ -43,7 +41,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Constructor
      *
-     * @since 1.0.0
      */
     public function __construct()
     {
@@ -55,7 +52,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Register routes
      *
-     * @since 1.0.0
      * @return void
      */
     public function registerRoutes(): void
@@ -119,7 +115,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Check permissions for getting items
      *
-     * @since 1.0.0
      * @param WP_REST_Request $request Request object
      * @return bool|WP_Error
      */
@@ -139,7 +134,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Get archived assets
      *
-     * @since 1.0.0
      * @param WP_REST_Request $request Request object
      * @return WP_REST_Response|WP_Error
      */
@@ -283,7 +277,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Check permissions for downloading archive
      *
-     * @since 1.0.0
      * @param WP_REST_Request $request Request object
      * @return bool|WP_Error
      */
@@ -313,7 +306,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Download archive file
      *
-     * @since 1.0.0
      * @param WP_REST_Request $request Request object
      * @return void|WP_Error
      */
@@ -421,7 +413,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Check permissions for deleting archive
      *
-     * @since 1.0.0
      * @param WP_REST_Request $request Request object
      * @return bool|WP_Error
      */
@@ -441,7 +432,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Delete archive file and database entries
      *
-     * @since 1.0.0
      * @param WP_REST_Request $request Request object
      * @return WP_REST_Response|WP_Error
      */
@@ -507,7 +497,6 @@ class ArchivesController extends WP_REST_Controller
     /**
      * Get collection parameters
      *
-     * @since 1.0.0
      * @return array
      */
     public function getCollectionParams(): array

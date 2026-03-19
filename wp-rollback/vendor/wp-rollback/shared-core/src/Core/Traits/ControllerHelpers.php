@@ -4,7 +4,6 @@
  * This trait provides methods to handle the controller process flow.
  *
  * @package WpRollback\SharedCore\Core\Traits
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -17,7 +16,6 @@ use WpRollback\SharedCore\Core\SharedCore;
 /**
  * Trait HandlesProcessFlow
  *
- * @since 1.0.0
  */
 trait ControllerHelpers
 {
@@ -29,7 +27,6 @@ trait ControllerHelpers
      *
      * @param callable|null $function The function to execute before exit
      *
-     * @since 1.0.0
      */
     protected function exit(callable $function = null): void // @phpstan-ignore-line
     {
@@ -43,7 +40,6 @@ trait ControllerHelpers
      * @param string $url The URL to redirect
      * @param bool $safeRedirect Whether to use safe redirect or not
      *
-     * @since 1.0.0
      */
     protected function redirectTo(string $url, bool $safeRedirect = true): void
     {
@@ -57,7 +53,6 @@ trait ControllerHelpers
     }
 
     /**
-     * @since 1.0.0
      * @throws BindingResolutionException
      */
     public static function processRequest(): void

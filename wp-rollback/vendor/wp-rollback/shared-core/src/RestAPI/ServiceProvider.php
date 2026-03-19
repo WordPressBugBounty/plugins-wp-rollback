@@ -4,7 +4,6 @@
  * REST API Service Provider
  *
  * @package WpRollback\SharedCore\RestAPI
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -19,7 +18,6 @@ use WpRollback\SharedCore\Rollbacks\Registry\RollbackStepRegisterer;
 /**
  * Service Provider for REST API components.
  *
- * @since 1.0.0
  */
 class ServiceProvider implements ServiceProviderContract
 {
@@ -27,7 +25,6 @@ class ServiceProvider implements ServiceProviderContract
      * Register services.
      *
      * @inheritdoc
-     * @since 1.0.0
      */
     public function register(): void
     {
@@ -49,7 +46,6 @@ class ServiceProvider implements ServiceProviderContract
      * Bootstrap services.
      *
      * @inheritdoc
-     * @since 1.0.0
      */
     public function boot(): void
     {

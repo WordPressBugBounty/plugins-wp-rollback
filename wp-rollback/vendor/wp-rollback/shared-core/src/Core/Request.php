@@ -7,7 +7,6 @@
  * It also provides methods to retrieve, sanitize, and redirect the request.
  *
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -17,7 +16,6 @@ namespace WpRollback\SharedCore\Core;
 /**
  * Class Request
  *
- * @since 1.0.0
  */
 class Request
 {
@@ -27,7 +25,6 @@ class Request
      * @param string $key The key to retrieve from the request
      * @param mixed $default The default value to return if the key is not found
      *
-     * @since 1.0.0
      * @return mixed Sanitized data from the request
      */
     public function get(string $key, $default = null)
@@ -46,7 +43,6 @@ class Request
      * @param mixed $default The default value to return if the key is not found
      * @param bool $verify Whether to verify nonce before retrieving data (nonce must be verified separately)
      *
-     * @since 1.0.0
      * @return mixed Sanitized data from the request
      */
     public function post(string $key, $default = null, bool $verify = true)
@@ -67,7 +63,6 @@ class Request
      *
      * @param bool $verify Whether to verify nonce before retrieving data (nonce must be verified separately)
      * 
-     * @since 1.0.0
      * @return array Request data from the GET and POST superglobals
      */
     public function all(bool $verify = true): array
@@ -86,7 +81,6 @@ class Request
     /**
      * Check if nonce has been verified in the current request.
      *
-     * @since 1.0.0
      * @return bool Whether nonce has been verified
      */
     private function isNonceVerified(): bool
@@ -100,7 +94,6 @@ class Request
      * @param string $key The key to check for in the request
      * @param bool $verify Whether to verify nonce before checking POST data
      *
-     * @since 1.0.0
      */
     public function has(string $key, bool $verify = true): bool
     {
@@ -113,7 +106,6 @@ class Request
      *
      * @param array|string $data The data to sanitize
      *
-     * @since 1.0.0
      * @return array|string
      */
     public function sanitize($data)
@@ -132,7 +124,6 @@ class Request
      * Some servers are not using Apache and "getallheaders()" will not work, so we may need to
      * build our own headers.
      *
-     * @since 1.0.0
      */
     public function getRequestHeaders(): array
     {
@@ -162,7 +153,6 @@ class Request
     /**
      * This function is used to retrieve the request body.
      *
-     * @since 1.0.0
      */
     public function getBody(): string
     {
@@ -181,7 +171,6 @@ class Request
      * @param string $action The action to check the nonce for
      * @param string $nonceName The name of the nonce field
      *
-     * @since 1.0.0
      */
     public function hasValidNonce(string $action, string $nonceName = 'wp-rollback-nonce'): bool
     {
@@ -195,7 +184,6 @@ class Request
      *
      * @param string $capability The ability to check for
      *
-     * @since 1.0.0
      */
     public function hasPermission(string $capability): bool
     {
@@ -205,7 +193,6 @@ class Request
     /**
      * This function is used to check if the request method is valid.
      *
-     * @since 1.0.0
      */
     public function usesHttpMethod(string $type): bool
     {
@@ -215,7 +202,6 @@ class Request
     /**
      * This function is used to check if the request uses the GET method.
      *
-     * @since 1.0.0
      */
     public function usesGetMethod(): bool
     {
@@ -225,7 +211,6 @@ class Request
     /**
      * This function is used to check if the request uses the POST method.
      *
-     * @since 1.0.0
      */
     public function usesPostMethod(): bool
     {

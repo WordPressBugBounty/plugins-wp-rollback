@@ -1,0 +1,40 @@
+// Complete template — shared hero styles (used by both Free and Pro)
+@use '../index' as *;
+
+// Hero section: Lottie animation + title + success message
+.wpr-complete-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 24px 28px;
+    background: linear-gradient( 180deg, #edf7f0 0%, #fff 100% );
+
+    &__animation {
+        margin-bottom: 4px;
+        line-height: 0;
+
+        svg {
+            display: block;
+        }
+    }
+
+    &__title {
+        font-size: 19px;
+        font-weight: 600;
+        color: $color-headings;
+        margin: 0 0 6px;
+        padding: 0;
+    }
+
+    &__message {
+        font-size: 13px;
+        color: $color-text;
+        margin: 0;
+        line-height: 1.6;
+
+        strong {
+            color: $color-headings;
+        }
+    }
+}

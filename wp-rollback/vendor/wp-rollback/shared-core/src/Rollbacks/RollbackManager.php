@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -14,7 +13,6 @@ namespace WpRollback\SharedCore\Rollbacks;
  * 
  * Provides shared functionality for managing rollbacks in both free and pro plugins.
  *
- * @since 1.0.0
  */
 abstract class RollbackManager
 {
@@ -27,7 +25,6 @@ abstract class RollbackManager
     /**
      * Get the available versions for an asset.
      * 
-     * @since 1.0.0
      * 
      * @param string $slug The asset slug
      * @param string $type The asset type (plugin or theme)
@@ -38,7 +35,6 @@ abstract class RollbackManager
     /**
      * Perform a rollback for an asset.
      * 
-     * @since 1.0.0
      * 
      * @param string $slug The asset slug
      * @param string $version The version to rollback to
@@ -50,7 +46,6 @@ abstract class RollbackManager
     /**
      * Validate that a rollback can be performed.
      * 
-     * @since 1.0.0
      * 
      * @param string $slug The asset slug
      * @param string $version The version to rollback to
@@ -77,7 +72,6 @@ abstract class RollbackManager
     /**
      * Format version information for display.
      * 
-     * @since 1.0.0
      * 
      * @param string $version The version number
      * @param array<string, mixed> $versionInfo Additional version info
@@ -99,7 +93,6 @@ abstract class RollbackManager
     /**
      * Get rollback URL for UI display.
      * 
-     * @since 1.0.0
      * 
      * @param string $slug The asset slug
      * @param string $version The version to rollback to

@@ -4,7 +4,6 @@
  * Base Constants class to be extended by both Free and Pro plugins.
  *
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -16,7 +15,6 @@ use WpRollback\SharedCore\Core\ConstantsInterface;
 /**
  * Base constants implementation with shared functionality.
  * 
- * @since 1.0.0
  */
 class BaseConstants implements ConstantsInterface
 {

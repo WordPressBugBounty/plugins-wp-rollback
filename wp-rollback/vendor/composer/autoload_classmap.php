@@ -73,6 +73,7 @@ return array(
     'WpRollback\\SharedCore\\RestAPI\\RollbackStepsApiRoute' => $vendorDir . '/wp-rollback/shared-core/src/RestAPI/RollbackStepsApiRoute.php',
     'WpRollback\\SharedCore\\RestAPI\\ServiceProvider' => $vendorDir . '/wp-rollback/shared-core/src/RestAPI/ServiceProvider.php',
     'WpRollback\\SharedCore\\Rollbacks\\Actions\\BaseRegisterAdminMenu' => $vendorDir . '/wp-rollback/shared-core/src/Rollbacks/Actions/BaseRegisterAdminMenu.php',
+    'WpRollback\\SharedCore\\Rollbacks\\Admin\\AdminPageHeaderLinks' => $vendorDir . '/wp-rollback/shared-core/src/Rollbacks/Admin/AdminPageHeaderLinks.php',
     'WpRollback\\SharedCore\\Rollbacks\\Contract\\RollbackStep' => $vendorDir . '/wp-rollback/shared-core/src/Rollbacks/Contract/RollbackStep.php',
     'WpRollback\\SharedCore\\Rollbacks\\Contract\\RollbackStepResult' => $vendorDir . '/wp-rollback/shared-core/src/Rollbacks/Contract/RollbackStepResult.php',
     'WpRollback\\SharedCore\\Rollbacks\\DTO\\RollbackApiRequestDTO' => $vendorDir . '/wp-rollback/shared-core/src/Rollbacks/DTO/RollbackApiRequestDTO.php',

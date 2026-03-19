@@ -103,6 +103,7 @@ class ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f
         'WpRollback\\SharedCore\\RestAPI\\RollbackStepsApiRoute' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/RollbackStepsApiRoute.php',
         'WpRollback\\SharedCore\\RestAPI\\ServiceProvider' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/ServiceProvider.php',
         'WpRollback\\SharedCore\\Rollbacks\\Actions\\BaseRegisterAdminMenu' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Actions/BaseRegisterAdminMenu.php',
+        'WpRollback\\SharedCore\\Rollbacks\\Admin\\AdminPageHeaderLinks' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Admin/AdminPageHeaderLinks.php',
         'WpRollback\\SharedCore\\Rollbacks\\Contract\\RollbackStep' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Contract/RollbackStep.php',
         'WpRollback\\SharedCore\\Rollbacks\\Contract\\RollbackStepResult' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Contract/RollbackStepResult.php',
         'WpRollback\\SharedCore\\Rollbacks\\DTO\\RollbackApiRequestDTO' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/DTO/RollbackApiRequestDTO.php',

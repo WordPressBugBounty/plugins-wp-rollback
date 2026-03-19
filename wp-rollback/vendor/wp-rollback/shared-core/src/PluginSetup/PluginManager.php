@@ -4,7 +4,6 @@
  * This class is used to manage the plugin activate, deactivation, and redirection on plugin activation.
  *
  * @package WpRollback\SharedCore\PluginSetup
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -17,13 +16,11 @@ use WpRollback\SharedCore\Core\SharedCore;
 /**
 * Class PluginManager
  *
- * @since 1.0.0
  */
 class PluginManager
 {
     /**
      * This is used to manage the plugin activation.
-     * @since 1.0.0
      */
     public static function activate(): void
     {
@@ -45,7 +42,6 @@ class PluginManager
 
     /**
      * This is used to manage the plugin deactivation.
-     * @since 1.0.0
      */
     public static function deactivate(): void
     {

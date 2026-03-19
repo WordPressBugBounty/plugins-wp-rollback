@@ -10,14 +10,12 @@ use WpRollback\SharedCore\Core\ConstantsInterface;
  * Data helper class for sanitization and URL handling
  *
  * @package WpRollback\SharedCore\Core\Helpers
- * @since 1.0.0
  */
 class DataHelper
 {
     /**
      * This function is used to sanitize data.
      *
-     * @since 1.0.0
      *
      * @param string $data The text to sanitize
      *
@@ -33,7 +31,6 @@ class DataHelper
      *
      * Note: This function is used to generate a nonce URL from a given plain URL.
      *
-     * @since 1.0.0
      *
      * @param ConstantsInterface $constants The Constants instance
      * @param string $action The action to perform
@@ -52,7 +49,6 @@ class DataHelper
     /**
      * This function is used to generate a nonce action name.
      *
-     * @since 1.0.0
      *
      * @param ConstantsInterface $constants The Constants instance
      * @param string $action The action to generate a nonce action name for

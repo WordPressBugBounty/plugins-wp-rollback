@@ -10,7 +10,6 @@ use WpRollback\SharedCore\Core\ConstantsInterface;
  * Database helper class
  *
  * @package WpRollback\SharedCore\Core\Helpers
- * @since 1.0.0
  */
 class DatabaseHelper
 {
@@ -23,7 +22,6 @@ class DatabaseHelper
      * @param string $key The key to generate a meta key for
      * @param bool $hide Whether to hide the key or not
      *
-     * @since 1.0.0
      *
      * @return string The generated meta key
      */
@@ -43,7 +41,6 @@ class DatabaseHelper
      * @param ConstantsInterface $constants The Constants instance
      * @param string $key The key to generate a meta key for
      *
-     * @since 1.0.0
      *
      * @return string The generated meta key
      */

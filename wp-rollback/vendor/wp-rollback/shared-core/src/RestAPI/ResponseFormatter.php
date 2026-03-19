@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\RestAPI
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -15,14 +14,12 @@ use WP_Error;
 /**
  * Response formatter for API responses.
  *
- * @since 1.0.0
  */
 class ResponseFormatter
 {
     /**
      * Format a successful response.
      *
-     * @since 1.0.0
      *
      * @param mixed $data Response data
      * @param string|null $message Optional success message
@@ -49,7 +46,6 @@ class ResponseFormatter
     /**
      * Format an error response.
      *
-     * @since 1.0.0
      *
      * @param string $code Error code
      * @param string $message Error message
@@ -66,7 +62,6 @@ class ResponseFormatter
     /**
      * Convert a WP_Error to a WP_REST_Response.
      *
-     * @since 1.0.0
      *
      * @param WP_Error $error The error to convert
      * @return WP_REST_Response

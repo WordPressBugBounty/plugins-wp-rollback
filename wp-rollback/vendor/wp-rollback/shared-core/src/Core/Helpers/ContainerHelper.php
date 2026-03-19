@@ -12,14 +12,12 @@ use WpRollback\SharedCore\Core\SharedCore;
  * Container helper class
  *
  * @package WpRollback\SharedCore\Core\Helpers
- * @since 1.0.0
  */
 class ContainerHelper
 {
     /**
      * Get the container instance.
      *
-     * @since 1.0.0
      *
      * @return ContainerInterface
      */
@@ -31,7 +29,6 @@ class ContainerHelper
     /**
      * Get a Constants instance from the container.
      *
-     * @since 1.0.0
      *
      * @param string $constantsClass The Constants class to get
      * @return ConstantsInterface

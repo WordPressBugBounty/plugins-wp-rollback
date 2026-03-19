@@ -29,6 +29,7 @@ export const RollbackProvider = ( { children, type, slug, onCancel } ) => {
     const [ isModalOpen, setIsModalOpen ] = useState( false );
     const [ modalTemplate, setModalTemplate ] = useState( 'failed' );
     const [ errorMessage, setErrorMessage ] = useState( null );
+    const [ isProgressComplete, setIsProgressComplete ] = useState( false );
 
     // Rollback version state
     const [ rollbackVersion, setRollbackVersion ] = useState( null );
@@ -134,6 +135,8 @@ export const RollbackProvider = ( { children, type, slug, onCancel } ) => {
         setModalTemplate,
         errorMessage,
         setErrorMessage,
+        isProgressComplete,
+        setIsProgressComplete,
 
         // Rollback data
         isLoading,

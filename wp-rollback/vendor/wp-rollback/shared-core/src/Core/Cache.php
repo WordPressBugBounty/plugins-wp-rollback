@@ -8,7 +8,6 @@
  * It also provides a way use persistence or object cache for caching.
  *
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -18,14 +17,12 @@ namespace WpRollback\SharedCore\Core;
 /**
  * Class Cache
  *
- * @since 1.0.0
  */
 class Cache
 {
     /**
      * Cache group name.
      *
-     * @since 1.0.0
      */
     private string $cacheGroup;
 
@@ -34,14 +31,12 @@ class Cache
      *
      * This is used to prefix the persistence cache key name.
      *
-     * @since 1.0.0
      */
     private string $cacheKeyPrefix;
 
     /**
      * Constructor.
      *
-     * @since 1.0.0
      */
     public function __construct(string $prefix = 'wp-rollback')
     {
@@ -52,7 +47,6 @@ class Cache
     /**
      * This method sets the cache.
      *
-     * @since 1.0.0
      */
     public function set(string $key, $value, int $expiration = 0, bool $cacheInDatabase = false): bool
     {
@@ -66,7 +60,6 @@ class Cache
     /**
      * This method gets the cache.
      *
-     * @since 1.0.0
      *
      * @return bool|mixed
      */
@@ -82,7 +75,6 @@ class Cache
     /**
      * This method deletes the cache.
      *
-     * @since 1.0.0
      */
     public function delete(string $key, $cacheInDatabase = false): bool
     {
@@ -98,7 +90,6 @@ class Cache
      *
      * This method is used to get the cache key when data stores in database.
      *
-     * @since 1.0.0
      */
     private function getCacheKey(string $key): string
     {

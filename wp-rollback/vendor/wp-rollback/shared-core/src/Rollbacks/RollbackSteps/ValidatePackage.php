@@ -4,7 +4,6 @@
  * Validate package rollback step.
  *
  * @package WpRollback\SharedCore\Rollbacks\RollbackSteps
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -19,14 +18,12 @@ use WpRollback\SharedCore\Rollbacks\Contract\RollbackStepResult;
 /**
  * Rollback step for validating package integrity using WordPress Core methods
  *
- * @since 1.0.0
  */
 class ValidatePackage implements RollbackStep
 {
     /**
      * Package validation service instance
      *
-     * @since 1.0.0
      * @var PackageValidationService
      */
     private PackageValidationService $validationService;
@@ -34,7 +31,6 @@ class ValidatePackage implements RollbackStep
     /**
      * Constructor
      *
-     * @since 1.0.0
      * @param PackageValidationService $validationService The package validation service
      */
     public function __construct(PackageValidationService $validationService)
@@ -44,7 +40,6 @@ class ValidatePackage implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function id(): string
     {
@@ -53,7 +48,6 @@ class ValidatePackage implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function execute(RollbackApiRequestDTO $rollbackApiRequestDTO): RollbackStepResult
     {
@@ -139,7 +133,6 @@ class ValidatePackage implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function rollbackProcessingMessage(): string
     {

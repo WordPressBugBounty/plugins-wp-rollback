@@ -8,7 +8,6 @@
  * detection of premium assets and Pro plugin status.
  *
  * @package WpRollback\SharedCore\Rollbacks\PluginRollback\Actions
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -20,7 +19,6 @@ use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
 /**
  * Class AddPluginRollbackLinks
  *
- * @since 1.0.0
  */
 class AddPluginRollbackLinks
 {

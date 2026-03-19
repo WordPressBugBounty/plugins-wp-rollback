@@ -5,9 +5,11 @@ const PluginNameColumn = ( { item } ) => {
     const imageUrl = useAssetImage( item.slug, 'plugin' );
 
     return (
-        <div style={ { display: 'flex', alignItems: 'center', gap: '15px' } }>
+        <div className="wpr-name-column" style={ { display: 'flex', alignItems: 'center', gap: '15px' } }>
             <AssetImage slug={ item.slug } type="plugin" imageUrl={ imageUrl } width={ 48 } height={ 48 } />
-            <p>{ item.name }</p>
+            <p className="wpr-name-column__text" title={ item.name }>
+                { item.name }
+            </p>
         </div>
     );
 };

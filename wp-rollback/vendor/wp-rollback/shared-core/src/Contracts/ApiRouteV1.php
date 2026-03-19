@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Contracts
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -15,7 +14,6 @@ use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 /**
  * Interface for API routes.
  *
- * @since 1.0.0
  */
 abstract class ApiRouteV1
 {
@@ -29,7 +27,6 @@ abstract class ApiRouteV1
     /**
      * Register the route.
      *
-     * @since 1.0.0
      *
      * @return void
      */
@@ -38,7 +35,6 @@ abstract class ApiRouteV1
     /**
      * Permission validation callback.
      *
-     * @since 1.0.0
      *
      * @param WP_REST_Request $request
      * @return bool

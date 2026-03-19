@@ -9,7 +9,6 @@ use WpRollback\SharedCore\Core\BaseConstants;
 /**
  * Handles script and style registration for WP Rollback.
  *
- * @since 1.0.0
  */
 class AssetsManager {
     protected BaseConstants $constants;
@@ -21,7 +20,6 @@ class AssetsManager {
     /**
      * Register and enqueue a script with its associated style.
      *
-     * @since 1.0.0
      * @param string $handle Script handle
      * @param array|bool $localizeDataOrEnqueueStyle Array of data to localize or boolean to control CSS enqueuing
      * @param bool|null $enqueueStyle Whether to enqueue the associated style. Only used if $localizeDataOrEnqueueStyle is an array.
@@ -85,7 +83,6 @@ class AssetsManager {
     /**
      * Check if we're on an allowed admin page for a specific script.
      *
-     * @since 1.0.0
      * @param string $screenId Current screen ID
      * @param string $handle Script handle
      * @return bool

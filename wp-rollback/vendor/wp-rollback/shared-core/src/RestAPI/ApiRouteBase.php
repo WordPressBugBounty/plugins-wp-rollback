@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\RestAPI
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -16,7 +15,6 @@ use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 /**
  * Base class for API routes.
  *
- * @since 1.0.0
  */
 abstract class ApiRouteBase
 {
@@ -30,7 +28,6 @@ abstract class ApiRouteBase
     /**
      * Register the route.
      *
-     * @since 1.0.0
      *
      * @return void
      */
@@ -39,7 +36,6 @@ abstract class ApiRouteBase
     /**
      * Permission validation callback.
      *
-     * @since 1.0.0
      *
      * @param WP_REST_Request $request
      * @return bool
@@ -52,7 +48,6 @@ abstract class ApiRouteBase
     /**
      * Create a standardized error response.
      *
-     * @since 1.0.0
      *
      * @param string $code Error code
      * @param string $message Error message
@@ -67,7 +62,6 @@ abstract class ApiRouteBase
     /**
      * Sanitize and validate request data.
      *
-     * @since 1.0.0
      *
      * @param WP_REST_Request $request
      * @param array<string, mixed> $fields Fields to validate with their sanitization callbacks

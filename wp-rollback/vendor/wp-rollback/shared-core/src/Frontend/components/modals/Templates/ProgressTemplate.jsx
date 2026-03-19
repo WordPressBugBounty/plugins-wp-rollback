@@ -1,6 +1,6 @@
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState, createInterpolateElement } from '@wordpress/element';
+import { useEffect, useState, useRef, createInterpolateElement } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -13,8 +13,16 @@ import { useRollbackContext } from '../../../context/RollbackContext';
  * @return {JSX.Element} Progress template content
  */
 const ProgressTemplate = () => {
-    const { setModalTemplate, rollbackInfo, rollbackVersion, type, slug, setErrorMessage, rollbackMeta } =
-        useRollbackContext();
+    const {
+        setModalTemplate,
+        rollbackInfo,
+        rollbackVersion,
+        type,
+        slug,
+        setErrorMessage,
+        rollbackMeta,
+        setIsProgressComplete,
+    } = useRollbackContext();
 
     const [ currentStep, setCurrentStep ] = useState( 0 );
     const [ steps, setSteps ] = useState( [] );
@@ -24,6 +32,8 @@ const ProgressTemplate = () => {
 
     // Step status: 'pending', 'running', 'completed', 'error'
     const [ stepStatuses, setStepStatuses ] = useState( {} );
+
+    const stepsContainerRef = useRef( null );
 
     const delay = ms => new Promise( resolve => setTimeout( resolve, ms ) );
 
@@ -138,8 +148,8 @@ const ProgressTemplate = () => {
                     const progressPercent = ( i / rollbackSteps.length ) * 100;
                     setProgress( progressPercent );
 
-                    // Mark step as running
-                    updateStepStatus( i, 'running', step.rollbackProcessingMessage );
+                    // Mark step as running — no message yet, title already describes the step
+                    updateStepStatus( i, 'running', '' );
 
                     // Artificial delay to let user see the step start
                     await delay( 600 );
@@ -180,6 +190,7 @@ const ProgressTemplate = () => {
                 setProgress( 100 );
                 setCurrentStep( rollbackSteps.length );
                 setIsComplete( true );
+                setIsProgressComplete( true );
 
                 // Completion delay to show success state
                 await delay( 800 );
@@ -197,8 +208,23 @@ const ProgressTemplate = () => {
         performRollback();
     }, [ rollbackVersion, setModalTemplate ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
+    // Keep the active step scrolled into view as steps progress
+    useEffect( () => {
+        const container = stepsContainerRef.current;
+        if ( ! container ) {
+            return;
+        }
+        const activeStep = container.querySelector( '.wpr-step--running' );
+        if ( activeStep ) {
+            activeStep.scrollIntoView( { behavior: 'smooth', block: 'nearest' } );
+        } else {
+            // On completion or error, scroll to the bottom to show the final step
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [ currentStep, stepStatuses ] );
+
     const introText = createInterpolateElement(
-        __( 'Rolling <assetName/> back to version <assetVersion/>…', 'wp-rollback' ),
+        __( 'Rolling back <assetName/> to version <assetVersion/>…', 'wp-rollback' ),
         {
             assetName: <strong>{ decodeEntities( rollbackInfo.name ) }</strong>,
             assetVersion: <strong>{ rollbackVersion }</strong>,
@@ -223,8 +249,8 @@ const ProgressTemplate = () => {
                     { hasError
                         ? __( 'An error occurred during the rollback process.', 'wp-rollback' )
                         : isComplete
-                        ? __( 'Rollback completed successfully! Click Continue to proceed.', 'wp-rollback' )
-                        : __( 'Please wait while we safely rollback your asset.', 'wp-rollback' ) }
+                        ? __( 'All steps completed successfully.', 'wp-rollback' )
+                        : __( 'Please wait — this may take a few moments.', 'wp-rollback' ) }
                 </p>
             </div>
 
@@ -240,7 +266,18 @@ const ProgressTemplate = () => {
             </div>
 
             { /* Steps List */ }
-            <div className="wpr-steps-container">
+            <div className="wpr-steps-container" ref={ stepsContainerRef }>
+                { steps.length === 0 &&
+                    [ ...Array( 5 ) ].map( ( _, index ) => (
+                        <div key={ index } className="wpr-step wpr-step--skeleton">
+                            <div className="wpr-step-icon wpr-step-icon--pending">
+                                <div className="wpr-step-dot"></div>
+                            </div>
+                            <div className="wpr-step-content">
+                                <div className="wpr-step-skeleton-bar"></div>
+                            </div>
+                        </div>
+                    ) ) }
                 { steps.map( ( step, index ) => {
                     const status = stepStatuses[ index ] || { status: 'pending', message: '' };
                     const isActive = index === currentStep;
@@ -255,9 +292,12 @@ const ProgressTemplate = () => {
                             { getStepIcon( status.status ) }
                             <div className="wpr-step-content">
                                 <div className="wpr-step-title">{ step.rollbackProcessingMessage || step.id }</div>
-                                { status.message && status.status === 'completed' && (
-                                    <div className="wpr-step-message">{ status.message }</div>
-                                ) }
+                                { status.message &&
+                                    ( status.status === 'running' ||
+                                        status.status === 'completed' ||
+                                        status.status === 'error' ) && (
+                                        <div className="wpr-step-message">{ status.message }</div>
+                                    ) }
                             </div>
                         </div>
                     );

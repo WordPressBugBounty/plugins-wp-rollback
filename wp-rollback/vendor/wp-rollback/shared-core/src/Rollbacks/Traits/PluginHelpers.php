@@ -4,7 +4,6 @@
  * Plugin Helper Traits
  * 
  * @package WpRollback\SharedCore\Rollbacks\Traits
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -20,7 +19,6 @@ trait PluginHelpers
     /**
      * Common plugin paths for WP Rollback
      * 
-     * @since 1.0.0
      * @var array
      */
     protected static $pluginPaths = [
@@ -37,7 +35,6 @@ trait PluginHelpers
     /**
      * Ensure WordPress plugin functions are loaded
      *
-     * @since 1.0.0
      * @return void
      */
     private function loadPluginFunctions(): void
@@ -50,7 +47,6 @@ trait PluginHelpers
     /**
      * Get plugin file path by slug
      *
-     * @since 1.0.0
      * @param string $pluginSlug The plugin slug
      * @return string The plugin file path
      */
@@ -75,7 +71,6 @@ trait PluginHelpers
      * on individual subsites when the plugin is network activated. It returns false
      * in network admin context to ensure network-level operations proceed normally.
      *
-     * @since 1.0.0
      * @return bool True if network activated (and not in network admin), false otherwise
      */
     protected function isNetworkActivated(): bool
@@ -124,7 +119,6 @@ trait PluginHelpers
     /**
      * Check if Pro plugin is active
      *
-     * @since 1.0.0
      * @return bool Whether Pro plugin is active
      */
     protected function isProPluginActive(): bool
@@ -152,7 +146,6 @@ trait PluginHelpers
     /**
      * Check if Free plugin is active
      *
-     * @since 1.0.0
      * @return bool Whether Free plugin is active
      */
     protected function isFreePluginActive(): bool
@@ -175,7 +168,6 @@ trait PluginHelpers
     /**
      * Get the appropriate admin URL based on context
      *
-     * @since 1.0.0
      * @param string $page The admin page (e.g., 'tools.php', 'settings.php')
      * @return string The admin URL
      */

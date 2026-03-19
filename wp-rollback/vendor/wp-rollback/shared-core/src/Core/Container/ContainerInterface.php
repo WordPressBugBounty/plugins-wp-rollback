@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Core\Container
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -12,14 +11,12 @@ namespace WpRollback\SharedCore\Core\Container;
 /**
  * Container interface for dependency injection.
  *
- * @since 1.0.0
  */
 interface ContainerInterface
 {
     /**
      * Register a binding with the container.
      *
-     * @since 1.0.0
      *
      * @param string $abstract The abstract key to register
      * @param mixed $concrete The concrete implementation
@@ -32,7 +29,6 @@ interface ContainerInterface
     /**
      * Register a shared binding in the container.
      *
-     * @since 1.0.0
      *
      * @param string $abstract The abstract key to register
      * @param mixed $concrete The concrete implementation
@@ -44,7 +40,6 @@ interface ContainerInterface
     /**
      * Resolve an instance from the container.
      *
-     * @since 1.0.0
      *
      * @param string $abstract The abstract key to resolve
      * @param array<mixed> $parameters Optional parameters to pass to the resolver
@@ -57,7 +52,6 @@ interface ContainerInterface
     /**
      * Determine if a given type has been bound.
      *
-     * @since 1.0.0
      *
      * @param string $abstract The abstract key to check
      *
@@ -68,7 +62,6 @@ interface ContainerInterface
     /**
      * Alias a type to a different name.
      *
-     * @since 1.0.0
      *
      * @param string $abstract The abstract key to alias
      * @param string $alias The alias name

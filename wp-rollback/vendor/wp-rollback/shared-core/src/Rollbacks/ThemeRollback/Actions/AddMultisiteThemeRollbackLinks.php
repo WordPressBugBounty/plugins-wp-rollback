@@ -8,7 +8,6 @@
  * for multisite installations - single site uses a different UI approach.
  *
  * @package WpRollback\SharedCore\Rollbacks\ThemeRollback\Actions
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -20,7 +19,6 @@ use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
 /**
  * Class AddMultisiteThemeRollbackLinks
  *
- * @since 1.0.0
  */
 class AddMultisiteThemeRollbackLinks
 {

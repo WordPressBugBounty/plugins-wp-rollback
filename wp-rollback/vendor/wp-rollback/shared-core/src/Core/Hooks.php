@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -14,14 +13,12 @@ use WpRollback\SharedCore\Core\Request;
 /**
  * Hooks class.
  *
- * @since 1.0.0
  */
 class Hooks
 {
     /**
      * Dependency container for class resolution.
      *
-     * @since 1.0.0
      * @var array<string, callable>
      */
     private static array $container = [];
@@ -29,7 +26,6 @@ class Hooks
     /**
      * Add an action hook.
      *
-     * @since 1.0.0
      *
      * @param string $hook          The action hook.
      * @param string $class         The class to call.
@@ -52,7 +48,6 @@ class Hooks
     /**
      * Add a filter hook.
      *
-     * @since 1.0.0
      *
      * @param string $hook          The filter hook.
      * @param string $class         The class to call.
@@ -78,7 +73,6 @@ class Hooks
      * This allows defining how specific classes should be instantiated
      * when they're needed by the hook system.
      *
-     * @since 1.0.0
      *
      * @param string   $class   The fully qualified class name.
      * @param callable $factory A function that returns an instance of the class.
@@ -97,7 +91,6 @@ class Hooks
      * If a factory was registered for the class, it will be used.
      * Controllers will automatically receive a Request object.
      *
-     * @since 1.0.0
      *
      * @param string $class The fully qualified class name to resolve.
      *

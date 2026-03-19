@@ -1,4 +1,4 @@
-import { Modal } from '@wordpress/components';
+import { Modal, Dashicon } from '@wordpress/components';
 import getTemplateConfig from './Templates/getTemplateConfig';
 import { createInterpolateElement } from '@wordpress/element';
 import { useRollbackContext } from '../../context/RollbackContext';
@@ -11,7 +11,14 @@ import { useRollbackContext } from '../../context/RollbackContext';
  * @return {JSX.Element|null} Modal component or null if not open
  */
 const RollbackModal = ( { queryArgs = {} } ) => {
-    const { isModalOpen, setIsModalOpen, modalTemplate = 'failed', rollbackInfo, type } = useRollbackContext();
+    const {
+        isModalOpen,
+        setIsModalOpen,
+        modalTemplate = 'failed',
+        rollbackInfo,
+        type,
+        isProgressComplete,
+    } = useRollbackContext();
 
     // Check both modal state and required info
     if ( ! isModalOpen || ! rollbackInfo?.name ) {
@@ -23,9 +30,13 @@ const RollbackModal = ( { queryArgs = {} } ) => {
     const {
         component: TemplateComponent,
         title: TemplateTitle,
-        icon: TemplateIcon,
+        icon: templateConfigIcon,
         buttons,
     } = TEMPLATES[ modalTemplate ] || TEMPLATES.failed;
+
+    // Stop the spinning update icon once the rollback steps are done
+    const TemplateIcon =
+        modalTemplate === 'progress' && isProgressComplete ? <Dashicon icon="yes-alt" /> : templateConfigIcon;
 
     const typeText = type === 'plugin' ? 'Plugin' : 'Theme';
     const FilteredTitle = createInterpolateElement( TemplateTitle, {
@@ -35,7 +46,7 @@ const RollbackModal = ( { queryArgs = {} } ) => {
     return (
         <Modal
             title={ FilteredTitle }
-            className="wpr-modal"
+            className={ `wpr-modal wpr-modal--${ modalTemplate }` }
             shouldCloseOnClickOutside={ false }
             onRequestClose={ () => setIsModalOpen( false ) }
             icon={ TemplateIcon }

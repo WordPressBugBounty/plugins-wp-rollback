@@ -11,7 +11,6 @@ use WP_Error;
  * HTTP request helper class
  *
  * @package WpRollback\SharedCore\Core\Helpers
- * @since 1.0.0
  */
 class HttpHelper
 {
@@ -25,7 +24,6 @@ class HttpHelper
      * @param string $url The URL to make the GET request to
      * @param array $args Optional arguments to pass along with the request
      *
-     * @since 1.0.0
      *
      * @return array|WP_Error The response from the remote GET request
      * @throws Exception

@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks\DTO
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -14,42 +13,35 @@ use InvalidArgumentException;
 /**
  * Data Transfer Object for API rollback requests
  * 
- * @since 1.0.0
  */
 class RollbackApiRequestDTO
 {
     /**
-     * @since 1.0.0
      * @var string
      */
     private string $type;
 
     /**
-     * @since 1.0.0
      * @var string
      */
     private string $slug;
 
     /**
-     * @since 1.0.0
      * @var string
      */
     private string $version;
 
     /**
-     * @since 1.0.0
      * @var string
      */
     private string $name;
 
     /**
-     * @since 1.0.0
      * @var array
      */
     private array $meta = [];
 
     /**
-     * @since 1.0.0
      * @param string $type The asset type (plugin, theme)
      * @param string $slug The asset slug
      * @param string $version The asset version
@@ -86,7 +78,6 @@ class RollbackApiRequestDTO
     /**
      * Get the asset type
      * 
-     * @since 1.0.0
      * @return string
      */
     public function getType(): string
@@ -97,7 +88,6 @@ class RollbackApiRequestDTO
     /**
      * Get the asset slug
      * 
-     * @since 1.0.0
      * @return string
      */
     public function getSlug(): string
@@ -108,7 +98,6 @@ class RollbackApiRequestDTO
     /**
      * Get the asset version
      * 
-     * @since 1.0.0
      * @return string
      */
     public function getVersion(): string
@@ -119,7 +108,6 @@ class RollbackApiRequestDTO
     /**
      * Get the asset name
      * 
-     * @since 1.0.0
      * @return string
      */
     public function getName(): string
@@ -130,7 +118,6 @@ class RollbackApiRequestDTO
     /**
      * Get the asset meta data
      * 
-     * @since 1.0.0
      * @return array
      */
     public function getMeta(): array
@@ -141,7 +128,6 @@ class RollbackApiRequestDTO
     /**
      * Set the asset meta data
      * 
-     * @since 1.0.0
      * @param array $meta
      * @return self
      */
@@ -154,7 +140,6 @@ class RollbackApiRequestDTO
     /**
      * Create an instance from API request data
      *
-     * @since 1.0.0
      * @param array $data The request data
      * @return self
      * @throws InvalidArgumentException If required data is missing
@@ -192,7 +177,6 @@ class RollbackApiRequestDTO
     /**
      * Get the raw request data
      *
-     * @since 1.0.0
      * @return array The request data
      */
     public function getData(): array

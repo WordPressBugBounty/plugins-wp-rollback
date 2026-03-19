@@ -4,7 +4,6 @@
  * Package validation service for verifying plugin and theme integrity using WordPress Core methods.
  *
  * @package WpRollback\SharedCore\Rollbacks\Services
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -17,7 +16,6 @@ use ZipArchive;
 /**
  * Service for validating packages using WordPress Core validation methods
  *
- * @since 1.0.0
  */
 class PackageValidationService
 {
@@ -25,7 +23,6 @@ class PackageValidationService
     /**
      * Validate a downloaded package using WordPress Core methods
      *
-     * @since 1.0.0
      * @param string $packagePath Path to the downloaded ZIP package
      * @param string $assetType   Type of asset ('plugin' or 'theme')
      * @param string $assetSlug   Asset slug
@@ -116,7 +113,6 @@ class PackageValidationService
     /**
      * Validate using WordPress Core functions
      *
-     * @since 1.0.0
      * @param string $packagePath Path to ZIP package
      * @return array|WP_Error Validation results or error
      */
@@ -229,7 +225,6 @@ class PackageValidationService
     /**
      * Validate ZIP file integrity
      *
-     * @since 1.0.0
      * @param string $packagePath Path to ZIP package
      * @return array|WP_Error Validation results or error
      */
@@ -279,7 +274,6 @@ class PackageValidationService
     /**
      * Validate package directory structure
      *
-     * @since 1.0.0
      * @param string $packagePath Path to ZIP package
      * @param string $assetType   Asset type
      * @param string $assetSlug   Asset slug
@@ -362,7 +356,6 @@ class PackageValidationService
      * no pattern-based scanning (too prone to false positives).
      * Focuses on structural validation and file size monitoring only.
      *
-     * @since 1.0.0
      * @param string $packagePath Path to ZIP package
      * @return array Validation results
      */
@@ -419,7 +412,6 @@ class PackageValidationService
     /**
      * Count PHP files in the package for reporting
      *
-     * @since 1.0.0
      * @param ZipArchive $zip The ZIP archive
      * @return int Number of PHP files found
      */

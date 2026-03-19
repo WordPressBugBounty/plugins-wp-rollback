@@ -13,10 +13,16 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
 
     &__name {
         font-size: 14px;
-        color: var(--wpr-gray-800);
+        font-weight: 500;
+        color: $color-headings;
+        max-width: 260px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 
@@ -61,7 +67,22 @@
 }
 
 .wpr-theme-name-column {
-    color: $color-headings;
+    min-width: 0;
+}
+
+.wpr-name-column {
+    min-width: 0;
+
+    &__text {
+        font-size: 14px;
+        font-weight: 500;
+        color: $color-headings;
+        max-width: 260px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 0;
+    }
 }
 
 .wpr-column-notes {

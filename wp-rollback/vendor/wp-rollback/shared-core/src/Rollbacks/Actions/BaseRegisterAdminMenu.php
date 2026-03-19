@@ -4,7 +4,6 @@
  * Base class for registering admin menus.
  *
  * @package WpRollback\SharedCore\Rollbacks\Actions
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -19,7 +18,6 @@ use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
 /**
  * Base class for registering admin menus in both free and pro versions
  *
- * @since 1.0.0
  */
 abstract class BaseRegisterAdminMenu
 {
@@ -27,7 +25,6 @@ abstract class BaseRegisterAdminMenu
     /**
      * Get the menu title to be displayed in the admin menu
      *
-     * @since 1.0.0
      * @return string The menu title
      */
     abstract protected function getMenuTitle(): string;
@@ -35,7 +32,6 @@ abstract class BaseRegisterAdminMenu
     /**
      * Get the page title to be displayed in the browser title
      *
-     * @since 1.0.0
      * @return string The page title
      */
     abstract protected function getPageTitle(): string;
@@ -43,7 +39,6 @@ abstract class BaseRegisterAdminMenu
     /**
      * Get the capability required to access the page
      *
-     * @since 1.0.0
      * @return string The capability
      */
     protected function getCapability(): string
@@ -54,7 +49,6 @@ abstract class BaseRegisterAdminMenu
     /**
      * Get the menu slug for the admin menu
      *
-     * @since 1.0.0
      * @return string The menu slug
      */
     protected function getMenuSlug(): string
@@ -65,7 +59,6 @@ abstract class BaseRegisterAdminMenu
     /**
      * Register the admin menu item
      *
-     * @since 1.0.0
      * @throws BindingResolutionException
      */
     public function __invoke(): void
@@ -89,7 +82,6 @@ abstract class BaseRegisterAdminMenu
     /**
      * Register menu in multisite context
      * 
-     * @since 1.0.0
      * @throws BindingResolutionException
      */
     public function registerMultisiteMenu(): void

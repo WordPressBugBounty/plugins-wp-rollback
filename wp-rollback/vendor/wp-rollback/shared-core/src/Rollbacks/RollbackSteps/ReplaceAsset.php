@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks\RollbackSteps
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -15,7 +14,6 @@ use WpRollback\SharedCore\Rollbacks\Contract\RollbackStepResult;
 use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
 
 /**
- * @since 1.0.0
  */
 class ReplaceAsset implements RollbackStep
 {
@@ -23,7 +21,6 @@ class ReplaceAsset implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function id(): string
     {
@@ -32,7 +29,6 @@ class ReplaceAsset implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function execute(RollbackApiRequestDTO $rollbackApiRequestDTO): RollbackStepResult
     {
@@ -69,7 +65,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Get current version based on asset type
      *
-     * @since 1.0.0
      * @param string $assetType The type of asset (plugin/theme)
      * @param string $assetSlug The asset slug
      * @return string The current version
@@ -84,7 +79,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Get current plugin version
      *
-     * @since 1.0.0
      * @param string $pluginSlug The plugin slug
      * @return string The current plugin version
      */
@@ -105,7 +99,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Get current theme version
      *
-     * @since 1.0.0
      * @param string $themeSlug The theme slug
      * @return string The current theme version
      */
@@ -118,7 +111,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Validate the downloaded package
      *
-     * @since 1.0.0
      * @param string|\WP_Error $package The package file path or WP_Error
      * @param RollbackApiRequestDTO $rollbackApiRequestDTO The rollback request DTO
      * @return RollbackStepResult The validation result
@@ -160,7 +152,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Setup WordPress filesystem
      *
-     * @since 1.0.0
      * @return void
      */
     private function setupFilesystem(): void
@@ -178,7 +169,6 @@ class ReplaceAsset implements RollbackStep
      * we only want to remove files — matching how WordPress core's Plugin_Upgrader
      * handles updates via WP_Upgrader::clear_destination().
      *
-     * @since 1.0.0
      * @param string $pluginDir Absolute path to the plugin directory to remove.
      * @return bool Whether the deletion was successful.
      */
@@ -203,7 +193,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Prepare destination based on asset type
      *
-     * @since 1.0.0
      * @param string $assetType The type of asset (plugin/theme)
      * @param string $assetSlug The asset slug
      * @return string The destination path
@@ -218,7 +207,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Prepare plugin destination
      *
-     * @since 1.0.0
      * @param string $pluginSlug The plugin slug
      * @return string The plugin destination path
      */
@@ -235,7 +223,6 @@ class ReplaceAsset implements RollbackStep
                 /**
                  * Filter whether to delete the existing plugin before rollback.
                  *
-                 * @since 1.0.0
                  * @param bool   $shouldDelete Whether to delete the plugin
                  * @param string $pluginFile    The plugin file path
                  * @param string $pluginSlug    The plugin slug
@@ -280,7 +267,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Prepare theme destination
      * 
-     * @since 1.0.0
      * @param string $themeSlug The theme slug
      * @return string The theme destination path
      */
@@ -326,7 +312,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Perform the rollback operation
      *
-     * @since 1.0.0
      * @param string $package The package file path
      * @param string $destination The destination path
      * @param string $assetType The type of asset (plugin/theme)
@@ -377,7 +362,6 @@ class ReplaceAsset implements RollbackStep
     /**
      * Reactivate plugin if it was active before rollback
      *
-     * @since 1.0.0
      * @param string $pluginSlug The plugin slug
      * @return void
      */
@@ -431,7 +415,6 @@ class ReplaceAsset implements RollbackStep
      *
      * Following WordPress Core pattern: only switch theme if the folder name changed
      * 
-     * @since 1.0.0
      * @param string $themeSlug The theme slug after rollback
      * @return void
      */
@@ -479,7 +462,6 @@ class ReplaceAsset implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function rollbackProcessingMessage(): string
     {

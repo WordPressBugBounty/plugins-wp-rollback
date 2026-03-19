@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks\Contract
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -15,42 +14,35 @@ use WpRollback\SharedCore\Rollbacks\DTO\RollbackApiRequestDTO;
 /**
  * Class representing the result of a rollback step
  * 
- * @since 1.0.0
  */
 class RollbackStepResult
 {
     /**
-     * @since 1.0.0
      * @var bool
      */
     private bool $success;
 
     /**
-     * @since 1.0.0
      * @var RollbackApiRequestDTO
      */
     private RollbackApiRequestDTO $rollbackApiRequestDTO;
 
     /**
-     * @since 1.0.0
      * @var string
      */
     private string $message;
 
     /**
-     * @since 1.0.0
      * @var Throwable|null
      */
     private ?Throwable $exception;
 
     /**
-     * @since 1.0.0
      * @var array
      */
     private array $data;
 
     /**
-     * @since 1.0.0
      * @param bool $success Whether the step was successful
      * @param RollbackApiRequestDTO $rollbackApiRequestDTO The request data
      * @param string $message A message describing the result
@@ -74,7 +66,6 @@ class RollbackStepResult
     /**
      * Check if the step was successful
      * 
-     * @since 1.0.0
      * @return bool
      */
     public function isSuccess(): bool
@@ -85,7 +76,6 @@ class RollbackStepResult
     /**
      * Get the rollback API request DTO
      * 
-     * @since 1.0.0
      * @return RollbackApiRequestDTO
      */
     public function getRollbackApiRequestDTO(): RollbackApiRequestDTO
@@ -96,7 +86,6 @@ class RollbackStepResult
     /**
      * Get the result message
      * 
-     * @since 1.0.0
      * @return string
      */
     public function getMessage(): string
@@ -107,7 +96,6 @@ class RollbackStepResult
     /**
      * Get the exception if one occurred
      * 
-     * @since 1.0.0
      * @return Throwable|null
      */
     public function getException(): ?Throwable
@@ -118,7 +106,6 @@ class RollbackStepResult
     /**
      * Get the step result data
      * 
-     * @since 1.0.0
      * @return array
      */
     public function getData(): array
@@ -129,7 +116,6 @@ class RollbackStepResult
     /**
      * Create a successful result
      * 
-     * @since 1.0.0
      * @param RollbackApiRequestDTO $dto The request data
      * @param string $message A success message
      * @return self
@@ -142,7 +128,6 @@ class RollbackStepResult
     /**
      * Create a failed result
      * 
-     * @since 1.0.0
      * @param RollbackApiRequestDTO $dto The request data
      * @param string $message An error message
      * @param Throwable|null $exception An exception if one occurred
@@ -159,7 +144,6 @@ class RollbackStepResult
     /**
      * Create a failure result from an exception
      * 
-     * @since 1.0.0
      * @param RollbackApiRequestDTO $dto The request data
      * @param Throwable $exception The exception that occurred
      * @return self

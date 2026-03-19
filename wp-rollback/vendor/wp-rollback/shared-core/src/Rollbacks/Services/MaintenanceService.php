@@ -4,7 +4,6 @@
  * Maintenance mode service for managing WordPress .maintenance file.
  *
  * @package WpRollback\SharedCore\Rollbacks\Services
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -14,14 +13,12 @@ namespace WpRollback\SharedCore\Rollbacks\Services;
 /**
  * Service for managing WordPress maintenance mode
  *
- * @since 1.0.0
  */
 class MaintenanceService
 {
     /**
      * Custom maintenance file name to avoid conflicts with WordPress core
      * 
-     * @since 1.0.0
      * @var string
      */
     private const MAINTENANCE_FILE = '.wpr-maintenance';
@@ -29,7 +26,6 @@ class MaintenanceService
     /**
      * Get the path to the maintenance file
      *
-     * @since 1.0.0
      * @return string Path to maintenance file
      */
     private function getMaintenanceFilePath(): string
@@ -41,7 +37,6 @@ class MaintenanceService
      * Enable maintenance mode by creating maintenance file
      * Uses a custom file to avoid blocking admin/API requests
      *
-     * @since 1.0.0
      * @return bool True if maintenance mode was enabled, false on failure
      */
     public function enableMaintenanceMode(): bool
@@ -72,7 +67,6 @@ class MaintenanceService
     /**
      * Show maintenance message for frontend requests only
      *
-     * @since 1.0.0
      * @return void
      */
     public function showMaintenanceMessage(): void
@@ -159,7 +153,6 @@ class MaintenanceService
     /**
      * Check if current request is a REST API request
      *
-     * @since 1.0.0
      * @return bool
      */
     private function isRestRequest(): bool
@@ -181,7 +174,6 @@ class MaintenanceService
     /**
      * Disable maintenance mode by removing maintenance file
      *
-     * @since 1.0.0
      * @return bool True if maintenance mode was disabled or wasn't active, false on failure
      */
     public function disableMaintenanceMode(): bool
@@ -203,7 +195,6 @@ class MaintenanceService
     /**
      * Check if maintenance mode is currently active
      *
-     * @since 1.0.0
      * @return bool True if maintenance mode is active, false otherwise
      */
     public function isMaintenanceModeActive(): bool
@@ -232,7 +223,6 @@ class MaintenanceService
      * Force disable maintenance mode regardless of file permissions or state
      * This is a more aggressive cleanup method for error recovery
      *
-     * @since 1.0.0
      * @return void
      */
     public function forceDisableMaintenanceMode(): void
@@ -262,7 +252,6 @@ class MaintenanceService
      * Initialize maintenance mode checks
      * This should be called early in WordPress load
      *
-     * @since 1.0.0
      * @return void
      */
     public function init(): void
@@ -278,7 +267,6 @@ class MaintenanceService
      * Determine if we should show the maintenance message
      * Filters out admin, AJAX, REST, CLI, update processes, and monitoring tools
      *
-     * @since 1.0.0
      * @return bool
      */
     private function shouldShowMaintenanceMessage(): bool
@@ -339,7 +327,6 @@ class MaintenanceService
         /**
          * Filter to allow custom logic for showing maintenance mode
          *
-         * @since 1.0.0
          * @param bool $should_show Whether to show maintenance mode
          */
         return apply_filters('wpr_should_show_maintenance_mode', true);

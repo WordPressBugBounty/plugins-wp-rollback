@@ -4,7 +4,6 @@
  * Backup service for creating and managing asset backups.
  *
  * @package WpRollback\SharedCore\Rollbacks\Services
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -23,7 +22,6 @@ use WpRollback\SharedCore\Core\SharedCore;
 /**
  * Service for creating and managing asset backups
  *
- * @since 1.0.0
  */
 class BackupService
 {
@@ -42,7 +40,6 @@ class BackupService
     /**
      * Constructor.
      *
-     * @since 1.0.0
      */
     public function __construct()
     {
@@ -53,7 +50,6 @@ class BackupService
     /**
      * Set up the rollback directory.
      *
-     * @since 1.0.0
      * @throws \RuntimeException If directory creation fails
      */
     public function setupRollbackDirectory(): void
@@ -93,7 +89,6 @@ class BackupService
     /**
      * Check if a backup already exists for a specific version.
      *
-     * @since 1.0.0
      * @param string $assetSlug The asset slug
      * @param string $assetType The asset type ('plugin' or 'theme')
      * @return bool|string False if no backup exists, version string if backup exists
@@ -120,7 +115,6 @@ class BackupService
     /**
      * Create a backup of a plugin or theme.
      *
-     * @since 1.0.0
      * @param string $assetSlug The asset slug
      * @param string $assetType The asset type ('plugin' or 'theme')
      * @return bool|string True if backup was created successfully, 'exists' if backup already exists, false otherwise
@@ -157,7 +151,6 @@ class BackupService
     /**
      * Intercept plugin/theme upgrade to store a backup.
      *
-     * @since 1.0.0
      * @param array $options Upgrader package options
      * @return array Modified options
      */
@@ -205,7 +198,6 @@ class BackupService
     /**
      * Get available versions for a plugin/theme from backup files.
      *
-     * @since 1.0.0
      * @param array  $versions Current versions array
      * @param string $slug     Plugin/theme slug
      * @return array Modified versions array
@@ -240,7 +232,6 @@ class BackupService
     /**
      * Check if a plugin/theme has backup versions available.
      *
-     * @since 1.0.0
      * @param bool   $isPro Current pro status
      * @param string $slug  Plugin/theme slug
      * @return bool Modified pro status
@@ -258,7 +249,6 @@ class BackupService
     /**
      * Control whether to delete the existing plugin/theme during rollback.
      *
-     * @since 1.0.0
      * @param bool   $shouldDelete Whether to delete the asset
      * @param string $assetFile    The asset file path
      * @param string $assetSlug    The asset slug
@@ -277,7 +267,6 @@ class BackupService
     /**
      * Modify rollback request data for assets with backup versions.
      *
-     * @since 1.0.0
      * @param array         $data    Current request data
      * @param WP_REST_Request $request Raw request data
      * @return array Modified request data
@@ -340,7 +329,6 @@ class BackupService
     /**
      * Create a backup of a plugin.
      *
-     * @since 1.0.0
      * @param string $pluginSlug The plugin slug
      * @return bool True if backup was created successfully
      * @throws \RuntimeException If backup creation fails
@@ -371,7 +359,6 @@ class BackupService
     /**
      * Create a backup of a theme.
      *
-     * @since 1.0.0
      * @param string $themeSlug The theme slug
      * @return bool True if backup was created successfully
      * @throws \RuntimeException If backup creation fails
@@ -413,7 +400,6 @@ class BackupService
     /**
      * Create a ZIP backup of an asset.
      *
-     * @since 1.0.0
      * @param string $assetPath The path to the asset directory
      * @param string $slug The asset slug
      * @param string $version The asset version
@@ -445,7 +431,6 @@ class BackupService
     /**
      * Create a ZIP backup using ZipArchive (preferred method).
      *
-     * @since 1.0.0
      * @param string $assetPath The path to the asset directory
      * @param string $slug The asset slug
      * @param string $type The asset type ('plugin' or 'theme')
@@ -511,7 +496,6 @@ class BackupService
     /**
      * Create a ZIP backup using PclZip (WordPress Core fallback).
      *
-     * @since 1.0.0
      * @param string $assetPath The path to the asset directory
      * @param string $slug The asset slug
      * @param string $type The asset type ('plugin' or 'theme')
@@ -568,9 +552,17 @@ class BackupService
     }
 
     /**
+     * Get the absolute path to the rollback backup directory.
+     *
+     */
+    public function getRollbackDirectory(): string
+    {
+        return $this->rollbackDir;
+    }
+
+    /**
      * Initialize WordPress filesystem.
      *
-     * @since 1.0.0
      * @throws \RuntimeException If filesystem initialization fails
      */
     private function initializeFilesystem(): void
@@ -602,7 +594,6 @@ class BackupService
     /**
      * Get the archive limit based on Pro/Free version
      *
-     * @since 1.0.0
      * @return int The archive limit
      */
     public function getArchiveLimit(): int
@@ -624,7 +615,6 @@ class BackupService
     /**
      * Rotate backups to maintain maximum backups per asset.
      *
-     * @since 1.0.0
      * @param string $slug The asset slug
      */
     private function rotateBackups(string $slug): void
@@ -655,7 +645,6 @@ class BackupService
     /**
      * Get plugin file by slug.
      *
-     * @since 1.0.0
      * @param string $pluginSlug The plugin slug
      * @return string The plugin file path relative to plugins directory
      */
@@ -678,7 +667,6 @@ class BackupService
     /**
      * Get the current version of an asset.
      *
-     * @since 1.0.0
      * @param string $assetSlug The asset slug
      * @param string $assetType The asset type ('plugin' or 'theme')
      * @return string The asset version or empty string if not found
@@ -716,7 +704,6 @@ class BackupService
     /**
      * Cleanup excess archives when limit is reduced
      *
-     * @since 1.0.0
      * @param int $newLimit New archive limit
      * @return array Array with 'deleted' files and 'count' of deletions
      */
@@ -800,7 +787,6 @@ class BackupService
     /**
      * Clear all archives
      *
-     * @since 1.1.0
      * @return array Array with 'deleted' files and 'count' of deletions
      */
     public function clearAllArchives(): array

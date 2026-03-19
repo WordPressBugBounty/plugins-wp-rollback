@@ -6,7 +6,6 @@
  * This class is responsible for providing loggable traits to exceptions.
  *
  * @package WpRollback\SharedCore\Core\Exceptions\Traits
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -18,14 +17,12 @@ trait Loggable
     /**
      * Gets the Exception::getMessage() method
      *
-     * @since 1.0.0
      */
     abstract public function getMessage();
 
     /**
      * Returns the human-readable log message
      *
-     * @since 1.0.0
      */
     public function getLogMessage(): string
     {
@@ -35,7 +32,6 @@ trait Loggable
     /**
      * Returns an array with the basic context details
      *
-     * @since 1.0.0
      *
      * @return array
      */

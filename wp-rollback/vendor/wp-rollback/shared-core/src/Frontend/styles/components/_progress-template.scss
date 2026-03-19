@@ -2,7 +2,6 @@
 .wpr-progress-template {
     padding: 0;
     overflow: hidden;
-    min-height: 510px;
     
     &--running {
         .wpr-progress-header {
@@ -44,8 +43,8 @@
     
     .wpr-progress-subtitle {
         margin: 0;
-        font-size: 14px;
-        color: #757575;
+        font-size: 13px;
+        color: #50575e;
         line-height: 1.4;
     }
 }
@@ -146,61 +145,51 @@
     overflow-y: auto;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    background: #ffffff;
+    background: #fff;
 }
 
 /* Individual Step */
 .wpr-step {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
-    padding: 16px;
+    padding: 12px 16px;
     border-bottom: 1px solid #f0f0f0;
-    transition: all 0.3s ease;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     
     &:last-child {
         border-bottom: none;
     }
     
-    &--active {
-        background: #f8f9fa;
-        border-left: 3px solid #0073aa;
-        margin-left: -1px;
-        
-        &::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, #0073aa, #005a87);
-            animation: active-pulse 2s ease-in-out infinite;
-        }
-    }
-    
     &--pending {
-        opacity: 0.6;
+        opacity: 0.75;
         
-        .wpr-step-content {
+        .wpr-step-title {
             color: #757575;
+            font-weight: 400;
         }
     }
     
     &--running {
         background: #f0f8ff;
-        border-left: 3px solid #0073aa;
-        margin-left: -1px;
+        box-shadow: inset 3px 0 0 #0073aa;
         
-        .wpr-step-content {
+        .wpr-step-title {
             color: #0073aa;
+            font-weight: 600;
+        }
+        
+        .wpr-step-message {
+            color: #0073aa;
+            opacity: 0.8;
         }
     }
     
     &--completed {
-        .wpr-step-content {
+        .wpr-step-title {
             color: #1e1e1e;
+            font-weight: 500;
         }
         
         .wpr-step-icon--completed {
@@ -210,11 +199,16 @@
     
     &--error {
         background: #fef7f7;
-        border-left: 3px solid #d63638;
-        margin-left: -1px;
+        box-shadow: inset 3px 0 0 #d63638;
         
-        .wpr-step-content {
+        .wpr-step-title {
             color: #d63638;
+            font-weight: 600;
+        }
+        
+        .wpr-step-message {
+            color: #d63638;
+            opacity: 0.85;
         }
     }
 }
@@ -228,7 +222,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 2px;
     
     &--pending {
         background: #e0e0e0;
@@ -265,6 +258,26 @@
     }
 }
 
+/* Skeleton loading state */
+.wpr-step--skeleton {
+    pointer-events: none;
+}
+
+.wpr-step-skeleton-bar {
+    height: 18px;
+    width: 55%;
+    background: linear-gradient(90deg, #e0e0e0 25%, #ececec 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+    border-radius: 3px;
+}
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+
+    100% { background-position: -200% 0; }
+}
+
 /* Step Content */
 .wpr-step-content {
     flex: 1;
@@ -272,10 +285,11 @@
 }
 
 .wpr-step-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
+    color: #1e1e1e;
     line-height: 1.4;
-    margin: 0 0 4px 0;
+    margin: 0 0 2px 0;
 }
 
 .wpr-step-message {
@@ -314,22 +328,27 @@
 /* Animations */
 @keyframes spin {
     0% { transform: rotate(0deg); }
+
     100% { transform: rotate(360deg); }
 }
 
 @keyframes progress-stripes {
     0% { background-position: 0 0; }
+
     100% { background-position: 20px 0; }
 }
 
 @keyframes progress-shine {
     0% { transform: translateX(-100px); }
+
     50% { transform: translateX(100%); }
+
     100% { transform: translateX(100%); }
 }
 
 @keyframes active-pulse {
     0%, 100% { opacity: 1; }
+
     50% { opacity: 0.7; }
 }
 
@@ -338,9 +357,11 @@
         transform: scale(0.3);
         opacity: 0;
     }
+
     50% {
         transform: scale(1.1);
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
@@ -349,7 +370,9 @@
 
 @keyframes button-shine {
     0% { left: -100%; }
+
     50% { left: 100%; }
+
     100% { left: 100%; }
 }
 
@@ -358,6 +381,7 @@
         opacity: 0;
         transform: translateY(-4px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -442,8 +466,8 @@
     .wpr-spinner,
     .wpr-progress-bar::before,
     .wpr-progress-bar-fill::after,
-    .wpr-step--active::before,
-    .wpr-progress-button--running::after {
+    .wpr-progress-button--running::after,
+    .wpr-step-skeleton-bar {
         animation: none;
     }
     

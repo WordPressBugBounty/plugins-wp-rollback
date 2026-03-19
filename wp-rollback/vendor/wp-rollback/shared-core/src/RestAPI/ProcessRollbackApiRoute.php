@@ -4,7 +4,6 @@
  * This endpoint is used to process rollback of plugins or themes from the WordPress repository.
  *
  * @package WpRollback\SharedCore\RestAPI
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -21,17 +20,14 @@ use WpRollback\SharedCore\Rollbacks\Registry\RollbackStepRegisterer;
 use WpRollback\SharedCore\Rollbacks\Services\MaintenanceService;
 
 /**
- * @since 1.0.0
  */
 class ProcessRollbackApiRoute extends ApiRouteV1
 {
     /**
-     * @since 1.0.0
      */
     private RollbackStepRegisterer $rollbackStepRegisterer;
 
     /**
-     * @since 1.0.0
      */
     public function __construct(RollbackStepRegisterer $rollbackStepRegisterer)
     {
@@ -68,7 +64,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
         /**
          * Filter the rollback API route arguments.
          * 
-         * @since 1.0.0
          * @param array $args The default route arguments
          */
         $args = apply_filters('wpr_rollback_api_route_args', $defaultArgs);
@@ -88,7 +83,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
     /**
      * This function returns an array of route arguments.
      *
-     * @since 1.0.0
      * @return array<string, array<string, mixed>> Array of route arguments
      */
     public function getRoutes(): array
@@ -107,7 +101,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function permissionValidation(WP_REST_Request $request)
     {
@@ -127,7 +120,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
      * Process the rollback request
      *
      * @inheritdoc
-     * @since 1.0.0
      * @param WP_REST_Request $request The request object
      * @return \WP_REST_Response|\WP_Error The response
      */
@@ -172,7 +164,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
             /**
              * Filter the rollback API request data before creating the DTO.
              * 
-             * @since 1.0.0
              * @param array $requestData The base request data
              * @param WP_REST_Request $request The full request object
              */
@@ -233,7 +224,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
     /**
      * Get array of plugin slugs
      *
-     * @since 1.0.0
      * @return array<string> Array of plugin slugs
      */
     private function getPluginsSlug(): array
@@ -256,7 +246,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
     /**
      * Get array of theme slugs
      *
-     * @since 1.0.0
      * @return array<string> Array of theme slugs
      */
     private function getThemesSlug(): array
@@ -268,7 +257,6 @@ class ProcessRollbackApiRoute extends ApiRouteV1
      * Cleanup maintenance mode as a failsafe
      * This ensures the site doesn't get stuck in maintenance mode if rollback fails
      *
-     * @since 1.0.0
      * @return void
      */
     private function cleanupMaintenanceMode(): void

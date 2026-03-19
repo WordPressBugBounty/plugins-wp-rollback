@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks\RollbackSteps
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -14,13 +13,11 @@ use WpRollback\SharedCore\Rollbacks\Contract\RollbackStep;
 use WpRollback\SharedCore\Rollbacks\Contract\RollbackStepResult;
 
 /**
- * @since 1.0.0
  */
 class DownloadAsset implements RollbackStep
 {
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function id(): string
     {
@@ -29,7 +26,6 @@ class DownloadAsset implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function execute(RollbackApiRequestDTO $rollbackApiRequestDTO): RollbackStepResult
     {
@@ -65,7 +61,6 @@ class DownloadAsset implements RollbackStep
     }
 
     /**
-     * @since 1.0.0
      */
     public static function rollbackProcessingMessage(): string
     {
@@ -73,7 +68,6 @@ class DownloadAsset implements RollbackStep
     }
 
     /**
-     * @since 1.0.0
      */
     protected function getDownloadUrl($assetType, $assetSlug, $assetVersion): string
     {
@@ -88,7 +82,6 @@ class DownloadAsset implements RollbackStep
     /**
      * Allow ZIP files to be downloaded in multisite
      *
-     * @since 1.0.0
      * @param array  $checked File data array
      * @param string $file    Full path to the file
      * @param string $filename The name of the file

@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Rollbacks\RollbackSteps
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -15,7 +14,6 @@ use WpRollback\SharedCore\Rollbacks\Contract\RollbackStepResult;
 use WpRollback\SharedCore\Rollbacks\Services\BackupService;
 
 /**
- * @since 1.0.0
  */
 class BackupAsset implements RollbackStep
 {
@@ -27,7 +25,6 @@ class BackupAsset implements RollbackStep
     /**
      * Constructor.
      *
-     * @since 1.0.0
      * @param BackupService $backupService The backup service
      */
     public function __construct(BackupService $backupService)
@@ -37,7 +34,6 @@ class BackupAsset implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function id(): string
     {
@@ -46,7 +42,6 @@ class BackupAsset implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0.
      */
     public function execute(RollbackApiRequestDTO $rollbackApiRequestDTO): RollbackStepResult
     {
@@ -91,7 +86,6 @@ class BackupAsset implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function rollbackProcessingMessage(): string
     {
@@ -104,7 +98,6 @@ class BackupAsset implements RollbackStep
      * @param string $slug Asset slug
      * @param string $type Asset type (plugin or theme)
      * @return bool True if asset is from WordPress.org, false otherwise
-     * @since 1.0.0
      */
     private function isWordPressOrgAsset(string $slug, string $type): bool
     {

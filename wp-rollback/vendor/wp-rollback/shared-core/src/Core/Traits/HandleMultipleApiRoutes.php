@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Core\Traits
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -16,7 +15,6 @@ use WP_REST_Response;
 /**
  * Trait HandleMultipleApiRoutes
  *
- * @since 1.0.0
  *
  * @method string getNamespace()
  * @method string getEndpoint(string $route)
@@ -27,7 +25,6 @@ trait HandleMultipleApiRoutes
     /**
      * Register REST routes.
      *
-     * @since 1.0.0
      */
     public function registerAllRoutes(): void
     {
@@ -48,7 +45,6 @@ trait HandleMultipleApiRoutes
     }
 
     /**
-     * @since 1.0.0
      *
      * @return WP_Error|WP_REST_Response
      */

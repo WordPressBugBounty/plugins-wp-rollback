@@ -7,7 +7,6 @@
  * and local premium assets.
  * 
  * @package WpRollback\SharedCore\RestAPI
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -23,7 +22,6 @@ use WpRollback\SharedCore\Rollbacks\DTO\RollbackItemDTO;
 /**
  * Class FetchInfoApiRoute
  *
- * @since 1.0.0
  */
 class FetchInfoApiRoute extends ApiRouteV1
 {
@@ -56,7 +54,6 @@ class FetchInfoApiRoute extends ApiRouteV1
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function permissionValidation(WP_REST_Request $request)
     {
@@ -170,6 +167,16 @@ class FetchInfoApiRoute extends ApiRouteV1
         // Get available versions from backup directory
         $versions = $this->getAvailableVersions($slug);
 
+        /**
+         * Filters the available versions for a premium asset before display.
+         *
+         *
+         * @param array  $versions Associative array of version => version data.
+         * @param string $slug     The asset slug.
+         * @param string $type     The asset type ('plugin' or 'theme').
+         */
+        $versions = apply_filters('wpr_premium_asset_versions', $versions, $slug, $type);
+
         // Add current version if not in versions array
         $currentVersion = $currentData['current_version'];
         if (!isset($versions[$currentVersion])) {
@@ -226,6 +233,7 @@ class FetchInfoApiRoute extends ApiRouteV1
                     'file' => basename($file),
                     'downloadUrl' => '', // Premium plugins/themes don't have public download URLs
                     'released' => null,
+                    'source' => 'local',
                 ];
             }
         }

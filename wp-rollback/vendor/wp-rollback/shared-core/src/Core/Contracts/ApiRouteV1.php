@@ -4,7 +4,6 @@
  * This contract class is used to create api routes.
  *
  * @package WpRollback\SharedCore\Core\Contracts
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -17,12 +16,10 @@ use WP_REST_Response;
 use WpRollback\SharedCore\Core\Exceptions\BindingResolutionException;
 
 /**
- * @since 1.0.0
  */
 class ApiRouteV1 implements ApiRoute
 {
     /**
-     * @since 1.0.0
      */
     protected string $namespace = 'wp-rollback/v1';
 
@@ -50,7 +47,6 @@ class ApiRouteV1 implements ApiRoute
     }
 
     /**
-     * @since 1.0.0
      * @throws BindingResolutionException
      * @return WP_REST_Response|WP_Error
      */

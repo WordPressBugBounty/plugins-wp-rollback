@@ -1,5 +1,13 @@
 @use '../index' as *;
 
+// The WP modal frame has max-height: calc(100% - 120px) at ≥600px, which triggers
+// overflow: auto on the content and creates a spurious outer scrollbar. The compound
+// selector has higher specificity than the single-class media query rule applied by WP core.
+.components-modal__frame.wpr-modal--complete,
+.components-modal__frame.wpr-modal--progress {
+    max-height: none;
+}
+
 .wpr-modal {
     max-width: 600px;
 
@@ -64,6 +72,7 @@
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: 0 0;
     }
@@ -73,6 +82,7 @@
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

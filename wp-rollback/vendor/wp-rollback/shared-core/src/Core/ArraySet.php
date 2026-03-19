@@ -6,7 +6,6 @@
  * This class is responsible to handle complex operations on array.
  *
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -19,7 +18,6 @@ namespace WpRollback\SharedCore\Core;
  * This class is responsible for handling array related logic.
  *
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 class ArraySet
 {

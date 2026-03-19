@@ -4,7 +4,6 @@
  * Service Provider
  *
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -20,14 +19,12 @@ use WpRollback\SharedCore\RestAPI\ArchivesController;
  * Class ServiceProvider
  *
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 class ServiceProvider implements Contracts\ServiceProvider
 {
     /**
      * Register services with the container.
      *
-     * @since 1.0.0
      * @throws BindingResolutionException
      */
     public function register(): void
@@ -54,7 +51,6 @@ class ServiceProvider implements Contracts\ServiceProvider
     /**
      * Register REST routes for archives
      *
-     * @since 1.0.0
      * @return void
      */
     public function registerArchivesRoutes(): void

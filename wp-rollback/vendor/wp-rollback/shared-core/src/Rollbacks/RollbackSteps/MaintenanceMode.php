@@ -4,7 +4,6 @@
  * Maintenance mode rollback step.
  *
  * @package WpRollback\SharedCore\Rollbacks\RollbackSteps
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -19,14 +18,12 @@ use WpRollback\SharedCore\Rollbacks\Contract\RollbackStepResult;
 /**
  * Rollback step for enabling maintenance mode during rollback process
  *
- * @since 1.0.0
  */
 class MaintenanceMode implements RollbackStep
 {
     /**
      * Maintenance service instance
      *
-     * @since 1.0.0
      * @var MaintenanceService
      */
     private MaintenanceService $maintenanceService;
@@ -34,7 +31,6 @@ class MaintenanceMode implements RollbackStep
     /**
      * Constructor
      *
-     * @since 1.0.0
      * @param MaintenanceService $maintenanceService The maintenance service
      */
     public function __construct(MaintenanceService $maintenanceService)
@@ -44,7 +40,6 @@ class MaintenanceMode implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function id(): string
     {
@@ -53,7 +48,6 @@ class MaintenanceMode implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function execute(RollbackApiRequestDTO $rollbackApiRequestDTO): RollbackStepResult
     {
@@ -141,7 +135,6 @@ class MaintenanceMode implements RollbackStep
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public static function rollbackProcessingMessage(): string
     {
@@ -152,7 +145,6 @@ class MaintenanceMode implements RollbackStep
      * Check if maintenance mode should be enabled for the asset
      * Only enable for active plugins and themes
      *
-     * @since 1.0.0
      * @param string $assetType The asset type (plugin or theme)
      * @param string $assetSlug The asset slug
      * @return bool True if maintenance mode should be enabled

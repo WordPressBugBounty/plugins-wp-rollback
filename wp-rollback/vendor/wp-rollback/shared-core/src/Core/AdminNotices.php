@@ -4,7 +4,6 @@
  * Simple admin notices service using native WordPress functions.
  *
  * @package WpRollback\SharedCore\Core
- * @since 3.0.0
  */
 
 declare(strict_types=1);
@@ -16,14 +15,12 @@ namespace WpRollback\SharedCore\Core;
  *
  * Provides a simple interface for displaying admin notices using WordPress native functions.
  *
- * @since 3.0.0
  */
 class AdminNotices
 {
 	/**
 	 * Store notices to be displayed
 	 *
-	 * @since 3.0.0
 	 * @var array
 	 */
 	private static array $notices = [];
@@ -31,7 +28,6 @@ class AdminNotices
 	/**
 	 * Whether hooks have been registered
 	 *
-	 * @since 3.0.0
 	 * @var bool
 	 */
 	private static bool $hooksRegistered = false;
@@ -39,7 +35,6 @@ class AdminNotices
 	/**
 	 * Display an admin notice.
 	 *
-	 * @since 3.0.0
 	 *
 	 * @param string $id Unique identifier for the notice.
 	 * @param string $message The notice message.
@@ -70,7 +65,6 @@ class AdminNotices
 	/**
 	 * Display a success notice.
 	 *
-	 * @since 3.0.0
 	 *
 	 * @param string $id Unique identifier for the notice.
 	 * @param string $message The notice message.
@@ -89,7 +83,6 @@ class AdminNotices
 	/**
 	 * Display an error notice.
 	 *
-	 * @since 3.0.0
 	 *
 	 * @param string $id Unique identifier for the notice.
 	 * @param string $message The notice message.
@@ -108,7 +101,6 @@ class AdminNotices
 	/**
 	 * Display a warning notice.
 	 *
-	 * @since 3.0.0
 	 *
 	 * @param string $id Unique identifier for the notice.
 	 * @param string $message The notice message.
@@ -127,7 +119,6 @@ class AdminNotices
 	/**
 	 * Display an info notice.
 	 *
-	 * @since 3.0.0
 	 *
 	 * @param string $id Unique identifier for the notice.
 	 * @param string $message The notice message.
@@ -146,7 +137,6 @@ class AdminNotices
 	/**
 	 * Display all registered notices.
 	 *
-	 * @since 3.0.0
 	 */
 	public static function displayNotices(): void
 	{
@@ -172,7 +162,6 @@ class AdminNotices
 	/**
 	 * Clear all notices.
 	 *
-	 * @since 3.0.0
 	 */
 	public static function clear(): void
 	{
@@ -182,7 +171,6 @@ class AdminNotices
 	/**
 	 * Remove a specific notice by ID.
 	 *
-	 * @since 3.0.0
 	 *
 	 * @param string $id The notice ID to remove.
 	 */

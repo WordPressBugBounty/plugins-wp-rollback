@@ -4,7 +4,6 @@
  * Data Transfer Object for rollback item data (plugins/themes)
  *
  * @package WpRollback\SharedCore\Rollbacks\DTO
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -17,7 +16,6 @@ use WpRollback\SharedCore\Core\Exceptions\Primitives\InvalidArgumentException;
 /**
  * Class RollbackItemDTO
  *
- * @since 1.0.0
  */
 class RollbackItemDTO
 {

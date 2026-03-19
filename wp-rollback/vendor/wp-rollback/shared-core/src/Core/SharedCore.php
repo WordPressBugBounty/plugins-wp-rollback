@@ -2,7 +2,6 @@
 
 /**
  * @package WpRollback\SharedCore\Core
- * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -30,7 +29,6 @@ class SharedCore
     /**
      * Get the dependency injection container instance.
      *
-     * @since 1.0.0
      *
      * @return ContainerInterface
      */
@@ -45,7 +43,6 @@ class SharedCore
      * This function sets up the core shared functionality used by both plugins.
      * It should be called from the main plugin files before using any SharedCore functionality.
      *
-     * @since 1.0.0
      * @return void
      */
     public static function initialize(): void
@@ -60,7 +57,6 @@ class SharedCore
     /**
      * Check if SharedCore has been initialized
      *
-     * @since 1.0.0
      * @return bool
      */
     public static function isInitialized(): bool
