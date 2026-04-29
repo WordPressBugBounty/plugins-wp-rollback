@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WP Rollback plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Rollback 3.1.0\n"
+"Project-Id-Version: WP Rollback 3.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/free-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-19T21:17:17+00:00\n"
+"POT-Creation-Date: 2026-04-29T04:26:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-rollback\n"
@@ -73,6 +73,18 @@ msgstr ""
 
 #: src/Rollbacks/RollbackSteps/UpsellValidatePackage.php:87
 msgid "Validating package integrity…"
+msgstr ""
+
+#. translators: %s: Plugin name
+#: build/commandPalette.js:4
+#, js-format
+msgid "Rollback plugin: %s"
+msgstr ""
+
+#. translators: %s: Theme name
+#: build/commandPalette.js:7
+#, js-format
+msgid "Rollback theme: %s"
 msgstr ""
 
 #: build/themesAdmin.js:1
@@ -236,6 +248,7 @@ msgid "Same version will be reinstalled"
 msgstr ""
 
 #: build/tools.js:22
+#: build/tools.js:23
 msgid "Installed"
 msgstr ""
 
@@ -343,15 +356,15 @@ msgid "Plugin Rollback"
 msgstr ""
 
 #: build/tools.js:23
-msgid "Select which plugin version you would like to rollback to from the releases listed below."
+msgid "All versions listed below are available directly from WordPress.org."
+msgstr ""
+
+#: build/tools.js:23
+msgid "Select a release to roll back."
 msgstr ""
 
 #: build/tools.js:23
 msgid "Theme Rollback"
-msgstr ""
-
-#: build/tools.js:23
-msgid "Select which theme version you would like to rollback to from the releases listed below."
 msgstr ""
 
 #: build/tools.js:23
@@ -363,7 +376,31 @@ msgid "Update"
 msgstr ""
 
 #: build/tools.js:23
-msgid "Trunk is where the most current revisions of the code should be stored, often representing the development version of the software. This is particularly relevant for developers and testers who are working with the very latest code changes that have not yet been released to the public."
+msgid "The active development version — latest code changes not yet released to the public. Intended for developers and testers."
+msgstr ""
+
+#: build/tools.js:23
+msgid "From Plugin Vault — community-contributed ZIPs verified for integrity."
+msgstr ""
+
+#: build/tools.js:23
+msgid "Vault"
+msgstr ""
+
+#: build/tools.js:23
+msgid "A local backup saved on this site."
+msgstr ""
+
+#: build/tools.js:23
+msgid "Local"
+msgstr ""
+
+#: build/tools.js:23
+msgid "Available on WordPress.org."
+msgstr ""
+
+#: build/tools.js:23
+msgid "Repo"
 msgstr ""
 
 #: build/tools.js:23
@@ -372,34 +409,6 @@ msgstr ""
 
 #: build/tools.js:23
 msgid "No versions found"
-msgstr ""
-
-#: build/tools.js:23
-msgid "Currently Installed"
-msgstr ""
-
-#: build/tools.js:23
-msgid "Sourced from Plugin Vault — a shared library of plugin ZIPs contributed by WP Rollback Pro users and verified for integrity before distribution."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Vault"
-msgstr ""
-
-#: build/tools.js:23
-msgid "Backed up locally on this site — restore from your own saved archive."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Local"
-msgstr ""
-
-#: build/tools.js:23
-msgid "Available from the WordPress.org plugin repository."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Repo"
 msgstr ""
 
 #: build/tools.js:23

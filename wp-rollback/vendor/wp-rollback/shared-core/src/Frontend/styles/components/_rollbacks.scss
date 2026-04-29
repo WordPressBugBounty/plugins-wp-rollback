@@ -50,9 +50,8 @@
         box-shadow: none;
     }
 
-    .dashicons {
-        margin-left: 6px;
-        font-size: 18px;
+    span[aria-hidden] {
+        margin-left: 4px;
     }
 }
 
@@ -220,6 +219,15 @@
     flex-direction: column;
     gap: 10px;
     min-width: 170px;
+
+    .wpr-view-changelog,
+    .wpr-support-link {
+        .components-button,
+        a.components-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
 }
 
 // Radios listing versions
@@ -245,12 +253,6 @@
         margin: 0 0 0 8px;
     }
 
-    span.wpr-version-lineitem-current {
-        font-size: 15px;
-        font-style: italic;
-        font-weight: 400;
-        margin: 0 0 0 20px;
-    }
 }
 
 // Right-side badge container — pushes all badges to the trailing edge of the row
@@ -307,6 +309,15 @@
 
         .dashicons {
             color: #0073aa;
+        }
+    }
+
+    &--installed {
+        color: #374151;
+        background: rgba(55, 65, 81, 0.07);
+
+        .dashicons {
+            color: #374151;
         }
     }
 }

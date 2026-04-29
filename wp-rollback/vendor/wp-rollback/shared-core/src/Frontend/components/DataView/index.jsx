@@ -11,19 +11,20 @@ import DataViewBlankSlate from './DataViewBlankSlate';
  *   are handled automatically using WordPress DataViews utilities.
  * - Server-side: Pass paginationInfo from API. Only sorting/filtering is applied client-side.
  *
- * @param {Object}   props                       Component properties
- * @param {Array}    props.data                  Data to display
- * @param {boolean}  props.isLoading             Whether data is loading
- * @param {Array}    props.fields                Field definitions
- * @param {Object}   props.defaultLayouts        Default layout configurations
- * @param {Object}   props.paginationInfo        Optional pagination info for server-side pagination
- * @param {Object}   props.view                  Current view settings (includes sort, filters, pagination)
- * @param {Function} props.onChangeView          Callback for view changes
- * @param {Function} props.onNavigateToRollback  Callback for rollback navigation
- * @param {Function} props.onDelete              Callback for delete action
- * @param {string}   props.emptyStateTitle       Custom title for empty state
- * @param {string}   props.emptyStateDescription Custom description for empty state
- * @return {JSX.Element}                         The rendered component
+ * @param {Object}        props                       Component properties
+ * @param {Array}         props.data                  Data to display
+ * @param {boolean}       props.isLoading             Whether data is loading
+ * @param {Array}         props.fields                Field definitions
+ * @param {Object}        props.defaultLayouts        Default layout configurations
+ * @param {Object}        props.paginationInfo        Optional pagination info for server-side pagination
+ * @param {Object}        props.view                  Current view settings (includes sort, filters, pagination)
+ * @param {Function}      props.onChangeView          Callback for view changes
+ * @param {Function}      props.onNavigateToRollback  Callback for rollback navigation
+ * @param {Function}      props.onDelete              Callback for delete action
+ * @param {string}        props.emptyStateTitle       Custom title for empty state
+ * @param {string}        props.emptyStateDescription Custom description for empty state
+ * @param {IconType|null} props.emptyStateIcon        Optional icon for the empty state
+ * @return {JSX.Element}                              The rendered component
  */
 const DataView = ( {
     data,
@@ -37,6 +38,7 @@ const DataView = ( {
     onDelete,
     emptyStateTitle,
     emptyStateDescription,
+    emptyStateIcon,
 } ) => {
     // Ensure all items have IDs (fallback for data without IDs)
     const dataWithIds = useMemo( () => {
@@ -62,9 +64,9 @@ const DataView = ( {
             return [];
         }
 
-        // Only modify the actions field, return others as-is
+        // Inject onNavigateToRollback and onDelete into name and actions fields
         return fields.map( field =>
-            field.id === 'actions' && field.render
+            ( field.id === 'actions' || field.id === 'name' ) && field.render
                 ? {
                       ...field,
                       render: props =>
@@ -103,7 +105,13 @@ const DataView = ( {
 
     // Show custom empty state when there's no data
     if ( ! dataWithIds.length ) {
-        return <DataViewBlankSlate title={ emptyStateTitle } description={ emptyStateDescription } />;
+        return (
+            <DataViewBlankSlate
+                title={ emptyStateTitle }
+                description={ emptyStateDescription }
+                icon={ emptyStateIcon }
+            />
+        );
     }
 
     return (

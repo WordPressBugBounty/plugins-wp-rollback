@@ -18,7 +18,9 @@ export const themeConfig = {
         {
             id: 'name',
             label: __( 'Theme Name', 'wp-rollback' ),
-            render: ( { item } ) => <ThemeNameColumn item={ item } />,
+            render: ( { item, onNavigateToRollback } ) => (
+                <ThemeNameColumn item={ item } onNavigateToRollback={ onNavigateToRollback } />
+            ),
             getValue: ( { item } ) => item.name?.rendered || item.name,
             enableSorting: true,
             enableHiding: false,

@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { Dashicon, Tooltip } from '@wordpress/components';
 import TrunkPopover from './TrunkPopover';
+import VersionBadges from './VersionBadges';
 import { compareVersions } from '../../utils';
 
 /**
@@ -22,10 +22,9 @@ const formatReleaseDate = released => {
 /**
  * VersionsList component displays a list of available versions for rollback.
  *
- * Each version row shows a source badge based on the version's `source` field:
- * - `source: 'local'`  → "Local" badge  (backed-up on this site)
- * - `source: 'vault'`  → "Vault" badge  (approved version from the Plugin Vault)
- * - no source          → "Repo" badge   (version from the WordPress.org repository)
+ * Badge rendering is delegated to VersionBadges. The Repo badge only shows
+ * when a release date is present (indicating a WordPress.org version) — this
+ * prevents premium plugin versions from incorrectly displaying the WP.org badge.
  *
  * @param {Object}   props                    Component properties
  * @param {Object}   props.versions           Object containing version information
@@ -69,9 +68,6 @@ const VersionsList = ( { versions, rollbackVersion, setRollbackVersion, currentV
                     const versionData = versions[ version ] || {};
                     const releaseDate = formatReleaseDate( versionData.released );
                     const isCurrentVersion = currentVersion === version;
-                    const isVault = versionData?.source === 'vault';
-                    const isLocal = versionData?.source === 'local';
-                    const isRepo = ! isVault && ! isLocal;
 
                     return (
                         <div
@@ -93,61 +89,13 @@ const VersionsList = ( { versions, rollbackVersion, setRollbackVersion, currentV
                                     />
                                     <span className="wpr-version-lineitem">{ version }</span>
 
-                                    { isCurrentVersion && (
-                                        <span className="wpr-version-lineitem-current">
-                                            { __( 'Currently Installed', 'wp-rollback' ) }
-                                        </span>
-                                    ) }
-
                                     { version === 'trunk' && <TrunkPopover /> }
 
-                                    <div className="wpr-version-badges">
-                                        { isVault && (
-                                            <Tooltip
-                                                text={ __(
-                                                    'Sourced from Plugin Vault — a shared library of plugin ZIPs contributed by WP Rollback Pro users and verified for integrity before distribution.',
-                                                    'wp-rollback'
-                                                ) }
-                                            >
-                                                <span className="wpr-version-source wpr-version-source--vault">
-                                                    <Dashicon icon="cloud" />
-                                                    { __( 'Vault', 'wp-rollback' ) }
-                                                </span>
-                                            </Tooltip>
-                                        ) }
-
-                                        { isLocal && (
-                                            <Tooltip
-                                                text={ __(
-                                                    'Backed up locally on this site — restore from your own saved archive.',
-                                                    'wp-rollback'
-                                                ) }
-                                            >
-                                                <span className="wpr-version-source wpr-version-source--local">
-                                                    <Dashicon icon="media-archive" />
-                                                    { __( 'Local', 'wp-rollback' ) }
-                                                </span>
-                                            </Tooltip>
-                                        ) }
-
-                                        { isRepo && (
-                                            <Tooltip
-                                                text={ __(
-                                                    'Available from the WordPress.org plugin repository.',
-                                                    'wp-rollback'
-                                                ) }
-                                            >
-                                                <span className="wpr-version-source wpr-version-source--repo">
-                                                    <Dashicon icon="wordpress" />
-                                                    { __( 'Repo', 'wp-rollback' ) }
-                                                </span>
-                                            </Tooltip>
-                                        ) }
-
-                                        { releaseDate && isRepo && (
-                                            <span className="wpr-version-date">{ releaseDate }</span>
-                                        ) }
-                                    </div>
+                                    <VersionBadges
+                                        versionData={ versionData }
+                                        isCurrentVersion={ isCurrentVersion }
+                                        releaseDate={ releaseDate }
+                                    />
                                 </label>
                             </div>
                         </div>

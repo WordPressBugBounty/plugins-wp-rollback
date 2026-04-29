@@ -8,7 +8,9 @@ export const pluginConfig = {
         {
             id: 'name',
             label: __( 'Plugin Name', 'wp-rollback' ),
-            render: ( { item } ) => <PluginNameColumn item={ item } />,
+            render: ( { item, onNavigateToRollback } ) => (
+                <PluginNameColumn item={ item } onNavigateToRollback={ onNavigateToRollback } />
+            ),
             getValue: ( { item } ) => item.name,
             enableSorting: true,
             enableHiding: false,

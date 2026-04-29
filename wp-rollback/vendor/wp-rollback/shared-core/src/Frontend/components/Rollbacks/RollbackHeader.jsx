@@ -15,20 +15,32 @@ const RollbackHeader = () => {
             { 'plugin' === type && (
                 <Subheader
                     title={ __( 'Plugin Rollback', 'wp-rollback' ) }
-                    description={ __(
-                        'Select which plugin version you would like to rollback to from the releases listed below.',
-                        'wp-rollback'
-                    ) }
+                    description={
+                        <>
+                            { __(
+                                'All versions listed below are available directly from WordPress.org.',
+                                'wp-rollback'
+                            ) }
+                            <br />
+                            { __( 'Select a release to roll back.', 'wp-rollback' ) }
+                        </>
+                    }
                 />
             ) }
 
             { 'theme' === type && (
                 <Subheader
                     title={ __( 'Theme Rollback', 'wp-rollback' ) }
-                    description={ __(
-                        'Select which theme version you would like to rollback to from the releases listed below.',
-                        'wp-rollback'
-                    ) }
+                    description={
+                        <>
+                            { __(
+                                'All versions listed below are available directly from WordPress.org.',
+                                'wp-rollback'
+                            ) }
+                            <br />
+                            { __( 'Select a release to roll back.', 'wp-rollback' ) }
+                        </>
+                    }
                 />
             ) }
         </>

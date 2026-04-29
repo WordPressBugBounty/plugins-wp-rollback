@@ -449,18 +449,46 @@ class BackupService
         $assetDir = trailingslashit($assetPath);
 
         try {
-            $files = new RecursiveIteratorIterator(
+            // Collect all file paths before adding them to the archive.
+            //
+            // RecursiveDirectoryIterator returns entries in filesystem order,
+            // which differs between ext4, APFS, NTFS, and other filesystems.
+            // Because ZIP SHA-256 is sensitive to entry order, two servers
+            // creating a backup of the same plugin version would produce
+            // different checksums if files are added in a different sequence.
+            //
+            // Sorting alphabetically makes the entry order deterministic on
+            // every platform, so the Plugin Vault's SHA-256 quorum check
+            // produces the same result across all contributing sites.
+            $filePaths = [];
+            $iterator  = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($assetDir),
                 RecursiveIteratorIterator::LEAVES_ONLY
             );
 
-            foreach ($files as $file) {
+            foreach ($iterator as $file) {
                 if ($file->isDir()) {
                     continue;
                 }
+                // Use getPathname() rather than getRealPath() so the path is
+                // never symlink-resolved. getRealPath() would resolve /var to
+                // /private/var on macOS, making the path inconsistent with
+                // $assetDir and corrupting all relative path calculations.
+                $absolutePath = wp_normalize_path($file->getPathname());
+                // Skip OS-specific artefacts that are absent on some servers
+                // (e.g. .DS_Store on macOS, Thumbs.db on Windows) and VCS
+                // metadata that should never ship in a plugin package. These
+                // files cause SHA-256 differences between Mac-deployed and
+                // Linux-deployed servers even when the plugin code is identical.
+                if ($this->isOsArtefact($absolutePath)) {
+                    continue;
+                }
+                $filePaths[] = $absolutePath;
+            }
 
-                $filePath = wp_normalize_path($file->getRealPath());
+            sort($filePaths); // Stable, platform-independent entry order
 
+            foreach ($filePaths as $filePath) {
                 if ('theme' === $type) {
                     // For themes, WordPress expects files to be inside a directory with the theme's slug
                     $relativePath = $slug . '/' . str_replace($assetDir, '', $filePath);
@@ -472,6 +500,16 @@ class BackupService
                 if ($zip->addFile($filePath, $relativePath) === false) {
                     $zip->close();
                     throw new \RuntimeException('Failed to add file to ZIP archive: ' . esc_html($relativePath));
+                }
+
+                // Normalise the stored mtime to epoch 0 (PHP 8.0+).
+                // Without this, the ZIP entry timestamp reflects the file's
+                // mtime on the host filesystem, which can vary if PHP or the OS
+                // reset it during extraction or deployment. Setting a fixed
+                // value ensures the ZIP bytes — and therefore the SHA-256 —
+                // are identical across all sites backing up the same version.
+                if (method_exists($zip, 'setMtimeName')) {
+                    $zip->setMtimeName($relativePath, 0);
                 }
             }
 
@@ -640,6 +678,49 @@ class BackupService
                 @unlink($file);
             }
         }
+    }
+
+    /**
+     * Return true for OS-specific artefacts that should be excluded from
+     * vault-contribution ZIPs.
+     *
+     * These files are absent on some platforms (e.g. .DS_Store only appears
+     * on macOS; Thumbs.db / desktop.ini only on Windows). Including them
+     * would make the backup ZIP differ between servers even for identical
+     * plugin code, breaking the Plugin Vault's SHA-256 quorum check.
+     *
+     * VCS metadata (.git, .svn) is also excluded — it is occasionally
+     * shipped by accident but is never part of a distributed plugin package.
+     *
+     * NOTE: PclZip (the fallback when ZipArchive is unavailable) does not
+     * benefit from this filtering because it receives a directory path and
+     * traverses it internally. PclZip is only used on PHP 7.x hosts without
+     * the zip extension — an extremely rare configuration.
+     *
+     * @param string $absolutePath wp_normalize_path()-normalised absolute path.
+     */
+    private function isOsArtefact(string $absolutePath): bool
+    {
+        $basename = basename($absolutePath);
+
+        // macOS Finder metadata
+        if ('.DS_Store' === $basename) {
+            return true;
+        }
+
+        // Windows Explorer thumbnail / layout caches
+        if ('Thumbs.db' === $basename || 'desktop.ini' === $basename) {
+            return true;
+        }
+
+        // Files inside macOS ZIP resource-fork directory, VCS directories
+        foreach (['/__MACOSX/', '/.git/', '/.svn/'] as $segment) {
+            if (false !== strpos($absolutePath, $segment)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

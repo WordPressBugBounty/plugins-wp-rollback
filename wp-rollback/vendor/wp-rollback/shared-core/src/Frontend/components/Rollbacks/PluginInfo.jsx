@@ -1,5 +1,4 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { Dashicon } from '@wordpress/components';
 import { decodeEntities } from '@wordpress/html-entities';
 import ExpandableText from './ExpandableText';
 import VersionPill from './VersionPill';
@@ -19,7 +18,7 @@ const PluginInfo = ( { rollbackInfo, type, currentVersion } ) => {
                         rel="noreferrer"
                     >
                         { decodeEntities( rollbackInfo.name ) }
-                        <Dashicon icon="external" />
+                        <span aria-hidden="true">↗</span>
                     </a>
                 ) }
                 { type === 'theme' && (
@@ -32,7 +31,7 @@ const PluginInfo = ( { rollbackInfo, type, currentVersion } ) => {
                         rel="noreferrer"
                     >
                         { decodeEntities( rollbackInfo.name ) }
-                        <Dashicon icon="external" />
+                        <span aria-hidden="true">↗</span>
                     </a>
                 ) }
             </h2>
