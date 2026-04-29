@@ -48,11 +48,17 @@ class AdminFooter
     /**
      * Replace the left-side footer text on WP Rollback pages.
      *
-     * @param string $text Existing footer text.
+     * The parameter is intentionally untyped: other plugins/themes may filter
+     * `admin_footer_text` and return null or non-string values, which would
+     * trigger a TypeError under strict_types. We normalize defensively.
+     *
+     * @param mixed $text Existing footer text.
      * @return string
      */
-    public function footerText(string $text): string
+    public function footerText($text): string
     {
+        $text = is_string($text) ? $text : '';
+
         if (!$this->isWpRollbackPage()) {
             return $text;
         }
@@ -67,11 +73,17 @@ class AdminFooter
     /**
      * Replace the right-side version string with the plugin version on WP Rollback pages.
      *
-     * @param string $text Existing version text.
+     * The parameter is intentionally untyped: other plugins/themes may filter
+     * `update_footer` and return null or non-string values, which would
+     * trigger a TypeError under strict_types. We normalize defensively.
+     *
+     * @param mixed $text Existing version text.
      * @return string
      */
-    public function footerVersion(string $text): string
+    public function footerVersion($text): string
     {
+        $text = is_string($text) ? $text : '';
+
         if (!$this->isWpRollbackPage()) {
             return $text;
         }
@@ -92,6 +104,6 @@ class AdminFooter
             return false;
         }
 
-        return str_contains($screen->id, 'wp-rollback');
+        return strpos($screen->id, 'wp-rollback') !== false;
     }
 }
