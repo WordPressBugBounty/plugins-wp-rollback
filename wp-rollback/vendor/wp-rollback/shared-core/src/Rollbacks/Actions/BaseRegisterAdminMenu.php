@@ -43,7 +43,7 @@ abstract class BaseRegisterAdminMenu
      */
     protected function getCapability(): string
     {
-        return 'update_plugins';
+        return current_user_can('update_plugins') ? 'update_plugins' : 'update_themes';
     }
 
     /**

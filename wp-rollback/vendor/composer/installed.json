@@ -7,19 +7,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/wordpress-plugin-readme-parser.git",
-                "reference": "9c56ae9979c335df2371abc4cabca2e31b12cb00"
+                "reference": "ee642c448c382355008dcde1ff56c87d7021f708"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/wordpress-plugin-readme-parser/zipball/9c56ae9979c335df2371abc4cabca2e31b12cb00",
-                "reference": "9c56ae9979c335df2371abc4cabca2e31b12cb00",
+                "url": "https://api.github.com/repos/afragen/wordpress-plugin-readme-parser/zipball/ee642c448c382355008dcde1ff56c87d7021f708",
+                "reference": "ee642c448c382355008dcde1ff56c87d7021f708",
                 "shasum": ""
             },
             "require": {
-                "erusev/parsedown": "dev-master#0b274ac959624e6c6d647e9c9b6c2d20da242004",
+                "erusev/parsedown": "^1.8",
                 "php": ">=7.1"
             },
-            "time": "2025-12-06T18:49:18+00:00",
+            "time": "2026-04-09T15:37:45+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -52,17 +52,17 @@
         },
         {
             "name": "erusev/parsedown",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
+            "version": "1.8.0",
+            "version_normalized": "1.8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "0b274ac959624e6c6d647e9c9b6c2d20da242004"
+                "reference": "96baaad00f71ba04d76e45b4620f54d3beabd6f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/0b274ac959624e6c6d647e9c9b6c2d20da242004",
-                "reference": "0b274ac959624e6c6d647e9c9b6c2d20da242004",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/96baaad00f71ba04d76e45b4620f54d3beabd6f7",
+                "reference": "96baaad00f71ba04d76e45b4620f54d3beabd6f7",
                 "shasum": ""
             },
             "require": {
@@ -72,8 +72,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^7.5|^8.5|^9.6"
             },
-            "time": "2025-08-31T07:57:44+00:00",
-            "default-branch": true,
+            "time": "2026-02-16T11:41:01+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -100,168 +99,20 @@
             ],
             "support": {
                 "issues": "https://github.com/erusev/parsedown/issues",
-                "source": "https://github.com/erusev/parsedown/tree/master"
+                "source": "https://github.com/erusev/parsedown/tree/1.8.0"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/erusev",
+                    "type": "github"
+                }
+            ],
             "install-path": "../erusev/parsedown"
         },
         {
-            "name": "stellarwp/arrays",
-            "version": "1.3.1",
-            "version_normalized": "1.3.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stellarwp/arrays.git",
-                "reference": "315a9b2018ac6f2475a346c89b1d7120ae07c218"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stellarwp/arrays/zipball/315a9b2018ac6f2475a346c89b1d7120ae07c218",
-                "reference": "315a9b2018ac6f2475a346c89b1d7120ae07c218",
-                "shasum": ""
-            },
-            "require-dev": {
-                "lucatume/wp-browser": "^3.5 || ^4.0",
-                "saggre/phpdocumentor-markdown": "^0.1.3",
-                "symfony/event-dispatcher-contracts": "^2.5.1",
-                "symfony/string": "^5.4",
-                "szepeviktor/phpstan-wordpress": "^1.1"
-            },
-            "time": "2025-02-07T18:23:13+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "StellarWP\\Arrays\\": "src/Arrays/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "StellarWP",
-                    "email": "dev@stellarwp.com"
-                },
-                {
-                    "name": "Matthew Batchelder",
-                    "email": "matt.batchelder@stellarwp.com"
-                }
-            ],
-            "description": "A library for array manipulation.",
-            "support": {
-                "issues": "https://github.com/stellarwp/arrays/issues",
-                "source": "https://github.com/stellarwp/arrays/tree/1.3.1"
-            },
-            "install-path": "../stellarwp/arrays"
-        },
-        {
-            "name": "stellarwp/container-contract",
-            "version": "1.1.1",
-            "version_normalized": "1.1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stellarwp/container-contract.git",
-                "reference": "b2c42c76681db314e4edbb2af0a312b6c06b495e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stellarwp/container-contract/zipball/b2c42c76681db314e4edbb2af0a312b6c06b495e",
-                "reference": "b2c42c76681db314e4edbb2af0a312b6c06b495e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0"
-            },
-            "time": "2023-09-05T20:08:29+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "StellarWP\\ContainerContract\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "StellarWP",
-                    "homepage": "https://stellarwp.com"
-                }
-            ],
-            "description": "StellarWP Container Interface",
-            "homepage": "https://github.com/stellarwp/container-contract",
-            "keywords": [
-                "PSR-11",
-                "container",
-                "container-interface",
-                "container-interop"
-            ],
-            "support": {
-                "issues": "https://github.com/stellarwp/container-contract/issues",
-                "source": "https://github.com/stellarwp/container-contract/tree/1.1.1"
-            },
-            "install-path": "../stellarwp/container-contract"
-        },
-        {
-            "name": "stellarwp/superglobals",
-            "version": "1.3.0",
-            "version_normalized": "1.3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stellarwp/superglobals.git",
-                "reference": "a43ffa491c171f46d81a26d55e096bc8eaddfb3e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stellarwp/superglobals/zipball/a43ffa491c171f46d81a26d55e096bc8eaddfb3e",
-                "reference": "a43ffa491c171f46d81a26d55e096bc8eaddfb3e",
-                "shasum": ""
-            },
-            "require": {
-                "stellarwp/arrays": "^1.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "<10.0",
-                "symfony/event-dispatcher-contracts": "^2.5.1",
-                "symfony/string": "^5.4",
-                "szepeviktor/phpstan-wordpress": "^1.1"
-            },
-            "time": "2024-06-26T14:12:19+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "StellarWP\\SuperGlobals\\": "src/SuperGlobals/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "StellarWP",
-                    "email": "dev@stellarwp.com"
-                },
-                {
-                    "name": "Matthew Batchelder",
-                    "email": "matt.batchelder@stellarwp.com"
-                }
-            ],
-            "description": "A library that handles access to superglobals.",
-            "support": {
-                "issues": "https://github.com/stellarwp/superglobals/issues",
-                "source": "https://github.com/stellarwp/superglobals/tree/1.3.0"
-            },
-            "install-path": "../stellarwp/superglobals"
-        },
-        {
             "name": "wp-rollback/shared-core",
-            "version": "dev-dataviews-sorting",
-            "version_normalized": "dev-dataviews-sorting",
+            "version": "dev-draft-release/pro",
+            "version_normalized": "dev-draft-release/pro",
             "dist": {
                 "type": "path",
                 "url": "../shared-core",

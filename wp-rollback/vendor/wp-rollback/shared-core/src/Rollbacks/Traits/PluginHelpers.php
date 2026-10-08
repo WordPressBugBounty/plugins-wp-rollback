@@ -65,6 +65,39 @@ trait PluginHelpers
     }
 
     /**
+     * Find an installed plugin from the slug a rollback request names it by.
+     *
+     * That's the plugin's folder, or its file name for a single-file plugin. A
+     * WordPress.org plugin whose folder was renamed also answers to its
+     * WordPress.org slug. getPluginFileBySlug() only matches the folder, which
+     * is enough for the rollback steps but not for a request's slug.
+     *
+     * @param string $slug The slug from the rollback request
+     * @return string The plugin file as keyed in get_plugins(), or '' if no installed plugin matches
+     */
+    protected function findPluginFileForRollbackSlug(string $slug): string
+    {
+        $this->loadPluginFunctions();
+
+        $renamedMatch = '';
+
+        foreach (array_keys(get_plugins()) as $pluginFile) {
+            $pluginFile = (string) $pluginFile;
+            $folder     = strstr($pluginFile, '/', true);
+
+            if (($folder ?: $pluginFile) === $slug) {
+                return $pluginFile;
+            }
+
+            if ('' === $renamedMatch && $this->resolveWpOrgSlug($pluginFile) === $slug) {
+                $renamedMatch = $pluginFile;
+            }
+        }
+
+        return $renamedMatch;
+    }
+
+    /**
      * Check if the plugin is network activated
      * 
      * This method is primarily used to determine if operations should be skipped
@@ -175,4 +208,43 @@ trait PluginHelpers
     {
         return is_network_admin() ? network_admin_url($page) : admin_url($page);
     }
-} 
+
+    /**
+     * Resolve the canonical WordPress.org slug for an installed plugin.
+     *
+     * Reads the `update_plugins` site transient that WP core maintains via
+     * its twice-daily update check. WordPress.org's update API identifies
+     * plugins server-side by header fingerprint (Name, TextDomain, PluginURI,
+     * Author, UpdateURI) rather than by directory name, so the canonical
+     * slug is available even when a user has renamed the local directory
+     * (e.g. wp-rollback/ -> wp-rollback-disabled/ to disable during a conflict).
+     *
+     * Returns null when the plugin is not present in either bucket of the
+     * transient — typically a premium / non-wp.org plugin, or a site whose
+     * update check has never run.
+     *
+     * @param string $pluginFile Plugin file path as keyed in get_plugins()
+     *                           (e.g. 'wp-rollback-disabled/wp-rollback.php').
+     * @return string|null Canonical wp.org slug or null when not a wp.org plugin.
+     */
+    protected function resolveWpOrgSlug(string $pluginFile): ?string
+    {
+        $updates = get_site_transient('update_plugins');
+
+        if (!is_object($updates)) {
+            return null;
+        }
+
+        foreach (['response', 'no_update'] as $bucket) {
+            if (
+                isset($updates->{$bucket}[$pluginFile]->slug)
+                && is_string($updates->{$bucket}[$pluginFile]->slug)
+                && $updates->{$bucket}[$pluginFile]->slug !== ''
+            ) {
+                return $updates->{$bucket}[$pluginFile]->slug;
+            }
+        }
+
+        return null;
+    }
+}

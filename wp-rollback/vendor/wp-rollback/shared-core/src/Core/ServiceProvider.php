@@ -13,7 +13,7 @@ namespace WpRollback\SharedCore\Core;
 use WpRollback\SharedCore\Core\Container\Exceptions\BindingResolutionException;
 use WpRollback\SharedCore\Rollbacks\Services\PackageValidationService;
 use WpRollback\SharedCore\Rollbacks\Services\BackupService;
-use WpRollback\SharedCore\RestAPI\ArchivesController;
+use WpRollback\SharedCore\Migrations\ServiceProvider as MigrationsServiceProvider;
 
 /**
  * Class ServiceProvider
@@ -22,6 +22,11 @@ use WpRollback\SharedCore\RestAPI\ArchivesController;
  */
 class ServiceProvider implements Contracts\ServiceProvider
 {
+    /**
+     * @var MigrationsServiceProvider|null
+     */
+    private ?MigrationsServiceProvider $migrationsServiceProvider = null;
+
     /**
      * Register services with the container.
      *
@@ -37,25 +42,17 @@ class ServiceProvider implements Contracts\ServiceProvider
         // Register BackupService for creating asset backups
         SharedCore::container()->singleton(BackupService::class);
 
-        // Register ArchivesController for REST API
-        SharedCore::container()->singleton(ArchivesController::class);
+        // Register Migrations provider. It's registered and booted here only, so
+        // plugins must not also list it in their own service providers.
+        $this->migrationsServiceProvider = new MigrationsServiceProvider();
+        $this->migrationsServiceProvider->register();
     }
 
     /** @inheritDoc */
     public function boot(): void 
     {
-        // Register REST routes for archives
-        Hooks::addAction('rest_api_init', self::class, 'registerArchivesRoutes');
-    }
-
-    /**
-     * Register REST routes for archives
-     *
-     * @return void
-     */
-    public function registerArchivesRoutes(): void
-    {
-        $controller = SharedCore::container()->make(ArchivesController::class);
-        $controller->registerRoutes();
+        if ($this->migrationsServiceProvider) {
+            $this->migrationsServiceProvider->boot();
+        }
     }
 }

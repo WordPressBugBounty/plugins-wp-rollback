@@ -157,9 +157,11 @@ class RollbackItemDTO
             throw new InvalidArgumentException('Author is required');
         }
 
-        // Validate versions array structure
+        // Validate versions array structure. Keys can be ints: PHP stores a
+        // numeric-string key like "20231220" (theme-check's date versions) as
+        // int 20231220, so check the string form rather than the type.
         foreach ($versions as $ver => $data) {
-            if (!is_string($ver)) {
+            if ('' === (string) $ver) {
                 throw new InvalidArgumentException(
                     sprintf(
                         'Invalid version key: %s',
@@ -252,6 +254,10 @@ class RollbackItemDTO
             $versions = [];
             if (isset($data->versions) && (is_array($data->versions) || is_object($data->versions))) {
                 foreach ($data->versions as $version => $downloadUrl) {
+                    // All-digit versions (e.g. theme-check's 20231220) arrive as
+                    // int keys when versions is an array (plugins_api()).
+                    $version = (string) $version;
+
                     // Skip 'trunk' - it will be handled separately if needed
                     if ('trunk' === $version) {
                         $versions[$version] = [

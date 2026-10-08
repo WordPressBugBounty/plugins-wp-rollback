@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\Rollbacks\Services;
 
+use PclZip;
 use WP_Error;
 use ZipArchive;
 
@@ -52,8 +53,11 @@ class PackageValidationService
 
         $validationResults = [];
 
+        // Read the archive's entry list once; every check below works from it.
+        $entries = $this->readZipEntries($packagePath);
+
         // 1. Validate using WordPress Core file functions first
-        $coreValidation = $this->validateWithWordPressCore($packagePath);
+        $coreValidation = $this->validateWithWordPressCore($packagePath, $entries);
         if (is_wp_error($coreValidation)) {
             return [
                 'success' => false,
@@ -67,7 +71,7 @@ class PackageValidationService
         $validationResults['wordpress_core'] = $coreValidation;
 
         // 2. Validate ZIP integrity
-        $zipValidation = $this->validateZipIntegrity($packagePath);
+        $zipValidation = $this->validateZipIntegrity($packagePath, $entries);
         if (is_wp_error($zipValidation)) {
             return [
                 'success' => false,
@@ -81,7 +85,7 @@ class PackageValidationService
         $validationResults['zip_integrity'] = $zipValidation;
 
         // 3. Validate package structure
-        $structureValidation = $this->validatePackageStructure($packagePath, $assetType, $assetSlug);
+        $structureValidation = $this->validatePackageStructure($entries, $assetType, $assetSlug);
         if (is_wp_error($structureValidation)) {
             return [
                 'success' => false,
@@ -95,7 +99,7 @@ class PackageValidationService
         $validationResults['structure'] = $structureValidation;
 
         // 4. Validate file security (custom patterns WordPress doesn't provide)
-        $securityValidation = $this->validateFileSecurity($packagePath);
+        $securityValidation = $this->validateFileSecurity($entries);
         $validationResults['security'] = $securityValidation;
 
         return [
@@ -114,9 +118,10 @@ class PackageValidationService
      * Validate using WordPress Core functions
      *
      * @param string $packagePath Path to ZIP package
+     * @param array<int, array{name: string, size: int}>|WP_Error $entries ZIP entries, or the error from reading them
      * @return array|WP_Error Validation results or error
      */
-    private function validateWithWordPressCore(string $packagePath)
+    private function validateWithWordPressCore(string $packagePath, $entries)
     {
         // Initialize WordPress filesystem if needed
         if (!function_exists('WP_Filesystem')) {
@@ -131,18 +136,13 @@ class PackageValidationService
             );
         }
 
-        // First, verify this is actually a ZIP file using ZipArchive
+        // First, verify this is actually a ZIP file: its entry list could be read
         // This is more reliable than wp_check_filetype_and_ext() for temporary files
-        if (class_exists('ZipArchive')) {
-            $zip = new ZipArchive();
-            $zipCheck = $zip->open($packagePath, ZipArchive::CHECKCONS);
-            if ($zipCheck !== true) {
-                return new WP_Error(
-                    'invalid_zip_format',
-                    __('Package is not a valid ZIP file format.', 'wp-rollback')
-                );
-            }
-            $zip->close();
+        if (is_wp_error($entries)) {
+            return new WP_Error(
+                'invalid_zip_format',
+                __('Package is not a valid ZIP file format.', 'wp-rollback')
+            );
         }
 
         // Use WordPress file type validation
@@ -150,12 +150,12 @@ class PackageValidationService
         $fileType = wp_check_filetype_and_ext($packagePath, basename($packagePath));
         
         // For temporary files (like those from download_url()), we may not get an extension
-        // If ZipArchive confirmed it's a valid ZIP, we can be more lenient here
-        if (!$fileType['ext'] && class_exists('ZipArchive')) {
+        // The archive was read successfully above, so we can be more lenient here
+        if (!$fileType['ext']) {
             // Force ZIP type for valid ZIP files that WordPress can't detect
             $fileType['ext'] = 'zip';
             $fileType['type'] = 'application/zip';
-        } elseif (!$fileType['ext'] || $fileType['ext'] !== 'zip') {
+        } elseif ($fileType['ext'] !== 'zip') {
             return new WP_Error(
                 'invalid_file_type',
                 __('Package is not a valid ZIP file according to WordPress.', 'wp-rollback')
@@ -226,9 +226,10 @@ class PackageValidationService
      * Validate ZIP file integrity
      *
      * @param string $packagePath Path to ZIP package
+     * @param array<int, array{name: string, size: int}> $entries ZIP entries
      * @return array|WP_Error Validation results or error
      */
-    private function validateZipIntegrity(string $packagePath)
+    private function validateZipIntegrity(string $packagePath, array $entries)
     {
         // Check file size is reasonable (100MB limit)
         $fileSize = filesize($packagePath);
@@ -239,33 +240,8 @@ class PackageValidationService
             );
         }
 
-        // Validate ZIP using ZipArchive (WordPress dependency)
-        if (!class_exists('ZipArchive')) {
-            return new WP_Error(
-                'zip_not_available',
-                __('ZIP functionality is not available for package validation.', 'wp-rollback')
-            );
-        }
-
-        $zip = new ZipArchive();
-        $result = $zip->open($packagePath, ZipArchive::CHECKCONS);
-
-        if ($result !== true) {
-            return new WP_Error(
-                'zip_corrupt',
-                sprintf(
-                    /* translators: %d: ZipArchive error code */
-                    __('ZIP file appears to be corrupted or invalid. Error code: %d', 'wp-rollback'),
-                    $result
-                )
-            );
-        }
-
-        $fileCount = $zip->numFiles;
-        $zip->close();
-
         return [
-            'file_count' => $fileCount,
+            'file_count' => count($entries),
             'file_size' => $fileSize,
             'format_valid' => true,
         ];
@@ -274,36 +250,39 @@ class PackageValidationService
     /**
      * Validate package directory structure
      *
-     * @param string $packagePath Path to ZIP package
-     * @param string $assetType   Asset type
-     * @param string $assetSlug   Asset slug
+     * @param array<int, array{name: string, size: int}> $entries ZIP entries
+     * @param string $assetType Asset type
+     * @param string $assetSlug Asset slug
      * @return array|WP_Error Validation results or error
      */
-    private function validatePackageStructure(string $packagePath, string $assetType, string $assetSlug)
+    private function validatePackageStructure(array $entries, string $assetType, string $assetSlug)
     {
-        // Defensive check - this should never happen as validateZipIntegrity() checks first
-        if (!class_exists('ZipArchive')) {
-            return new WP_Error(
-                'zip_not_available',
-                __('ZIP functionality is not available for package validation.', 'wp-rollback')
-            );
-        }
-
-        $zip = new ZipArchive();
-        $zip->open($packagePath);
-
         $rootDir = null;
         $hasValidStructure = false;
         $phpFilesFound = 0;
         $cssFilesFound = 0;
 
         // Find root directory and validate basic structure
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $filename = $zip->getNameIndex($i);
+        foreach ($entries as $entry) {
+            $filename = $entry['name'];
             
             // Skip __MACOSX and other meta directories
             if (strpos($filename, '__MACOSX/') === 0) {
                 continue;
+            }
+
+            // Stop here, before the current version is moved or deleted, rather
+            // than let unzip_file() fail or write files outside the asset's folder.
+            if (!$this->isInsideAssetFolder($filename, $assetSlug)) {
+                return new WP_Error(
+                    'file_outside_asset_folder',
+                    sprintf(
+                        /* translators: 1: Path of a file in the package, 2: Plugin or theme folder name */
+                        __('The package can\'t be installed because "%1$s" isn\'t a valid path inside the %2$s/ folder. Your installed version hasn\'t been changed.', 'wp-rollback'),
+                        sanitize_text_field($filename),
+                        $assetSlug
+                    )
+                );
             }
 
             // Find root directory
@@ -325,8 +304,6 @@ class PackageValidationService
             }
         }
 
-        $zip->close();
-
         // Basic validation: ensure package has relevant files
         if (!$hasValidStructure) {
             return new WP_Error(
@@ -347,6 +324,52 @@ class PackageValidationService
         ];
     }
 
+    /**
+     * Whether a ZIP entry unzips inside the plugin or theme's own folder.
+     *
+     * unzip_file() writes each entry into the plugins or themes folder exactly as
+     * it's named, so the entry must start with "{slug}/" and the rest must be a
+     * plain relative path. Theme backups made on Windows by older versions store
+     * a full server path after the folder name, e.g.
+     * "acme-theme/C:/xampp/htdocs/wp-content/themes/acme-theme/style.css".
+     *
+     * @param string $entryName ZIP entry name.
+     * @param string $assetSlug Asset slug, which is also its folder name.
+     * @return bool
+     */
+    private function isInsideAssetFolder(string $entryName, string $assetSlug): bool
+    {
+        $folder = $assetSlug . '/';
+
+        // ZIP entries always use "/". A "\" is a separator on Windows but part of
+        // the file name elsewhere, so the files wouldn't land in the same place.
+        if (strpos($entryName, $folder) !== 0 || strpos($entryName, '\\') !== false) {
+            return false;
+        }
+
+        $relativePath = substr($entryName, strlen($folder));
+        if ('' === $relativePath) {
+            return true;
+        }
+
+        $segments = explode('/', $relativePath);
+
+        // A directory entry ends with "/", which leaves an empty last segment.
+        if ('' === end($segments)) {
+            array_pop($segments);
+        }
+
+        foreach ($segments as $segment) {
+            // "" (from "//"), ".", ".." and a drive letter like "C:" all mean a
+            // server path or a path that climbs out of the folder.
+            if (in_array($segment, ['', '.', '..'], true) || 1 === preg_match('/^[A-Za-z]:$/', $segment)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
 
         /**
@@ -356,28 +379,16 @@ class PackageValidationService
      * no pattern-based scanning (too prone to false positives).
      * Focuses on structural validation and file size monitoring only.
      *
-     * @param string $packagePath Path to ZIP package
+     * @param array<int, array{name: string, size: int}> $entries ZIP entries
      * @return array Validation results
      */
-    private function validateFileSecurity(string $packagePath): array
+    private function validateFileSecurity(array $entries): array
     {
-        // Defensive check - this should never happen as validateZipIntegrity() checks first
-        if (!class_exists('ZipArchive')) {
-            return [
-                'files_checked' => 0,
-                'oversized_files' => [],
-                'warnings' => ['ZIP functionality is not available for security validation.'],
-            ];
-        }
-
-        $zip = new ZipArchive();
-        $zip->open($packagePath);
-
         $oversizedFiles = [];
         $totalFilesChecked = 0;
 
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $filename = $zip->getNameIndex($i);
+        foreach ($entries as $entry) {
+            $filename = $entry['name'];
             
             // Skip directories and meta files
             if (substr($filename, -1) === '/' || strpos($filename, '__MACOSX/') === 0) {
@@ -387,19 +398,15 @@ class PackageValidationService
             $totalFilesChecked++;
 
             // Check file size (5MB limit for individual files)
-            $stat = $zip->statIndex($i);
-            if ($stat && $stat['size'] > 5242880) {
+            if ($entry['size'] > 5242880) {
                 $oversizedFiles[] = [
                     'file' => $filename,
-                    'size' => $stat['size']
+                    'size' => $entry['size']
                 ];
             }
         }
 
-        // Count PHP files before closing
-        $phpFilesFound = $this->countPhpFiles($zip);
-        
-        $zip->close();
+        $phpFilesFound = $this->countPhpFiles($entries);
 
         return [
             'files_checked' => $totalFilesChecked,
@@ -412,19 +419,120 @@ class PackageValidationService
     /**
      * Count PHP files in the package for reporting
      *
-     * @param ZipArchive $zip The ZIP archive
+     * @param array<int, array{name: string, size: int}> $entries ZIP entries
      * @return int Number of PHP files found
      */
-    private function countPhpFiles(ZipArchive $zip): int
+    private function countPhpFiles(array $entries): int
     {
         $phpCount = 0;
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $filename = $zip->getNameIndex($i);
-            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        foreach ($entries as $entry) {
+            $extension = strtolower(pathinfo($entry['name'], PATHINFO_EXTENSION));
             if (in_array($extension, ['php', 'inc', 'phtml'], true)) {
                 $phpCount++;
             }
         }
         return $phpCount;
+    }
+
+    /**
+     * Read the entry list of a ZIP package
+     *
+     * Uses ZipArchive when PHP's Zip extension is loaded and WordPress Core's
+     * PclZip library otherwise, the same fallback unzip_file() uses, so a
+     * package validates on every server WordPress can install it on.
+     *
+     * @param string $packagePath Path to ZIP package
+     * @return array<int, array{name: string, size: int}>|WP_Error Entries or error
+     */
+    private function readZipEntries(string $packagePath)
+    {
+        if (class_exists('ZipArchive')) {
+            return $this->readZipEntriesWithZipArchive($packagePath);
+        }
+
+        return $this->readZipEntriesWithPclZip($packagePath);
+    }
+
+    /**
+     * Read ZIP entries using ZipArchive (preferred method)
+     *
+     * @param string $packagePath Path to ZIP package
+     * @return array<int, array{name: string, size: int}>|WP_Error Entries or error
+     */
+    private function readZipEntriesWithZipArchive(string $packagePath)
+    {
+        $zip = new ZipArchive();
+        $result = $zip->open($packagePath, ZipArchive::CHECKCONS);
+
+        if ($result !== true) {
+            return new WP_Error(
+                'zip_corrupt',
+                sprintf(
+                    /* translators: %d: ZIP library error code */
+                    __('ZIP file appears to be corrupted or invalid. Error code: %d', 'wp-rollback'),
+                    $result
+                )
+            );
+        }
+
+        $entries = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $stat = $zip->statIndex($i);
+            $entries[] = [
+                'name' => (string) $zip->getNameIndex($i),
+                'size' => $stat ? (int) $stat['size'] : 0,
+            ];
+        }
+        $zip->close();
+
+        return $entries;
+    }
+
+    /**
+     * Read ZIP entries using PclZip (WordPress Core fallback)
+     *
+     * Loads and calls PclZip the way _unzip_file_pclzip() does. listContent()
+     * parses the archive's central directory, so a file that isn't a ZIP or
+     * was cut short during download is rejected here too. Like PclZip's own
+     * extraction, the names it returns have "//", "." and ".." resolved.
+     *
+     * @param string $packagePath Path to ZIP package
+     * @return array<int, array{name: string, size: int}>|WP_Error Entries or error
+     */
+    private function readZipEntriesWithPclZip(string $packagePath)
+    {
+        // Load PclZip library from WordPress Core
+        if (!class_exists('PclZip')) {
+            require_once ABSPATH . 'wp-admin/includes/class-pclzip.php';
+        }
+
+        mbstring_binary_safe_encoding();
+
+        $archive = new PclZip($packagePath);
+        $archiveFiles = $archive->listContent();
+
+        reset_mbstring_encoding();
+
+        if (!is_array($archiveFiles)) {
+            return new WP_Error(
+                'zip_corrupt',
+                sprintf(
+                    /* translators: %d: ZIP library error code */
+                    __('ZIP file appears to be corrupted or invalid. Error code: %d', 'wp-rollback'),
+                    $archive->errorCode()
+                ),
+                $archive->errorInfo(true)
+            );
+        }
+
+        $entries = [];
+        foreach ($archiveFiles as $file) {
+            $entries[] = [
+                'name' => (string) $file['filename'],
+                'size' => (int) $file['size'],
+            ];
+        }
+
+        return $entries;
     }
 } 

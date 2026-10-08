@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\Rollbacks\RollbackSteps;
 
+use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 use WpRollback\SharedCore\Rollbacks\Services\MaintenanceService;
+use WpRollback\SharedCore\Rollbacks\Services\NetworkAssetUsageService;
 use WpRollback\SharedCore\Rollbacks\DTO\RollbackApiRequestDTO;
 use WpRollback\SharedCore\Rollbacks\Contract\RollbackStep;
 use WpRollback\SharedCore\Rollbacks\Contract\RollbackStepResult;
@@ -29,13 +31,22 @@ class MaintenanceMode implements RollbackStep
     private MaintenanceService $maintenanceService;
 
     /**
+     * Checks whether other sites on a network use the asset
+     *
+     * @var NetworkAssetUsageService
+     */
+    private NetworkAssetUsageService $networkAssetUsage;
+
+    /**
      * Constructor
      *
-     * @param MaintenanceService $maintenanceService The maintenance service
+     * @param MaintenanceService       $maintenanceService The maintenance service
+     * @param NetworkAssetUsageService $networkAssetUsage  Checks whether other sites on a network use the asset
      */
-    public function __construct(MaintenanceService $maintenanceService)
+    public function __construct(MaintenanceService $maintenanceService, NetworkAssetUsageService $networkAssetUsage)
     {
         $this->maintenanceService = $maintenanceService;
+        $this->networkAssetUsage = $networkAssetUsage;
     }
 
     /**
@@ -152,45 +163,21 @@ class MaintenanceMode implements RollbackStep
     private function shouldEnableMaintenanceMode(string $assetType, string $assetSlug): bool
     {
         if ('plugin' === $assetType) {
-            // Check if plugin is active
-            if (!function_exists('is_plugin_active')) {
-                require_once ABSPATH . 'wp-admin/includes/plugin.php';
-            }
-            
-            // For plugins, the slug might be the full plugin path or just the directory
-            // First, try with the slug as-is (could be full path like 'plugin-dir/plugin-file.php')
-            if (is_plugin_active($assetSlug)) {
+            if (PluginUtility::listIncludesPlugin((array) get_option('active_plugins', []), $assetSlug)) {
                 return true;
             }
-            
-            // If not found, check all active plugins to see if any start with this slug
-            $active_plugins = get_option('active_plugins', []);
-            foreach ($active_plugins as $plugin) {
-                // Check if the plugin file starts with our slug directory
-                if (strpos($plugin, $assetSlug . '/') === 0) {
-                    return true;
-                }
-                
-                // Also check if the plugin file path matches when we add common file patterns
-                $common_files = [$assetSlug . '.php', 'plugin.php', 'index.php', 'main.php'];
-                foreach ($common_files as $file) {
-                    if ($plugin === $assetSlug . '/' . $file) {
-                        return true;
-                    }
-                }
+
+            if (!is_multisite()) {
+                return false;
             }
-            
-            // Check network activated plugins for multisite
-            if (is_multisite()) {
-                $network_plugins = get_site_option('active_sitewide_plugins', []);
-                foreach ($network_plugins as $plugin => $time) {
-                    if ($plugin === $assetSlug || strpos($plugin, $assetSlug . '/') === 0) {
-                        return true;
-                    }
-                }
+
+            $networkPlugins = array_keys((array) get_site_option('active_sitewide_plugins', []));
+            if (PluginUtility::listIncludesPlugin($networkPlugins, $assetSlug)) {
+                return true;
             }
-            
-            return false;
+
+            // Every site on a network loads its plugins from the same folder, so check the other sites too
+            return $this->networkAssetUsage->isPluginActiveOnOtherSites($assetSlug);
         }
         
         if ('theme' === $assetType) {
@@ -208,21 +195,9 @@ class MaintenanceMode implements RollbackStep
                 }
             }
             
-            // Check network enabled themes for multisite
+            // Every site on a network loads its theme from the same folder, so check the other sites too
             if (is_multisite()) {
-                $allowed_themes = get_site_option('allowedthemes', []);
-                if (isset($allowed_themes[$assetSlug]) && $allowed_themes[$assetSlug]) {
-                    // Check if any site is using this theme
-                    global $wpdb;
-                    $sites_using_theme = $wpdb->get_var($wpdb->prepare(
-                        "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = 'stylesheet' AND option_value = %s",
-                        $assetSlug
-                    ));
-                    
-                    if ($sites_using_theme > 0) {
-                        return true;
-                    }
-                }
+                return $this->networkAssetUsage->isThemeUsedOnOtherSites($assetSlug);
             }
             
             return false;

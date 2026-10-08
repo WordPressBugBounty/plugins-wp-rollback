@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\RestAPI;
 
+use WP_REST_Request;
 use WP_REST_Server;
 use WpRollback\SharedCore\Core\Contracts\ApiRouteV1;
+use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 use WpRollback\SharedCore\Rollbacks\Registry\RollbackStepRegisterer;
 
 /**
@@ -50,6 +52,26 @@ class RollbackStepsApiRoute extends ApiRouteV1
                 'permission_callback' => [$this, 'permissionValidation'],
             ]
         );
+    }
+
+    /**
+     * Permission validation callback.
+     *
+     * @param WP_REST_Request $request
+     * @return bool|\WP_Error
+     */
+    public function permissionValidation(WP_REST_Request $request)
+    {
+        $parentCheck = parent::permissionValidation($request);
+        if (is_wp_error($parentCheck)) {
+            return $parentCheck;
+        }
+
+        if (!$parentCheck) {
+            return false;
+        }
+
+        return PluginUtility::currentUserCanRollback();
     }
 
     /**

@@ -28,7 +28,7 @@ class MaintenanceService
      *
      * @return string Path to maintenance file
      */
-    private function getMaintenanceFilePath(): string
+    protected function getMaintenanceFilePath(): string
     {
         return ABSPATH . self::MAINTENANCE_FILE;
     }
@@ -77,15 +77,25 @@ class MaintenanceService
         }
 
         $maintenanceFile = $this->getMaintenanceFilePath();
-        
+
+        clearstatcache(true, $maintenanceFile);
+
         if (!file_exists($maintenanceFile)) {
             return;
         }
 
-        $data = json_decode(file_get_contents($maintenanceFile), true);
-        
+        // Guard against file_get_contents() returning false even when
+        // file_exists() reported true (see isMaintenanceModeActive) so a
+        // non-string is never passed to json_decode().
+        $contents = file_get_contents($maintenanceFile);
+        if (!is_string($contents)) {
+            return;
+        }
+
+        $data = json_decode($contents, true);
+
         // Check if maintenance is still valid (10 minutes)
-        if (!$data || (time() - $data['time']) >= 600) {
+        if (!$data || (time() - ($data['time'] ?? 0)) >= 600) {
             $this->disableMaintenanceMode();
             return;
         }
@@ -200,13 +210,29 @@ class MaintenanceService
     public function isMaintenanceModeActive(): bool
     {
         $maintenanceFile = $this->getMaintenanceFilePath();
-        
+
+        // Drop any stale stat-cache entry first. On some virtualized
+        // filesystems (e.g. PHP-WASM) a file removed during a prior rollback
+        // request can still be reported as present by file_exists() while its
+        // data is gone, so the cached stat must be cleared before checking.
+        clearstatcache(true, $maintenanceFile);
+
         if (!file_exists($maintenanceFile)) {
             return false;
         }
-        
-        $data = json_decode(file_get_contents($maintenanceFile), true);
-        
+
+        // file_get_contents() can still return false even when file_exists()
+        // reported true (a phantom directory entry left behind after the
+        // file's data was removed). Guard against it so a non-string value is
+        // never passed to json_decode(), which throws a fatal TypeError on
+        // PHP 8+.
+        $contents = file_get_contents($maintenanceFile);
+        if (!is_string($contents)) {
+            return false;
+        }
+
+        $data = json_decode($contents, true);
+
         if (!$data || !isset($data['time'])) {
             return false;
         }

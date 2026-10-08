@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WP Rollback plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Rollback 3.1.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/free-plugin\n"
+"Project-Id-Version: WP Rollback 3.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-rollback\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-29T08:16:06+00:00\n"
+"POT-Creation-Date: 2026-10-08T05:08:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-rollback\n"
@@ -30,7 +30,15 @@ msgstr ""
 
 #. Description of the plugin
 #: wp-rollback.php
-msgid "Rollback (or forward) any WordPress.org plugin, theme or block like a boss."
+msgid "Roll back (or forward) any WordPress.org plugin, theme or block like a boss."
+msgstr ""
+
+#: src/PluginSetup/OutdatedProNotice.php:78
+msgid "WP Rollback is paused because it can't run alongside this older version of WP Rollback Pro. Deactivate WP Rollback to keep using Pro, then update WP Rollback Pro."
+msgstr ""
+
+#: src/PluginSetup/OutdatedProNotice.php:83
+msgid "Deactivate WP Rollback"
 msgstr ""
 
 #: src/PluginSetup/PluginMeta.php:45
@@ -56,7 +64,7 @@ msgid "Invalid version number provided."
 msgstr ""
 
 #: src/Rollbacks/PluginRollback.php:55
-msgid "Cannot rollback to the same version."
+msgid "Cannot roll back to the same version."
 msgstr ""
 
 #: src/Rollbacks/PluginRollback.php:63
@@ -78,18 +86,18 @@ msgstr ""
 #. translators: %s: Plugin name
 #: build/commandPalette.js:4
 #, js-format
-msgid "Rollback plugin: %s"
+msgid "Roll back plugin: %s"
 msgstr ""
 
 #. translators: %s: Theme name
 #: build/commandPalette.js:7
 #, js-format
-msgid "Rollback theme: %s"
+msgid "Roll back theme: %s"
 msgstr ""
 
 #: build/themesAdmin.js:1
-#: build/tools.js:22
 #: build/tools.js:23
+#: build/tools.js:27
 msgid "Rollback"
 msgstr ""
 
@@ -98,43 +106,143 @@ msgid "Rollback not available"
 msgstr ""
 
 #: build/tools.js:1
+#: build/tools.js:38
 msgid "Upgrade to Pro"
 msgstr ""
 
 #: build/tools.js:1
-msgid "Rollback a Plugin or Theme"
+msgid "WordPress.org plugins and themes"
 msgstr ""
 
 #: build/tools.js:1
-msgid "With WP Rollback you can go back to a previous WordPress.org plugin or theme version with ease. Which action would you like to perform today?"
+msgid "Any earlier version"
 msgstr ""
 
 #: build/tools.js:1
-msgid "Plugin Version Rollback"
+msgid "Premium plugins and themes"
 msgstr ""
 
 #: build/tools.js:1
-msgid "Revert any WordPress.org plugin to a previous version with just a few clicks. Choose the plugin and version you'd like to restore."
+msgid "Verified versions from Plugin Vault"
 msgstr ""
 
 #: build/tools.js:1
-msgid "Rollback a Plugin"
+#: build/tools.js:32
+msgid "Automatic backups"
 msgstr ""
 
 #: build/tools.js:1
-msgid "Theme Version Rollback"
+msgid "The current version is archived before each update"
 msgstr ""
 
 #: build/tools.js:1
-msgid "Rollback a Theme"
+#: build/tools.js:32
+msgid "Rollback notes"
 msgstr ""
 
 #: build/tools.js:1
-msgid "The Safest Way to Rollback Premium Plugins & Themes"
+msgid "Tell your team why you rolled back"
 msgstr ""
 
 #: build/tools.js:1
-msgid "Get complete control over every plugin on your site with automated backups, rollback notes for your team, and support for premium plugins from any marketplace."
+#: build/tools.js:32
+msgid "Activity log"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Who rolled back what, and when"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Abilities API"
+msgstr ""
+
+#: build/tools.js:1
+msgid "AI agents can run rollbacks on WordPress 6.9+"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Roll back a plugin or theme"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Return anything installed from WordPress.org to an earlier version in a few clicks."
+msgstr ""
+
+#: build/tools.js:1
+#: build/tools.js:23
+msgid "Plugins"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Pick a plugin, then choose the version to restore."
+msgstr ""
+
+#: build/tools.js:1
+msgid "Roll back a plugin"
+msgstr ""
+
+#: build/tools.js:1
+#: build/tools.js:44
+msgid "Themes"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Pick a theme, then choose the version to restore."
+msgstr ""
+
+#: build/tools.js:1
+msgid "Roll back a theme"
+msgstr ""
+
+#: build/tools.js:1
+#: build/tools.js:35
+#: build/tools.js:47
+msgid "WP Rollback Pro"
+msgstr ""
+
+#: build/tools.js:1
+#: build/tools.js:35
+msgid "Upgrade"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Roll back premium plugins and themes too"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Free covers WordPress.org. Pro covers everything else you hold a license for, and saves a backup before every update."
+msgstr ""
+
+#: build/tools.js:1
+#: build/tools.js:38
+#: build/tools.js:47
+msgid "See all Pro features"
+msgstr ""
+
+#: build/tools.js:1
+#: build/tools.js:38
+msgid "30-day money-back guarantee"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Feature"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Free"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Pro"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Included"
+msgstr ""
+
+#: build/tools.js:1
+msgid "Not included"
 msgstr ""
 
 #. translators: %s: field label
@@ -143,453 +251,864 @@ msgid "Loading…"
 msgstr ""
 
 #: build/tools.js:22
+msgid "No Activity Found"
+msgstr ""
+
+#. translators: %s: Type of activity (Plugin/Theme)
+#: build/tools.js:23
+#, js-format
+msgid "%s activity will be logged here."
+msgstr ""
+
+#: build/tools.js:23
 msgid "No Data Found"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "Data will appear here when available."
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "Active"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "Inactive"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "Version"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
+#: build/tools.js:44
 msgid "Status"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
+#: build/tools.js:44
 msgid "Actions"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "Plugin Name"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "No Plugins Found"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "No plugins available for rollback."
 msgstr ""
 
-#: build/tools.js:22
-msgid "Plugins"
+#: build/tools.js:23
+msgid "Select a plugin below to roll back to a previous version."
 msgstr ""
 
-#: build/tools.js:22
-msgid "Select a plugin below to rollback to a previous version."
-msgstr ""
-
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "Failed to fetch rollback data."
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:23
 msgid "Error fetching rollback data"
 msgstr ""
 
-#: build/tools.js:22
+#. translators: %s: PHP error message
+#: build/tools.js:25
+#, js-format
+msgid "A PHP fatal error stopped the rollback: %s"
+msgstr ""
+
+#. translators: 1: wp-config.php code, 2: wp-config.php, 3: debug log path
+#: build/tools.js:26
+#, js-format
+msgid "A PHP fatal error stopped the rollback. Your site's PHP error log shows which plugin or theme caused it. If you can't find the log, add %1$s to %2$s, try again, and check %3$s."
+msgstr ""
+
+#: build/tools.js:26
 msgid "Plugin"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Theme"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Reinstall Now"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Update Now"
 msgstr ""
 
-#: build/tools.js:22
-#: build/tools.js:23
-msgid "Rollback Now"
+#: build/tools.js:26
+#: build/tools.js:27
+msgid "Roll Back Now"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Rolling Back To"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Updating To"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Reinstalling"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Unknown Plugin"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "WordPress Plugin"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "WordPress Theme"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Same version will be reinstalled"
 msgstr ""
 
-#: build/tools.js:22
-#: build/tools.js:23
+#: build/tools.js:26
+#: build/tools.js:27
 msgid "Installed"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Back up your files and database before continuing. WP Rollback is not responsible for issues resulting from this action."
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Rollback version not specified."
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Failed to fetch rollback steps."
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "An unknown error occurred."
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Step completed successfully"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Rolling back <assetName/> to version <assetVersion/>…"
 msgstr ""
 
-#: build/tools.js:22
-msgid "An error occurred during the rollback process."
-msgstr ""
-
-#: build/tools.js:22
-msgid "All steps completed successfully."
-msgstr ""
-
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Please wait — this may take a few moments."
 msgstr ""
 
-#: build/tools.js:22
-#: build/tools.js:23
-msgid "Rollback Failed"
+#: build/tools.js:26
+msgid "An error occurred during the rollback process."
 msgstr ""
 
-#: build/tools.js:22
-msgid "Continue"
+#: build/tools.js:26
+msgid "All steps completed successfully."
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Rollback in Progress…"
 msgstr ""
 
-#: build/tools.js:22
-msgid "An error occurred while attempting to rollback <rollbackName/>:"
+#: build/tools.js:26
+#: build/tools.js:27
+msgid "Rollback Failed"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
+msgid "Continue"
+msgstr ""
+
+#: build/tools.js:26
+msgid "An error occurred while attempting to roll back <rollbackName/>:"
+msgstr ""
+
+#: build/tools.js:26
 msgid "Error:"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "An unknown error occurred"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Need help?"
 msgstr ""
 
-#: build/tools.js:22
+#: build/tools.js:26
 msgid "Read our troubleshooting guide"
 msgstr ""
 
 #. translators: 1: Asset slug
-#: build/tools.js:23
+#: build/tools.js:27
 #, js-format
-msgid "Sorry, we could not find a changelog entry for this version. Try checking the <a href=\"https://wordpress.org/plugins/%s/#developers\" target=\"_blank\">Development tab</a> on WP.org."
+msgid "Sorry, we could not find a changelog entry for this version. Try checking the <a href=\"https://wordpress.org/plugins/%1$s/#developers\" target=\"_blank\">Development tab</a> on WP.org."
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Confirm Rollback"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
+#: build/tools.js:45
 msgid "Cancel"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Rolling Back…"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Try Again"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "View Changelog"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Close"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Plugin Rollback"
 msgstr ""
 
-#: build/tools.js:23
-msgid "All versions listed below are available directly from WordPress.org."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Select a release to roll back."
-msgstr ""
-
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Theme Rollback"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
+msgid "All versions listed below are available directly from WordPress.org."
+msgstr ""
+
+#: build/tools.js:27
+msgid "Select a release to roll back."
+msgstr ""
+
+#: build/tools.js:27
 msgid "Reinstall"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Update"
 msgstr ""
 
-#: build/tools.js:23
-msgid "The active development version — latest code changes not yet released to the public. Intended for developers and testers."
-msgstr ""
-
-#: build/tools.js:23
-msgid "From Plugin Vault — community-contributed ZIPs verified for integrity."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Vault"
-msgstr ""
-
-#: build/tools.js:23
-msgid "A local backup saved on this site."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Local"
-msgstr ""
-
-#: build/tools.js:23
-msgid "Available on WordPress.org."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Repo"
-msgstr ""
-
-#: build/tools.js:23
-msgid "No versions available"
-msgstr ""
-
-#: build/tools.js:23
-msgid "No versions found"
-msgstr ""
-
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Read less"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Read more"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Installed version:"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Plugin author:"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Theme author:"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 #, js-format
 msgid "View %s on WordPress.org"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Theme Author"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:27
 msgid "Last Updated"
 msgstr ""
 
-#: build/tools.js:23
-msgid "Premium Plugin & Theme Rollbacks"
+#: build/tools.js:27
+msgid "The active development version — latest code changes not yet released to the public. Intended for developers and testers."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Roll back any premium plugin or theme from any marketplace - not just WordPress.org."
+#: build/tools.js:27
+msgid "From Plugin Vault — community-contributed ZIPs verified for integrity."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Version Preservation"
+#: build/tools.js:27
+#: build/tools.js:32
+msgid "Vault"
 msgstr ""
 
-#: build/tools.js:23
-msgid "For premium assets, creates a zip archive of the current version and stores the archive."
+#: build/tools.js:27
+msgid "A local backup saved on this site."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Rollback Notes & Documentation"
+#: build/tools.js:27
+msgid "Local"
 msgstr ""
 
-#: build/tools.js:23
-msgid "Add detailed notes to each rollback for better team coordination and change tracking."
+#: build/tools.js:27
+msgid "Available on WordPress.org."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Advanced Activity Logging"
+#: build/tools.js:27
+msgid "Repo"
 msgstr ""
 
-#: build/tools.js:23
-msgid "Complete audit trail of all rollbacks with timestamps, user tracking, and detailed logs."
+#: build/tools.js:27
+msgid "No versions available"
 msgstr ""
 
-#: build/tools.js:23
-msgid "Why Upgrade to WP Rollback Pro?"
+#: build/tools.js:27
+msgid "No versions found"
 msgstr ""
 
-#: build/tools.js:23
-msgid "30-Day Money-Back Guarantee"
+#. translators: 1: installed version number, 2: number of local backups.
+#: build/tools.js:30
+#, js-format
+msgid "Version %1$s installed · %2$d local backup"
+msgid_plural "Version %1$s installed · %2$d local backups"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: version number.
+#: build/tools.js:32
+#, js-format
+msgid "Version %s installed"
 msgstr ""
 
-#: build/tools.js:23
-msgid "Try WP Rollback Pro risk-free. If you're not completely satisfied, get your money back within 30 days."
+#: build/tools.js:32
+msgid "Plugin Vault"
 msgstr ""
 
-#: build/tools.js:23
-msgid "Upgrade to WP Rollback Pro"
+#: build/tools.js:32
+msgid "Verified earlier versions of premium plugins and themes you hold a license for."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Go Back"
+#: build/tools.js:32
+msgid "The current version is archived before each update, ready to restore."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Learn More About Pro Features"
+#: build/tools.js:32
+msgid "Record why you rolled back so your team knows what happened."
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:32
+msgid "See who rolled back what, and when, across the site."
+msgstr ""
+
+#: build/tools.js:32
+msgid "Status report emails"
+msgstr ""
+
+#: build/tools.js:32
+msgid "A regular summary of rollbacks and backups, sent to your inbox."
+msgstr ""
+
+#: build/tools.js:32
+msgid "WP-CLI and Abilities API"
+msgstr ""
+
+#: build/tools.js:32
+msgid "Run rollbacks from the command line or let AI agents do it."
+msgstr ""
+
+#: build/tools.js:32
+msgid "Available versions"
+msgstr ""
+
+#: build/tools.js:32
+msgid "Pro feature"
+msgstr ""
+
+#: build/tools.js:32
+msgid "What is Plugin Vault?"
+msgstr ""
+
+#. translators: %s: plugin or theme name.
+#: build/tools.js:35
+#, js-format
+msgid "A shared library of earlier versions of premium plugins and themes, contributed by Pro sites and verified before they're stored and again before they're installed. Pro checks it for %s. You need your own valid license for anything you roll back."
+msgstr ""
+
+#: build/tools.js:35
+msgid "Learn more about Plugin Vault"
+msgstr ""
+
+#. translators: %s: plugin or theme name.
+#: build/tools.js:38
+#, js-format
+msgid "Roll back %s to an earlier version"
+msgstr ""
+
+#: build/tools.js:38
+msgid "Pro installs verified versions from Plugin Vault or your own backups, and saves a fresh backup before every update."
+msgstr ""
+
+#: build/tools.js:38
+msgid "Go back"
+msgstr ""
+
+#: build/tools.js:38
+msgid "Try Pro risk-free. Full refund within 30 days."
+msgstr ""
+
+#: build/tools.js:38
+msgid "What you get with Pro"
+msgstr ""
+
+#: build/tools.js:38
 msgid "Error"
 msgstr ""
 
-#: build/tools.js:23
-msgid "Unlock Premium Rollbacks"
+#. translators: %s: plugin or theme name.
+#: build/tools.js:41
+#, js-format
+msgid "Roll back %s with Pro"
 msgstr ""
 
-#: build/tools.js:23
-msgid "This premium asset requires WP Rollback Pro for safe version rollbacks."
+#. translators: %s: plugin or theme name.
+#: build/tools.js:44
+#, js-format
+msgid "%s isn't on WordPress.org, so earlier versions come from Plugin Vault and your local backups. Rolling back to them needs WP Rollback Pro."
 msgstr ""
 
-#: build/tools.js:23
-msgid "is not available on WordPress.org and requires WP Rollback Pro for version control."
-msgstr ""
-
-#: build/tools.js:23
-msgid "Available Versions (Pro Feature)"
-msgstr ""
-
-#: build/tools.js:23
-msgid "These versions would be available for rollback with WP Rollback Pro:"
-msgstr ""
-
-#: build/tools.js:23
+#: build/tools.js:44
 msgid "Screenshot"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:44
 msgid "Theme Name"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:44
 msgid "No Themes Found"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:44
 msgid "No themes available for rollback."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Themes"
+#: build/tools.js:44
+msgid "Select a theme below to roll back to a previous version."
 msgstr ""
 
-#: build/tools.js:23
-msgid "Select a theme below to rollback to a previous version."
+#: build/tools.js:44
+msgid "Failed to fetch migrations."
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:44
+msgid "Migration Task"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Timestamp"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Description"
+msgstr ""
+
+#: build/tools.js:44
+msgid "View Error Log"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Run"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Revert"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Retry"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Revert Migration?"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Revert Migration"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Retry Migration?"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Retry Migration"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Run Migration?"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Run Migration"
+msgstr ""
+
+#: build/tools.js:44
+msgid "Refresh Status"
+msgstr ""
+
+#: build/tools.js:44
+msgid "No Migrations Registered"
+msgstr ""
+
+#: build/tools.js:44
+msgid "No database or storage migrations have been registered."
+msgstr ""
+
+#. translators: 1: action name (run, revert, retry), 2: migration label or ID
+#: build/tools.js:45
+#, js-format
+msgid "Are you sure you want to %1$s the migration \"%2$s\"?"
+msgstr ""
+
+#. translators: %s: Action name (e.g. run, revert, retry)
+#: build/tools.js:46
+#, js-format
+msgid "Failed to %s migration."
+msgstr ""
+
+#: build/tools.js:46
+msgid "Database & Storage Migrations"
+msgstr ""
+
+#: build/tools.js:46
+msgid "Inspect, run, revert, and debug system migrations."
+msgstr ""
+
+#: build/tools.js:46
 msgid "Premium plugins"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:46
 msgid "Auto-archives"
 msgstr ""
 
-#: build/tools.js:23
+#: build/tools.js:46
 msgid "Activity logs"
 msgstr ""
 
 #. translators: 1: Asset name 2: Asset version
-#: build/tools.js:24
+#: build/tools.js:47
 #, js-format
 msgid "%1$s has been successfully rolled back to version %2$s."
 msgstr ""
 
-#: build/tools.js:24
+#: build/tools.js:47
 msgid "Rollback Complete"
 msgstr ""
 
-#: build/tools.js:24
-msgid "WP Rollback Pro"
+#: build/tools.js:47
+msgid "Roll back any plugin — not just WordPress.org."
 msgstr ""
 
-#: build/tools.js:24
-msgid "Rollback any plugin — not just WordPress.org."
-msgstr ""
-
-#: build/tools.js:24
+#: build/tools.js:47
 msgid "Pro archives your version before every update and supports premium plugins like Elementor, Gravity Forms, and WooCommerce. Next time something breaks, you're one click from safety."
 msgstr ""
 
-#: build/tools.js:24
+#: build/tools.js:47
 msgid "Upgrade Now"
 msgstr ""
 
-#: build/tools.js:24
-msgid "See all Pro features"
-msgstr ""
-
-#: build/tools.js:24
+#: build/tools.js:47
 msgid "Return to <type/> Screen"
 msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Core/Traits/HandleMultipleApiRoutes.php:62
+msgid "Route not found."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:109
+msgid "You do not have permission to view migrations."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:135
+msgid "You do not have permission to execute migrations."
+msgstr ""
+
+#. translators: %s: Migration ID
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:206
+#, php-format
+msgid "Migration \"%s\" executed successfully."
+msgstr ""
+
+#. translators: %s: Migration ID
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:213
+#, php-format
+msgid "Migration \"%s\" failed to run."
+msgstr ""
+
+#. translators: %s: Migration ID
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:240
+#, php-format
+msgid "Migration \"%s\" reverted successfully."
+msgstr ""
+
+#. translators: %s: Migration ID
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:247
+#, php-format
+msgid "Migration \"%s\" failed to revert."
+msgstr ""
+
+#. translators: %s: Migration ID
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:274
+#, php-format
+msgid "Migration \"%s\" retried and completed successfully."
+msgstr ""
+
+#. translators: %s: Migration ID
+#: vendor/wp-rollback/shared-core/src/RestAPI/MigrationsController.php:281
+#, php-format
+msgid "Migration \"%s\" retry failed."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/RestAPI/ProcessRollbackApiRoute.php:146
+msgid "Invalid request. Required parameters are missing."
+msgstr ""
+
+#. translators: %s: WP Rollback website URL
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Admin/AdminFooter.php:68
+#, php-format
+msgid "Thank you for using <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">WP Rollback</a>."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Admin/AdminPageHeaderLinks.php:68
+msgid "Roll Back Plugins"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Admin/AdminPageHeaderLinks.php:86
+msgid "Roll Back Themes"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/PluginRollback/Actions/AddPluginRollbackLinks.php:201
+#: vendor/wp-rollback/shared-core/src/Rollbacks/ThemeRollback/Actions/AddMultisiteThemeRollbackLinks.php:135
+msgid "Rollback"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/BackupAsset.php:56
+msgid "Archive creation skipped for WordPress.org asset."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/BackupAsset.php:67
+msgid "Archive already exists for this version."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/BackupAsset.php:75
+msgid "Archive created successfully."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/BackupAsset.php:83
+msgid "Archive creation failed but rollback will continue."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/BackupAsset.php:92
+msgid "Creating version archive…"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/Cleanup.php:62
+msgid "Maintenance mode required forced cleanup."
+msgstr ""
+
+#. translators: %s: Package file path
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/Cleanup.php:75
+#, php-format
+msgid "Could not delete package file: %s"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/Cleanup.php:86
+msgid "Cleanup completed successfully."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/Cleanup.php:87
+msgid "Cleanup completed with warnings."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/Cleanup.php:111
+msgid "Cleaning up temporary files…"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/DownloadAsset.php:67
+msgid "Download requested version…"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/MaintenanceMode.php:74
+msgid "Maintenance mode is already active."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/MaintenanceMode.php:92
+msgid "Maintenance mode not needed for inactive asset."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/MaintenanceMode.php:110
+msgid "Could not enable maintenance mode, but continuing with rollback."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/MaintenanceMode.php:135
+msgid "Maintenance mode enabled successfully."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/MaintenanceMode.php:152
+msgid "Enabling maintenance mode…"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ReplaceAsset.php:62
+msgid "Unable to access the filesystem to replace the files."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ReplaceAsset.php:148
+msgid "Downloaded package for rollback not found."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ReplaceAsset.php:160
+msgid "Downloaded package for rollback is not a valid ZIP file."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ReplaceAsset.php:437
+msgid "Unable to unzip the downloaded package. The version you had has been put back."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ReplaceAsset.php:441
+msgid "Unable to unzip the downloaded package."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ReplaceAsset.php:473
+msgid "Files replaced successfully."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ReplaceAsset.php:588
+msgid "Replacing files…"
+msgstr ""
+
+#. translators: %s: Error message
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ValidatePackage.php:68
+#, php-format
+msgid "Package error during validation: %s"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ValidatePackage.php:79
+msgid "No package found for validation."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ValidatePackage.php:88
+msgid "Package file not found for validation."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/RollbackSteps/ValidatePackage.php:139
+msgid "Validating package integrity…"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/MaintenanceService.php:49
+msgid "Site is temporarily unavailable for scheduled maintenance. Please check back in a minute."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/MaintenanceService.php:114
+msgid "Briefly unavailable for scheduled maintenance. Check back in a minute."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/MaintenanceService.php:122
+msgid "Maintenance"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/MaintenanceService.php:154
+msgid "Maintenance Mode"
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:43
+msgid "Package file does not exist for validation."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:50
+msgid "Invalid asset type for package validation."
+msgstr ""
+
+#. translators: %s: Error message
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:66
+#, php-format
+msgid "WordPress Core validation failed: %s"
+msgstr ""
+
+#. translators: %s: Error message
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:80
+#, php-format
+msgid "ZIP validation failed: %s"
+msgstr ""
+
+#. translators: %s: Error message
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:94
+#, php-format
+msgid "Package structure validation failed: %s"
+msgstr ""
+
+#. translators: %1$s: Asset type, %2$s: Number of files validated
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:109
+#, php-format
+msgid "Package validation successful: %1$s package validated with %2$d files checked."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:135
+msgid "File modifications are not allowed on this installation."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:144
+msgid "Package is not a valid ZIP file format."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:161
+msgid "Package is not a valid ZIP file according to WordPress."
+msgstr ""
+
+#. translators: %s: MIME type
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:179
+#, php-format
+msgid "Package MIME type \"%s\" is not allowed by WordPress."
+msgstr ""
+
+#. translators: %s: Maximum file size
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:200
+#, php-format
+msgid "Package exceeds WordPress maximum upload size of %s."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:211
+msgid "Package file path contains invalid characters."
+msgstr ""
+
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:239
+msgid "Package file is too large for processing."
+msgstr ""
+
+#. translators: 1: Path of a file in the package, 2: Plugin or theme folder name
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:281
+#, php-format
+msgid "The package can't be installed because \"%1$s\" isn't a valid path inside the %2$s/ folder. Your installed version hasn't been changed."
+msgstr ""
+
+#. translators: %s: Asset type
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:313
+#, php-format
+msgid "Package does not appear to contain valid %s files."
+msgstr ""
+
+#. translators: %d: ZIP library error code
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:472
+#: vendor/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php:521
+#, php-format
+msgid "ZIP file appears to be corrupted or invalid. Error code: %d"
+msgstr ""
+

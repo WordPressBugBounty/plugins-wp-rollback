@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f
+class ComposerStaticInit4f52bec42b29b656d104920741f5f252
 {
     public static $prefixLengthsPsr4 = array (
         'W' =>
@@ -43,6 +43,7 @@ class ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f
         'WpRollback\\Free\\Core\\Request' => __DIR__ . '/../..' . '/src/Core/Request.php',
         'WpRollback\\Free\\Core\\ServiceProvider' => __DIR__ . '/../..' . '/src/Core/ServiceProvider.php',
         'WpRollback\\Free\\PluginSetup\\Language' => __DIR__ . '/../..' . '/src/PluginSetup/Language.php',
+        'WpRollback\\Free\\PluginSetup\\OutdatedProNotice' => __DIR__ . '/../..' . '/src/PluginSetup/OutdatedProNotice.php',
         'WpRollback\\Free\\PluginSetup\\PluginMeta' => __DIR__ . '/../..' . '/src/PluginSetup/PluginMeta.php',
         'WpRollback\\Free\\PluginSetup\\PluginScripts' => __DIR__ . '/../..' . '/src/PluginSetup/PluginScripts.php',
         'WpRollback\\Free\\PluginSetup\\PluginSetup' => __DIR__ . '/../..' . '/src/PluginSetup/PluginSetup.php',
@@ -92,12 +93,19 @@ class ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f
         'WpRollback\\SharedCore\\Core\\Traits\\ControllerHelpers' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Core/Traits/ControllerHelpers.php',
         'WpRollback\\SharedCore\\Core\\Traits\\HandleMultipleApiRoutes' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Core/Traits/HandleMultipleApiRoutes.php',
         'WpRollback\\SharedCore\\Core\\Utilities\\PluginUtility' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Core/Utilities/PluginUtility.php',
+        'WpRollback\\SharedCore\\Migrations\\AbstractMigration' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Migrations/AbstractMigration.php',
+        'WpRollback\\SharedCore\\Migrations\\DTO\\MigrationLogDTO' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Migrations/DTO/MigrationLogDTO.php',
+        'WpRollback\\SharedCore\\Migrations\\MigrationInterface' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Migrations/MigrationInterface.php',
+        'WpRollback\\SharedCore\\Migrations\\MigrationManager' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Migrations/MigrationManager.php',
+        'WpRollback\\SharedCore\\Migrations\\MigrationRepository' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Migrations/MigrationRepository.php',
+        'WpRollback\\SharedCore\\Migrations\\ServiceProvider' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Migrations/ServiceProvider.php',
+        'WpRollback\\SharedCore\\Migrations\\Tasks\\SecureBackupDirectory' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Migrations/Tasks/SecureBackupDirectory.php',
         'WpRollback\\SharedCore\\PluginSetup\\PluginManager' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/PluginSetup/PluginManager.php',
         'WpRollback\\SharedCore\\PluginSetup\\PluginSetup' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/PluginSetup/PluginSetup.php',
         'WpRollback\\SharedCore\\Plugin\\PluginInfo' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Plugin/PluginInfo.php',
         'WpRollback\\SharedCore\\RestAPI\\ApiRouteBase' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/ApiRouteBase.php',
-        'WpRollback\\SharedCore\\RestAPI\\ArchivesController' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/ArchivesController.php',
         'WpRollback\\SharedCore\\RestAPI\\FetchInfoApiRoute' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/FetchInfoApiRoute.php',
+        'WpRollback\\SharedCore\\RestAPI\\MigrationsController' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/MigrationsController.php',
         'WpRollback\\SharedCore\\RestAPI\\ProcessRollbackApiRoute' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/ProcessRollbackApiRoute.php',
         'WpRollback\\SharedCore\\RestAPI\\ResponseFormatter' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/ResponseFormatter.php',
         'WpRollback\\SharedCore\\RestAPI\\RollbackStepsApiRoute' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/RestAPI/RollbackStepsApiRoute.php',
@@ -123,6 +131,7 @@ class ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f
         'WpRollback\\SharedCore\\Rollbacks\\ServiceProvider' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/ServiceProvider.php',
         'WpRollback\\SharedCore\\Rollbacks\\Services\\BackupService' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Services/BackupService.php',
         'WpRollback\\SharedCore\\Rollbacks\\Services\\MaintenanceService' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Services/MaintenanceService.php',
+        'WpRollback\\SharedCore\\Rollbacks\\Services\\NetworkAssetUsageService' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Services/NetworkAssetUsageService.php',
         'WpRollback\\SharedCore\\Rollbacks\\Services\\PackageValidationService' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/Services/PackageValidationService.php',
         'WpRollback\\SharedCore\\Rollbacks\\ThemeRollback\\Actions\\AddMultisiteThemeRollbackLinks' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/ThemeRollback/Actions/AddMultisiteThemeRollbackLinks.php',
         'WpRollback\\SharedCore\\Rollbacks\\ToolsPage\\ToolsPage' => __DIR__ . '/..' . '/wp-rollback/shared-core/src/Rollbacks/ToolsPage/ToolsPage.php',
@@ -132,10 +141,10 @@ class ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf283cce0b01ea6f743b52e6aea01561f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4f52bec42b29b656d104920741f5f252::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4f52bec42b29b656d104920741f5f252::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit4f52bec42b29b656d104920741f5f252::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit4f52bec42b29b656d104920741f5f252::$classMap;
 
         }, null, ClassLoader::class);
     }

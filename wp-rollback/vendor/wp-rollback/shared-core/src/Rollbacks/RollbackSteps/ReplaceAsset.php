@@ -17,6 +17,12 @@ use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
  */
 class ReplaceAsset implements RollbackStep
 {
+    /**
+     * Where the plugin or theme's current folder was moved while the new version
+     * is unzipped, or null if it wasn't moved.
+     */
+    private ?string $_tempBackupDir = null;
+
     use PluginHelpers;
 
     /**
@@ -32,6 +38,8 @@ class ReplaceAsset implements RollbackStep
      */
     public function execute(RollbackApiRequestDTO $rollbackApiRequestDTO): RollbackStepResult
     {
+        $this->_tempBackupDir = null;
+
         $assetType = $rollbackApiRequestDTO->getType();
         $assetSlug = $rollbackApiRequestDTO->getSlug();
         $package = get_transient("wpr_{$assetType}_{$assetSlug}_package");
@@ -45,8 +53,15 @@ class ReplaceAsset implements RollbackStep
             return $validationResult;
         }
 
-        // Setup filesystem
-        $this->setupFilesystem();
+        // Set up the filesystem before any files are touched, so a host that
+        // needs credentials fails here instead of after deactivating the plugin.
+        if (!$this->setupFilesystem()) {
+            return new RollbackStepResult(
+                false,
+                $rollbackApiRequestDTO,
+                __('Unable to access the filesystem to replace the files.', 'wp-rollback')
+            );
+        }
 
         // Prepare destination and clean existing files
         $destination = $this->prepareDestination($assetType, $assetSlug);
@@ -150,41 +165,106 @@ class ReplaceAsset implements RollbackStep
     }
 
     /**
-     * Setup WordPress filesystem
+     * Set up WordPress's filesystem API for this step.
      *
-     * @return void
+     * Deleting the old files, unzip_file() and wp_opcache_invalidate_directory()
+     * all use the global $wp_filesystem, so it's set up once here for all of them.
+     *
+     * @return bool Whether the filesystem is available.
      */
-    private function setupFilesystem(): void
+    private function setupFilesystem(): bool
     {
         if (!defined('FS_METHOD')) {
             define('FS_METHOD', 'direct');
         }
+
+        return (bool) WP_Filesystem();
     }
 
     /**
-     * Delete plugin files using WP_Filesystem directly, bypassing delete_plugins().
+     * Move a plugin or theme folder to WordPress core's temporary backup location.
      *
-     * WordPress's delete_plugins() triggers uninstall_plugin() which runs a plugin's
-     * uninstall.php or registered uninstall hook, deleting user data. During a rollback
-     * we only want to remove files — matching how WordPress core's Plugin_Upgrader
-     * handles updates via WP_Upgrader::clear_destination().
+     * Core's updater uses the same places (wp-content/upgrade-temp-backup/plugins
+     * and wp-content/upgrade-temp-backup/themes) and its weekly cleanup removes
+     * anything left there.
      *
-     * @param string $pluginDir Absolute path to the plugin directory to remove.
-     * @return bool Whether the deletion was successful.
+     * @param string $assetDir  Absolute path of the plugin or theme folder.
+     * @param string $assetType The type of asset (plugin/theme).
+     * @param string $assetSlug The asset slug.
+     * @return string|null Where the folder was moved, or null if it couldn't be moved.
      */
-    private function deletePluginFiles(string $pluginDir): bool
+    private function moveToTempBackup(string $assetDir, string $assetType, string $assetSlug): ?string
+    {
+        $backupRoot = trailingslashit(WP_CONTENT_DIR) . 'upgrade-temp-backup/' . ('theme' === $assetType ? 'themes' : 'plugins');
+        if (!wp_mkdir_p($backupRoot)) {
+            return null;
+        }
+
+        $backupDir = $backupRoot . '/' . $assetSlug;
+
+        return true === move_dir($assetDir, $backupDir, true) ? $backupDir : null;
+    }
+
+    /**
+     * Put the folder moved aside by moveToTempBackup() back in place.
+     *
+     * @param string $assetDir Absolute path the plugin or theme folder belongs at.
+     * @return bool Whether it was put back.
+     */
+    private function restoreTempBackup(string $assetDir): bool
+    {
+        if (null === $this->_tempBackupDir) {
+            return false;
+        }
+
+        // Overwriting also removes anything a failed unzip left behind.
+        $restored = true === move_dir($this->_tempBackupDir, $assetDir, true);
+        $this->_tempBackupDir = null;
+
+        if ($restored) {
+            wp_opcache_invalidate_directory($assetDir);
+        }
+
+        return $restored;
+    }
+
+    /**
+     * Delete the folder moved aside by moveToTempBackup(), once the new version is in place.
+     */
+    private function deleteTempBackup(): void
     {
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
         global $wp_filesystem;
 
-        if (!WP_Filesystem()) {
-            return false;
+        if (null !== $this->_tempBackupDir) {
+            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
+            $wp_filesystem->delete($this->_tempBackupDir, true);
+            $this->_tempBackupDir = null;
         }
+    }
+
+    /**
+     * Delete plugin or theme files using WP_Filesystem directly, bypassing
+     * delete_plugins() and delete_theme().
+     *
+     * WordPress's delete_plugins() triggers uninstall_plugin() which runs a plugin's
+     * uninstall.php or registered uninstall hook, deleting user data, and delete_theme()
+     * also deletes the theme's translations. During a rollback we only want to remove
+     * files — matching how WordPress core's upgraders handle updates via
+     * WP_Upgrader::clear_destination().
+     *
+     * @param string $assetDir Absolute path to the plugin or theme directory to remove.
+     * @return bool Whether the deletion was successful.
+     */
+    private function deleteAssetFiles(string $assetDir): bool
+    {
+        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
+        global $wp_filesystem;
 
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
-        if ($wp_filesystem->is_dir($pluginDir)) {
+        if ($wp_filesystem->is_dir($assetDir)) {
             // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps -- WordPress core global
-            return $wp_filesystem->delete($pluginDir, true);
+            return $wp_filesystem->delete($assetDir, true);
         }
 
         return true;
@@ -221,9 +301,12 @@ class ReplaceAsset implements RollbackStep
             
             if ($pluginFile) {
                 /**
-                 * Filter whether to delete the existing plugin before rollback.
+                 * Filter whether to replace the existing plugin folder before rollback.
                  *
-                 * @param bool   $shouldDelete Whether to delete the plugin
+                 * When false, the plugin stays active and the new version is unzipped
+                 * over its folder, so files only the current version has are left behind.
+                 *
+                 * @param bool   $shouldDelete Whether to replace the plugin folder
                  * @param string $pluginFile    The plugin file path
                  * @param string $pluginSlug    The plugin slug
                  */
@@ -256,7 +339,12 @@ class ReplaceAsset implements RollbackStep
                         deactivate_plugins($pluginFile, true, true);
                     }
                     
-                    $this->deletePluginFiles($pluginDir);
+                    // Like WordPress core's updater, move the current folder aside rather
+                    // than deleting it, so it can be put back if unzipping fails.
+                    $this->_tempBackupDir = $this->moveToTempBackup($pluginDir, 'plugin', $pluginSlug);
+                    if (null === $this->_tempBackupDir) {
+                        $this->deleteAssetFiles($pluginDir);
+                    }
                 }
             }
         }
@@ -276,8 +364,6 @@ class ReplaceAsset implements RollbackStep
         $themeDir = $destination . '/' . $themeSlug;
 
         if (is_dir($themeDir)) {
-            include_once ABSPATH . 'wp-admin/includes/theme.php';
-            
             // Check if this is the active theme or parent theme
             $currentTheme = get_stylesheet();
             $currentTemplate = get_template();
@@ -301,9 +387,13 @@ class ReplaceAsset implements RollbackStep
                 );
             }
             
-            // Delete the theme files (like WordPress Core does)
+            // Like WordPress core's updater, move the current folder aside rather
+            // than deleting it, so it can be put back if unzipping fails.
             // Maintenance mode should be active if this is the active theme
-            delete_theme($themeSlug);
+            $this->_tempBackupDir = $this->moveToTempBackup($themeDir, 'theme', $themeSlug);
+            if (null === $this->_tempBackupDir) {
+                $this->deleteAssetFiles($themeDir);
+            }
         }
 
         return $destination;
@@ -332,9 +422,35 @@ class ReplaceAsset implements RollbackStep
         $result = unzip_file($package, $destination);
 
         if (is_wp_error($result)) {
+            if ($this->restoreTempBackup(trailingslashit($destination) . $assetSlug)) {
+                if ('plugin' === $assetType) {
+                    $this->reactivatePluginIfNeeded($assetSlug);
+                } elseif ('theme' === $assetType) {
+                    // The theme was never switched away from, so this only clears
+                    // its saved state before a later rollback can act on it.
+                    $this->reactivateThemeIfNeeded($assetSlug);
+                }
+
+                return new RollbackStepResult(
+                    false,
+                    $rollbackApiRequestDTO,
+                    __('Unable to unzip the downloaded package. The version you had has been put back.', 'wp-rollback')
+                );
+            }
+
             $errorMessage = __('Unable to unzip the downloaded package.', 'wp-rollback');
             return new RollbackStepResult(false, $rollbackApiRequestDTO, $errorMessage);
         }
+
+        $this->deleteTempBackup();
+
+        // unzip_file() writes straight into the plugins/themes folder, so PHP's
+        // opcode cache can keep serving the replaced version's compiled files
+        // until it revalidates. The next request then runs a mix of old and new
+        // code, and fatals if the old code loads a file the rollback removed
+        // (e.g. FooGallery 3.3.7 to 3.3.3 drops lib/action-scheduler). WordPress
+        // core invalidates after copy_dir()/move_dir() during updates; do the same.
+        wp_opcache_invalidate_directory(trailingslashit($destination) . $assetSlug);
 
         $fullAssetPath = $assetSlug;
         if ('plugin' === $assetType) {
@@ -343,6 +459,10 @@ class ReplaceAsset implements RollbackStep
             // Attempt to reactivate the plugin if it was active before rollback
             $this->reactivatePluginIfNeeded($assetSlug);
         } elseif ('theme' === $assetType) {
+            // Clear the cached theme headers and update data, like WordPress
+            // core's theme updater, so nothing reads the replaced version.
+            wp_clean_themes_cache();
+
             // Attempt to reactivate the theme if it was active before rollback
             $this->reactivateThemeIfNeeded($assetSlug);
         }

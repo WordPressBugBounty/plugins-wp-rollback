@@ -17,7 +17,11 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WpRollback\SharedCore\Core\Contracts\ApiRouteV1;
 use WpRollback\SharedCore\Core\Exceptions\Primitives\Exception;
+use WpRollback\SharedCore\Core\SharedCore;
 use WpRollback\SharedCore\Rollbacks\DTO\RollbackItemDTO;
+use WpRollback\SharedCore\Rollbacks\Services\BackupService;
+use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
+use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 
 /**
  * Class FetchInfoApiRoute
@@ -25,6 +29,8 @@ use WpRollback\SharedCore\Rollbacks\DTO\RollbackItemDTO;
  */
 class FetchInfoApiRoute extends ApiRouteV1
 {
+    use PluginHelpers;
+
     /**
      * @unreleased
      */
@@ -57,7 +63,18 @@ class FetchInfoApiRoute extends ApiRouteV1
      */
     public function permissionValidation(WP_REST_Request $request)
     {
-        return parent::permissionValidation($request);
+        $parentCheck = parent::permissionValidation($request);
+        if (is_wp_error($parentCheck)) {
+            return $parentCheck;
+        }
+
+        if (!$parentCheck) {
+            return false;
+        }
+
+        $type = $request->get_param('type');
+
+        return PluginUtility::currentUserCanRollback(is_string($type) ? $type : null);
     }
 
     /**
@@ -115,35 +132,6 @@ class FetchInfoApiRoute extends ApiRouteV1
      */
     private function handleWpOrgAsset(object $data, array $currentData, string $type): WP_REST_Response
     {
-        // For WP.org plugins, merge versions from repository data
-        if ('plugin' === $type && isset($data->versions)) {
-            $versions = [];
-            foreach ($data->versions as $version => $downloadUrl) {
-                // Skip 'trunk' - it will be handled separately if needed
-                if ('trunk' === $version) {
-                    $versions[$version] = [
-                        'file' => basename($downloadUrl),
-                        'downloadUrl' => $downloadUrl,
-                        'released' => null,
-                    ];
-                    continue;
-                }
-                
-                // Validate version format - allow semantic versioning with pre-release tags
-                // Examples: 1.0, 2.5.3, 1.0-beta, 2.5.0-RC1, 15.1-a.7, 15.1-beta.2
-                if (!preg_match('/^\d+(\.\d+)*(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?$/', $version)) {
-                    continue;
-                }
-
-                $versions[$version] = [
-                    'file' => basename($downloadUrl),
-                    'downloadUrl' => $downloadUrl,
-                    'released' => null,
-                ];
-            }
-            $currentData['versions'] = $versions;
-        }
-
         // Create DTO from WordPress.org data
         $dto = RollbackItemDTO::fromWpOrg($data, $currentData['current_version'] ?? '');
 
@@ -208,34 +196,16 @@ class FetchInfoApiRoute extends ApiRouteV1
      */
     private function getAvailableVersions(string $slug): array
     {
-        $uploadDir = wp_upload_dir();
-        $rollbackDir = trailingslashit($uploadDir['basedir']) . 'wp-rollback';
-        
-        // Try both patterns: {slug}-*.zip and just {slug}*.zip
-        $pattern1 = sprintf('%s/%s-*.zip', $rollbackDir, $slug);
-        $pattern2 = sprintf('%s/%s*.zip', $rollbackDir, $slug);
-        
-        $files = array_merge(
-            glob($pattern1) ?: [],
-            glob($pattern2) ?: []
-        );
-        
+        $backupService = SharedCore::container()->make(BackupService::class);
+
         $versions = [];
-        foreach ($files as $file) {
-            // Match version number at the end of filename before .zip
-            if (preg_match('/-?([0-9.]+)\.zip$/', $file, $matches)) {
-                $version = $matches[1];
-                // Ensure version number is valid
-                if (!preg_match('/^\d+(\.\d+)*$/', $version)) {
-                    continue;
-                }
-                $versions[$version] = [
-                    'file' => basename($file),
-                    'downloadUrl' => '', // Premium plugins/themes don't have public download URLs
-                    'released' => null,
-                    'source' => 'local',
-                ];
-            }
+        foreach ($backupService->getArchivesForSlug($slug) as $file => $version) {
+            $versions[$version] = [
+                'file' => basename($file),
+                'downloadUrl' => '', // Premium plugins/themes don't have public download URLs
+                'released' => null,
+                'source' => 'local',
+            ];
         }
 
         return $versions;
@@ -259,9 +229,12 @@ class FetchInfoApiRoute extends ApiRouteV1
 
             $allPlugins = get_plugins();
             foreach ($allPlugins as $file => $pluginData) {
-                // Check if this is the plugin we're looking for
-                $pluginSlug = dirname((string) $file);
-                if ($pluginSlug === $slug) {
+                // Match either the directory name (typical case) or the
+                // canonical wp.org slug from WP core's update transient
+                // (covers plugins whose directories were renamed locally).
+                $dirSlug = dirname((string) $file);
+                $canonicalSlug = $this->resolveWpOrgSlug((string) $file);
+                if ($dirSlug === $slug || $canonicalSlug === $slug) {
                     $data = [
                         'plugin' => $file,
                         'current_version' => $pluginData['Version'],

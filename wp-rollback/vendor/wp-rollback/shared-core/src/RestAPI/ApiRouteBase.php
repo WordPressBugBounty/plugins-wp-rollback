@@ -42,7 +42,9 @@ abstract class ApiRouteBase
      */
     public function permissionValidation(WP_REST_Request $request): bool
     {
-        return PluginUtility::currentUserCanRollback();
+        $type = $request->get_param('type');
+
+        return PluginUtility::currentUserCanRollback(is_string($type) ? $type : null);
     }
 
     /**

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace WpRollback\SharedCore\Rollbacks;
 
+use WpRollback\SharedCore\Core\BaseConstants;
 use WpRollback\SharedCore\Core\Exceptions\BindingResolutionException;
-use WpRollback\SharedCore\Core\Exceptions\Primitives\Exception;
 use WpRollback\SharedCore\Core\Contracts\ServiceProvider as ServiceProviderContract;
 use WpRollback\SharedCore\Core\Hooks;
 use WpRollback\SharedCore\Core\SharedCore;
@@ -26,6 +26,7 @@ use WpRollback\SharedCore\Rollbacks\RollbackSteps\Cleanup;
 use WpRollback\SharedCore\Rollbacks\Services\PackageValidationService;
 use WpRollback\SharedCore\Rollbacks\Services\BackupService;
 use WpRollback\SharedCore\Rollbacks\Services\MaintenanceService;
+use WpRollback\SharedCore\Rollbacks\Services\NetworkAssetUsageService;
 use WpRollback\SharedCore\Rollbacks\ToolsPage\ToolsPage;
 
 /**
@@ -46,10 +47,18 @@ class ServiceProvider implements ServiceProviderContract
         // Register MaintenanceService
         SharedCore::container()->singleton(MaintenanceService::class);
 
-        // Register MaintenanceMode step with MaintenanceService dependency
+        // Register NetworkAssetUsageService with the running WP Rollback plugin's file
+        SharedCore::container()->singleton(NetworkAssetUsageService::class, function ($container) {
+            return new NetworkAssetUsageService($container->make(BaseConstants::class)->getBasename());
+        });
+
+        // Register MaintenanceMode step with MaintenanceService and NetworkAssetUsageService dependencies
         // This step enables maintenance mode at the beginning of rollback
         SharedCore::container()->singleton(MaintenanceMode::class, function ($container) {
-            return new MaintenanceMode($container->make(MaintenanceService::class));
+            return new MaintenanceMode(
+                $container->make(MaintenanceService::class),
+                $container->make(NetworkAssetUsageService::class)
+            );
         });
 
         // Register ValidatePackage step with PackageValidationService dependency
@@ -100,20 +109,9 @@ class ServiceProvider implements ServiceProviderContract
             }
         }
 
-        // Initialize backup service and set up rollback directory for shared functionality
-        try {
-            $backupService = SharedCore::container()->make(BackupService::class);
-            $backupService->setupRollbackDirectory();
-            
-            // Register WordPress hooks for backup functionality - shared by both free and pro
-            $this->registerBackupHooks($backupService);
-        } catch (Exception $e) {
-            // Log error but continue
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-                error_log(sprintf('[WP Rollback Shared] Failed to set up rollback directory: %s', $e->getMessage()));
-            }
-        }
+        // Don't set up the backup folder here: this runs on every request, front end
+        // included. createAssetBackup() sets it up before writing a backup.
+        $this->registerBackupHooks(SharedCore::container()->make(BackupService::class));
     }
 
     /**
@@ -129,11 +127,6 @@ class ServiceProvider implements ServiceProviderContract
             return $backupService->interceptUpgrade($options);
         }, 10, 1);
         
-        // Register hooks for rollback request data modification
-        add_filter('wpr_rollback_api_request_data', function($data, $context) use ($backupService) {
-            return $backupService->modifyRollbackRequestData($data, $context);
-        }, 10, 2);
-        
         // Register hook to check if asset has backup versions
         add_filter('wpr_is_pro_rollback', function($isPro, $slug) use ($backupService) {
             return $backupService->hasBackupVersions($isPro, $slug);
@@ -143,11 +136,6 @@ class ServiceProvider implements ServiceProviderContract
         add_filter('wpr_get_pro_versions', function($versions, $slug) use ($backupService) {
             return $backupService->getAvailableVersions($versions, $slug);
         }, 10, 2);
-        
-        // Register hook to control asset deletion during rollback
-        add_filter('wpr_should_delete_existing_plugin', function($shouldDelete, $pluginFile, $pluginSlug) use ($backupService) {
-            return $backupService->shouldDeleteExistingAsset($shouldDelete, $pluginFile, $pluginSlug);
-        }, 10, 3);
         
         // Multisite: Register filters for rollback operations
         if (is_multisite()) {

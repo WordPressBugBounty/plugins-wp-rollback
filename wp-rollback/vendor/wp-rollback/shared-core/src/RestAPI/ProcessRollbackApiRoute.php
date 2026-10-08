@@ -14,15 +14,18 @@ use WP_REST_Request;
 use WP_REST_Server;
 use WpRollback\SharedCore\Core\Contracts\ApiRouteV1;
 use WpRollback\SharedCore\Core\SharedCore;
-use WpRollback\SharedCore\Core\Exceptions\Primitives\Exception;
 use WpRollback\SharedCore\Rollbacks\DTO\RollbackApiRequestDTO;
 use WpRollback\SharedCore\Rollbacks\Registry\RollbackStepRegisterer;
 use WpRollback\SharedCore\Rollbacks\Services\MaintenanceService;
+use WpRollback\SharedCore\Rollbacks\Traits\PluginHelpers;
+use WpRollback\SharedCore\Core\Utilities\PluginUtility;
 
 /**
  */
 class ProcessRollbackApiRoute extends ApiRouteV1
 {
+    use PluginHelpers;
+
     /**
      */
     private RollbackStepRegisterer $rollbackStepRegisterer;
@@ -104,16 +107,18 @@ class ProcessRollbackApiRoute extends ApiRouteV1
      */
     public function permissionValidation(WP_REST_Request $request)
     {
-        $type = $request->get_param('type');
-        $hasPermission = false;
-
-        if ('plugin' === $type) {
-            $hasPermission = current_user_can('update_plugins');
-        } elseif ('theme' === $type) {
-            $hasPermission = current_user_can('update_themes');
+        $parentCheck = parent::permissionValidation($request);
+        if (is_wp_error($parentCheck)) {
+            return $parentCheck;
         }
 
-        return parent::permissionValidation($request) && $hasPermission;
+        if (!$parentCheck) {
+            return false;
+        }
+
+        $type = $request->get_param('type');
+
+        return PluginUtility::currentUserCanRollback(is_string($type) ? $type : null);
     }
 
     /**
@@ -174,8 +179,15 @@ class ProcessRollbackApiRoute extends ApiRouteV1
 
             // If this is the final step (replace-asset) and it succeeded, trigger success actions
             if ($result->isSuccess() && $step === 'replace-asset') {
+                // Lift maintenance mode now rather than waiting for the cleanup
+                // step. The cleanup request is the first one to load the
+                // rolled-back code, so if that code fatals during boot the
+                // cleanup step never runs and visitors stay on the maintenance
+                // page until it expires.
+                $this->cleanupMaintenanceMode();
+
                 $resultData = $result->getData();
-                
+
                 if (isset($resultData['asset_path'], $resultData['current_version'])) {
                     do_action(
                         "wpr_{$type}_rollback_success",
@@ -185,15 +197,7 @@ class ProcessRollbackApiRoute extends ApiRouteV1
                     );
                 }
             } elseif (!$result->isSuccess()) {
-                // Handle failure - ensure maintenance mode is disabled
-                $this->cleanupMaintenanceMode();
-                
-                do_action(
-                    "wpr_{$type}_rollback_failed",
-                    $slug,
-                    $version,
-                    $result->getMessage()
-                );
+                $this->handleRollbackFailure($type, $slug, $version, $result->getMessage());
             }
 
             // Return the response
@@ -202,17 +206,11 @@ class ProcessRollbackApiRoute extends ApiRouteV1
                 'data'    => $result->getRollbackApiRequestDTO()->getData(),
                 'message' => $result->getMessage(),
             ]);
-        } catch (Exception $e) {
-            // Ensure maintenance mode is disabled on any exception
-            $this->cleanupMaintenanceMode();
-            
-            do_action(
-                "wpr_{$type}_rollback_failed",
-                $slug,
-                $version,
-                $e->getMessage()
-            );
-            
+        } catch (\Throwable $e) {
+            // Catch \Throwable, not just our own Exception, so a PHP error or core
+            // exception in any step can't leave the site in maintenance mode.
+            $this->handleRollbackFailure($type, $slug, $version, $e->getMessage());
+
             return rest_ensure_response([
                 'success' => false,
                 'data' => null,
@@ -236,11 +234,18 @@ class ProcessRollbackApiRoute extends ApiRouteV1
 
         $pluginSlugs = [];
         foreach ($plugins as $pluginPath => $pluginData) {
-            $result = strstr((string) $pluginPath, '/', true);
-            $pluginSlugs[] = $result ?: $pluginPath;
+            $dirSlug = strstr((string) $pluginPath, '/', true);
+            $pluginSlugs[] = $dirSlug ?: $pluginPath;
+
+            // Also accept the canonical wp.org slug so the rollback request
+            // validates for plugins whose local directory has been renamed.
+            $canonicalSlug = $this->resolveWpOrgSlug((string) $pluginPath);
+            if ($canonicalSlug !== null && $canonicalSlug !== $dirSlug) {
+                $pluginSlugs[] = $canonicalSlug;
+            }
         }
 
-        return $pluginSlugs;
+        return array_values(array_unique($pluginSlugs));
     }
 
     /**
@@ -254,8 +259,25 @@ class ProcessRollbackApiRoute extends ApiRouteV1
     }
 
     /**
+     * Handle a failed rollback step: turn maintenance mode off and fire the failed action
+     *
+     * @param string $type    The asset type (plugin or theme)
+     * @param string $slug    The asset slug
+     * @param string $version The target version
+     * @param string $message The failure message
+     * @return void
+     */
+    private function handleRollbackFailure(string $type, string $slug, string $version, string $message): void
+    {
+        $this->cleanupMaintenanceMode();
+
+        do_action("wpr_{$type}_rollback_failed", $slug, $version, $message);
+    }
+
+    /**
      * Cleanup maintenance mode as a failsafe
-     * This ensures the site doesn't get stuck in maintenance mode if rollback fails
+     * This ensures the site doesn't get stuck in maintenance mode if rollback fails,
+     * or if the rolled-back code fatals before the cleanup step can run
      *
      * @return void
      */
@@ -264,11 +286,11 @@ class ProcessRollbackApiRoute extends ApiRouteV1
         try {
             /** @var MaintenanceService $maintenanceService */
             $maintenanceService = SharedCore::container()->make(MaintenanceService::class);
-            
+
             // Force disable maintenance mode to ensure site is accessible
             $maintenanceService->forceDisableMaintenanceMode();
-            
-        } catch (Exception $e) {
+
+        } catch (\Throwable $e) {
             // Even if cleanup fails, don't throw - we're already in error handling
             if (defined('WP_DEBUG') && WP_DEBUG) {
                 // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -276,4 +298,4 @@ class ProcessRollbackApiRoute extends ApiRouteV1
             }
         }
     }
-} 
+}

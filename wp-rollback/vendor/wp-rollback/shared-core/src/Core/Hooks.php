@@ -68,6 +68,23 @@ class Hooks
     }
 
     /**
+     * Register a callback on WordPress 'admin_init'.
+     *
+     * @param callable $callback     The callback to execute on 'admin_init'.
+     * @param int      $priority     The priority level.
+     * @param int      $acceptedArgs The number of arguments to accept.
+     *
+     * @return void
+     */
+    public static function onAdminInit(
+        callable $callback,
+        int $priority = 10,
+        int $acceptedArgs = 1
+    ): void {
+        add_action('admin_init', $callback, $priority, $acceptedArgs);
+    }
+
+    /**
      * Register a factory for a class.
      *
      * This allows defining how specific classes should be instantiated
@@ -103,7 +120,7 @@ class Hooks
             $factory = self::$container[$class];
             return $factory();
         }
-        
+
         // Check if the class is a Controller
         if (is_subclass_of($class, 'WpRollback\\SharedCore\\Core\\Contracts\\Controller')) {
             // Provide a Request object for controllers
@@ -113,4 +130,4 @@ class Hooks
         // Default case: instantiate without arguments
         return new $class();
     }
-} 
+}

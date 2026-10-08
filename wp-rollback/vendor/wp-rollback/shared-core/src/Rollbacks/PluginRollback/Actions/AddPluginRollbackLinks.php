@@ -65,7 +65,7 @@ class AddPluginRollbackLinks
             return $actions;
         }
 
-        if (!$this->shouldAddRollbackLink($pluginData)) {
+        if (!$this->shouldAddRollbackLink($pluginFile, $pluginData)) {
             return $actions;
         }
 
@@ -79,10 +79,11 @@ class AddPluginRollbackLinks
     /**
      * Check if rollback link should be added
      *
+     * @param string $pluginFile Plugin file path
      * @param array $pluginData Plugin data
      * @return bool Whether to add rollback link
      */
-    protected function shouldAddRollbackLink(array $pluginData): bool
+    protected function shouldAddRollbackLink(string $pluginFile, array $pluginData): bool
     {
         // Don't show on non-network admin for multisite
         if (is_multisite() && !is_network_admin()) {
@@ -103,36 +104,42 @@ class AddPluginRollbackLinks
         }
 
         // For free plugin, show links for wp.org plugins OR premium plugins (with upsell)
-        return $this->hasValidPackageData($pluginData) || $this->isPremiumAsset($pluginData);
+        return $this->isWpOrgPlugin($pluginFile) || $this->isPremiumAsset($pluginFile, $pluginData);
     }
 
     /**
-     * Check if plugin has valid package data (wp.org plugin)
+     * Check whether a plugin is hosted on WordPress.org.
      *
-     * @param array $pluginData Plugin data
-     * @return bool Whether package data is valid
+     * Resolves via WP core's `update_plugins` transient, which records the
+     * canonical wp.org slug for every plugin identified by the update API —
+     * even when the local directory has been renamed (e.g. to disable the
+     * plugin during a conflict). This is strictly more reliable than checking
+     * `$pluginData['package']`, which is only populated when an update is
+     * pending and thus misses up-to-date wp.org plugins entirely.
+     *
+     * @param string $pluginFile Plugin file path as keyed in get_plugins().
+     * @return bool
      */
-    protected function hasValidPackageData(array $pluginData): bool
+    protected function isWpOrgPlugin(string $pluginFile): bool
     {
-        return isset($pluginData['package']) &&
-               is_string($pluginData['package']) &&
-               strpos($pluginData['package'], 'downloads.wordpress.org') !== false;
+        return $this->resolveWpOrgSlug($pluginFile) !== null;
     }
 
     /**
      * Check if plugin is a premium asset (not from wp.org)
      *
+     * @param string $pluginFile Plugin file path
      * @param array $pluginData Plugin data
      * @return bool Whether this is a premium asset
      */
-    protected function isPremiumAsset(array $pluginData): bool
+    protected function isPremiumAsset(string $pluginFile, array $pluginData): bool
     {
-        // If it has wp.org package data, it's not premium
-        if ($this->hasValidPackageData($pluginData)) {
+        // If wp.org recognises it, it's not premium.
+        if ($this->isWpOrgPlugin($pluginFile)) {
             return false;
         }
 
-        // If it has version data but no wp.org package, it's likely premium
+        // If it has version data but isn't on wp.org, it's likely premium.
         return $this->hasVersionData($pluginData);
     }
 
@@ -156,7 +163,10 @@ class AddPluginRollbackLinks
     protected function buildRollbackUrl(string $pluginFile): string
     {
         $baseUrl = $this->getBaseAdminUrl();
-        $pluginSlug = dirname($pluginFile);
+        // Prefer the canonical wp.org slug so renamed directories still
+        // resolve to the correct WordPress.org listing; fall back to the
+        // directory name for premium / unrecognised plugins.
+        $pluginSlug = $this->resolveWpOrgSlug($pluginFile) ?? dirname($pluginFile);
 
         return add_query_arg(
             ['page' => $this->pluginSlug],

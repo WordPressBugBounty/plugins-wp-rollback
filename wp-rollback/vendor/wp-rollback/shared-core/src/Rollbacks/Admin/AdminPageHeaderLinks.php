@@ -3,7 +3,7 @@
 /**
  * AdminPageHeaderLinks
  *
- * Adds page-level "Rollback Plugins" / "Rollback Themes" action links to the
+ * Adds page-level "Roll Back Plugins" / "Roll Back Themes" action links to the
  * native WordPress plugins.php and themes.php admin pages, displayed inline
  * with the existing page title action buttons (e.g. "Add New Plugin").
  *
@@ -51,7 +51,7 @@ class AdminPageHeaderLinks
     }
 
     /**
-     * Inject the "Rollback Plugins" link on the plugins.php page.
+     * Inject the "Roll Back Plugins" link on the plugins.php page.
      * Skipped on multisite individual sites (plugin management is network-only there).
      *
      * @return void
@@ -65,13 +65,13 @@ class AdminPageHeaderLinks
         $adminPage  = is_network_admin() ? 'settings.php' : 'tools.php';
         $url        = $this->getContextualAdminUrl($adminPage);
         $url        = add_query_arg(['page' => $this->pluginSlug], $url) . '#/plugin-list';
-        $label      = __('Rollback Plugins', 'wp-rollback');
+        $label      = __('Roll Back Plugins', 'wp-rollback');
 
         $this->outputInjectionScript(esc_url($url), esc_html($label));
     }
 
     /**
-     * Inject the "Rollback Themes" link on the themes.php page.
+     * Inject the "Roll Back Themes" link on the themes.php page.
      * Skipped on network admin (theme action links handle that context).
      *
      * @return void
@@ -83,7 +83,7 @@ class AdminPageHeaderLinks
         }
 
         $url   = add_query_arg(['page' => $this->pluginSlug], admin_url('tools.php')) . '#/theme-list';
-        $label = __('Rollback Themes', 'wp-rollback');
+        $label = __('Roll Back Themes', 'wp-rollback');
 
         $this->outputInjectionScript(esc_url($url), esc_html($label));
     }
